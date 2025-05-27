@@ -1,0 +1,108 @@
+.body-sideBar {
+    height: 100vh;
+    width: 80px;
+    /* transition: width 0.5s ease; */
+}
+
+.body-sideBar.expandir {
+    height: 100vh;
+    width: 240px;
+}
+
+.body-sideBar .box-vertical {
+    background-color: #F3F3F3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.body-sideBar.expandir .box-vertical {
+    background-color: #F3F3F3;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 30px;
+    height: 100%;
+}
+
+.body-sideBar .box-vertical .ams-title {
+    color: #101B23;
+    font-size: 25px;
+    margin-top: 50px;
+}
+
+.body-sideBar.expandir .box-vertical .school-name{
+    color: #3B4E5D;
+}
+
+.body-sideBar .box-vertical .icons-sideBar {
+    display: flex;
+    flex-direction: column;
+    margin-top: 65px;
+    transition: all 0.4s ease; 
+}
+
+.body-sideBar.expandir .box-vertical .icons-sideBar {
+    margin-top: 50px;
+}
+
+.body-sideBar .box-vertical .icons-sideBar .icon-select{
+    margin-top: 5px;
+    border-radius: 13px;
+}
+
+.body-sideBar.expandir .box-vertical .icons-sideBar .icon-select{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 45px 0 10px;
+    cursor: default;
+}
+
+.body-sideBar.expandir .box-vertical .icons-sideBar span{
+    font-size: 12px;
+}
+
+.body-sideBar .box-vertical .icons-sideBar .icon-select.ativo{
+    background-color: #004A80;
+}
+
+.body-sideBar.expandir .box-vertical .icons-sideBar .icon-select.ativo{
+    color: white;
+    font-weight: 700;
+}
+
+.body-sideBar .box-vertical .icons-sideBar .icon-select:hover{
+    background-color: #E0E0E0;
+}
+
+.body-sideBar .box-vertical .icons-sideBar .icon-select.ativo:hover{
+    background-color: #004A80;
+}
+
+.body-sideBar .box-vertical .icons-sideBar img{
+    width: 20px;
+    height: 20px;
+    padding: 10px;
+}
+
+.body-sideBar .box-vertical .sair-inicio {
+    margin-top: auto;
+    margin-bottom: 30px;
+}
+
+.body-sideBar.expandir .box-vertical .sair-inicio span{
+    cursor: pointer;
+    color: #101B23;
+    font-weight: 700;
+}
+
+.body-sideBar .box-vertical .sair-inicio img{
+    width: 25px;
+    height: 20px;
+}
+
+
+
+
