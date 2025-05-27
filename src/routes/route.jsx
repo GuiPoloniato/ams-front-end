@@ -6,7 +6,7 @@ import Turmas from "../pages/turmas/turmas";
 import Disciplinas from "../pages/disciplinas/disciplinas";
 import Permicoes from "../pages/permicoes/permicoes";
 import Relatorios from "../pages/relatorios/relatorios";
-import Configuracao from "../pages/configuracoes/config";
+// import Configuracao from "../pages/configuracoes/config";
 
 function Router(){
     return (
@@ -19,7 +19,7 @@ function Router(){
                 <Route path="/home/disciplinas" element={<Disciplinas />} />
                 <Route path="/home/permicoes" element={<Permicoes />} />
                 <Route path="/home/relatorios" element={<Relatorios />} />
-                <Route path="/home/configuracao" element={<Configuracao/>} />
+                {/* <Route path="/home/configuracao" element={<Configuracao/>} /> */}
             </Routes>
         </BrowserRouter>
     );

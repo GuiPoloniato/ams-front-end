@@ -2,10 +2,146 @@
    display: flex;
 }
 
+.body-home .content-home {
+    margin-top: 45px;
+}
+
 .body-home .content-home .h2-route{
     font-weight: 400;
-    font-size: 20px;
+    font-size: 14px;
     line-height: 40px;
     letter-spacing: 0px;
     color: #3B4E5D;
+}
+
+.body-home .content-home .h1-welcome{
+    font-size: 25px;
+    margin-top: 30px;
+}
+
+.body-home .content-home .acoes-rapidas p{
+    color: #3B4E5D;
+    font-weight: 600;
+    font-size: 17px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.body-home .content-home .acoes-rapidas .acoes button{
+    background-color: #6A97B3;
+    color: white;
+    font-weight: 800;
+    font-size: 12px;
+    padding: 13px 20px;
+    border: none;
+    border-radius: 10px;
+    margin-right: 15px;
+}
+
+.body-home .content-home .acoes-rapidas .acoes button:hover{
+    background-color: #1567B6;
+}
+
+.body-home .content-home .visao-geral p{
+    color: #3B4E5D;
+    font-weight: 600;
+    font-size: 17px;
+    margin-top: 35px;
+    margin-bottom: 25px;
+}
+
+.body-home .content-home .visao-geral .cards{
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.body-home .content-home .visao-geral .cards .card {
+    padding: 25px 20px;
+    border-radius: 12px;
+    width: 180px;
+    height: 60px;
+    border: 1px solid #0000001A;
+    box-shadow: 0px 0px 4px 0px #0000001b;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: default;
+    transition: transform 0.2s ease, box-shadow 0.2s ease; 
+}
+
+.body-home .content-home .visao-geral .cards .card:hover {
+    transform: scale(1.03); 
+}
+
+.body-home .content-home .visao-geral .cards .card .name-card {
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 12px;
+    color: #16151C;
+}
+
+.body-home .content-home .visao-geral .cards .card .numbers {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.body-home .content-home .visao-geral .cards .card .numbers .span-number {
+    color: #16151C;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.body-home .content-home .visao-geral .cards .card .numbers .porcentagem .span-porcentagem{
+    padding: 5px 12px;
+    border-radius: 7px;
+}
+
+.body-home .content-home .visao-geral .cards .card .numbers .porcentagem .span-porcentagem-positivo{
+    background-color: #72D2727D;
+    color: #218121;
+}
+
+.body-home .content-home .visao-geral .cards .card .numbers .porcentagem .span-porcentagem-negativo{
+    background-color: #E542428C;
+    color: #E54242;
+}
+
+.body-home .content-home .performance-academica .cards-deshboards {
+    display: flex;
+    gap: 30px;
+}
+
+.body-home .content-home .performance-academica .p-performance{
+    color: #3B4E5D;
+    font-weight: 600;
+    font-size: 17px;
+    margin-top: 35px;
+    margin-bottom: 25px;
+}
+
+.body-home .content-home .performance-academica .card-deshboard {
+    padding: 10px;
+    box-shadow: 0px 0px 4px 0px #00000026;
+    width: 400px;
+}
+
+.body-home .content-home .performance-academica .card-deshboard p{
+    color: black;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.body-home .content-home .performance-academica .card-deshboard span{
+    color: #00000080;
+    font-weight: 400;
+    font-size: 13px;
+    margin-top: 10px;
+    /* margin-top: 35px; */
+}
+
+.body-home .content-home .performance-academica .card-deshboard .span-legend{
+    display: block;
+    text-align: right;
 }

@@ -1,12 +1,16 @@
 .body-sideBar {
     height: 100vh;
     width: 80px;
+    margin-right: 120px;
     /* transition: width 0.5s ease; */
+    transition: width 0.3s ease, margin-right 0.3s ease;
+    overflow: hidden;
 }
 
 .body-sideBar.expandir {
     height: 100vh;
     width: 240px;
+    margin-right: 60px;
 }
 
 .body-sideBar .box-vertical {
@@ -40,7 +44,7 @@
     display: flex;
     flex-direction: column;
     margin-top: 65px;
-    transition: all 0.4s ease; 
+    /* transition: all 0.4s ease;  */
 }
 
 .body-sideBar.expandir .box-vertical .icons-sideBar {
@@ -75,6 +79,10 @@
 
 .body-sideBar .box-vertical .icons-sideBar .icon-select:hover{
     background-color: #E0E0E0;
+}
+
+.body-sideBar .box-vertical .icons-sideBar .icon-select-desable:hover{
+    background-color: #F3F3F3;
 }
 
 .body-sideBar .box-vertical .icons-sideBar .icon-select.ativo:hover{
