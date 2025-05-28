@@ -67,6 +67,10 @@
     padding: 8px;
 }
 
+.body-modalEstudante .modal-content .formulario .linha-flex .campo input:focus {
+    outline: none;
+}
+
 .body-modalEstudante .modal-content .formulario .linha-flex .campo .inputMatricula, 
 .body-modalEstudante .modal-content .formulario .linha-flex .campo .inputCep {
     width: 120px;

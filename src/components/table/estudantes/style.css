@@ -1,0 +1,159 @@
+.body-table .table-wrapper {
+  margin: 50px 0 0 0;
+  max-width: 1700px;
+  width: 100vw;
+  height: 600px;
+  max-height: 600px;
+  /* overflow-y: auto; */
+  border-radius: 10px;
+  border: 1px solid #CECECE;
+  background-color: #F7FCF794;
+;
+}
+
+.body-table .table-wrapper .table {
+  /* border-collapse: collapse; */
+  width: 100%;
+  text-align: left;
+}
+
+.body-table .table-wrapper .table thead {
+  height: 40px;
+  color: #687E90;
+}
+
+.body-table .table-wrapper .table th{
+  padding: 12px 16px;
+  border-bottom: 1px solid #CECECE;
+  font-size: 15px;
+}
+
+.body-table .table-wrapper .table .th-acoes{
+  text-align: right;
+  padding-right: 200px;
+}
+
+.body-table .table-wrapper .table td {
+  padding: 10px 16px;
+  font-size: 15px;
+  color: #16151C;
+  font-weight: 700;
+  border-bottom: 1px solid #CECECE;
+}
+
+.body-table .table-wrapper .table tr:last-child td {
+  border-bottom: none;
+}
+
+.body-table .table-wrapper .table .acoes {
+  display: flex;
+  justify-content: right;
+  gap: 10px;
+  padding-right: 20px;
+}
+
+.body-table .table-wrapper .table .acoes button {
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 5px;
+  padding: 5px 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.body-table .table-wrapper .table .acoes button:hover {
+  background-color: #6A97B3;
+  color: white;
+}
+
+.body-table .table-wrapper .table .acoes .icon {
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.body-table .table-wrapper .table .acoes .editar-icon {
+  background-image: url('../../../assets/iconsSvg/editar.svg');
+}
+
+.body-table .table-wrapper .table .acoes .editar:hover .editar-icon {
+  background-image: url('../../../assets/iconsSvg/white/editarWhite.svg');
+}
+
+
+.body-table .table-wrapper .table .acoes .arquivar-icon {
+  background-image: url('../../../assets/iconsSvg/arquivar.svg');
+}
+
+
+.body-table .table-wrapper .table .acoes .arquivar:hover .arquivar-icon {
+  background-image: url('../../../assets/iconsSvg/white/arquivarWhite.svg');
+}
+
+.body-table .table-wrapper .table .status {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.body-table .table-wrapper .table .status.verde {
+  background-color: green;
+}
+
+.body-table .table-wrapper .table .status.vermelho {
+  background-color: red;
+}
+
+/*
+ footer e paginação da tabela
+*/
+
+.body-table .table-wrapper .table-footer {
+  display: flex;
+  /* justify-content: center; */
+  padding: 12px 16px;
+  font-size: 14px;
+  align-items: center;
+  z-index: 1;
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 80px;
+}
+
+.body-table .table-wrapper .table-footer span {
+  color:  #A2A1A8;
+  font-weight: 600;
+}
+
+.body-table .table-wrapper .pagination  {
+  margin-left: 28vw;
+}
+
+.body-table .table-wrapper .pagination button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 3px 10px;
+  margin: 0 2px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.body-table .table-wrapper .pagination button img{
+  width: 12px;
+  height: 12px;
+}
+
+.body-table .table-wrapper .pagination .active {
+  border: 2px solid #1090CB;
+  background-color: none;
+  color: #1090CB;
+}
