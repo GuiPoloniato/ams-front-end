@@ -1,0 +1,199 @@
+.body-modalEditar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.body-modalEditar .modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    width: 85vw;
+    max-width: 1150px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+
+.body-modalEditar .modal-content  .title-modalEditar{
+    color: #000000;
+    font-weight: 700;
+    font-size: 25px;
+    margin-bottom: 15px;
+}
+
+.body-modalEditar .modal-content  hr{
+    border: 1px solid #E8E8E8;
+}
+
+.body-modalEditar .modal-content  .formulario .h2-informacoes-pessoais{
+    color: #2E2E2E;
+    font-weight: 700;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+.body-modalEditar .modal-content .formulario .h2-responsavel{
+    color: #2E2E2E;
+    font-weight: 700;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 25px;
+    align-items: flex-end;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo input,
+.body-modalEditar .modal-content .formulario .linha-flex .campo select  {
+    border: 1px solid #CECECE;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo input:focus {
+    outline: none;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .inputMatricula, 
+.body-modalEditar .modal-content .formulario .linha-flex .campo .inputCep {
+    width: 120px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .inputName,
+.body-modalEditar .modal-content .formulario .linha-flex .campo .inputNomeResponsavel {
+    width: 400px;
+}
+
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .selectRaca {
+    width: 200px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .inputBairro {
+    width: 300px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .inputLogradouro {
+    width: 200px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .selectPais {
+    width: 220px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .selectEstado {
+    width: 100px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .selectCidade {
+    width: 260px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .selectTurno {
+    width: 150px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .inputCpfResponsavel {
+    width: 190px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .inputRgResponsavel {
+    width: 110px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .selectUf {
+    width: 150px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .inputTelefone {
+    width: 180px;
+}
+
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .inputComercial {
+    width: 205px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .inputCelular {
+    width: 210px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .inputEmail {
+    width: 190px;
+}
+
+.body-modalEditar .modal-content .formulario .linha-flex .campo .inputProfissao {
+    width: 190px;
+}
+
+.body-modalEditar .modal-content .formulario .button-responsavel {
+    margin-top: 20px;
+    border: 1px solid #1090CB;
+    background-color: white;
+    color: #1090CB;
+    padding: 5px 30px;
+    border-radius: 5px;
+    font-weight: 400;
+    font-size: 15px;
+}
+
+.body-modalEditar .modal-content .formulario .button-responsavel:hover {
+    background-color: #1090CB;
+    color: white;
+}
+
+
+.body-modalEditar .modal-content .formulario .buttons-submit {
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.body-modalEditar .modal-content .formulario .buttons-submit .btn-cancelar{
+    padding: 7px 35px;
+    border: 1px solid #1090CB;
+    background-color: white;
+    color: #1090CB;
+    border-radius: 5px;
+}
+
+.body-modalEditar .modal-content .formulario .buttons-submit .btn-cancelar:hover{
+    border: 1px solid #1090CB;
+    background-color: #1090CB;
+    color: white;
+}
+
+.body-modalEditar .modal-content .formulario .buttons-submit .btn-salvar{
+    padding: 7px 45px;
+    font-size: 15px;
+    font-weight: 400;
+    border: none;
+    background-color: #1090CB;
+    color: #FFFFFF;
+    border-radius: 5px;
+}
+
+.body-modalEditar .modal-content .formulario .buttons-submit .btn-salvar:hover{
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.23);
+}

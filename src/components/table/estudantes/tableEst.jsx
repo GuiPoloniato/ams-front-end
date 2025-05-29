@@ -2,10 +2,13 @@ import { useState } from 'react';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg"
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 import ModalArquivar from '../../modal/arquivar/arquivar';
+import ModalEditar from '../../modal/editar/editar';
+import ModalVisualizar from '../../modal/visualizar/visualizarDados';
 import './style.css';
 
 function TableEstudantes({ filtrar }) {
   const [ modalOpen, setModalOpen ] = useState(false);
+  const [ estudanteSelecionado, setEstudanteSelecionado ] = useState(null);
 
     const handlleCloseModal = () => {
         setModalOpen(false)
@@ -18,7 +21,7 @@ function TableEstudantes({ filtrar }) {
       dataNascimento: '12/12/2012',
       serie: '1 Ano',
       turno: 'Matutino',
-      responsavel: 'Aline Marques da Silva',
+      nomeResponsavel: 'Aline Marques da Silva',
       status: 'ativo'
     },
     {
@@ -27,7 +30,7 @@ function TableEstudantes({ filtrar }) {
       dataNascimento: '01/01/2012',
       serie: '1 Ano',
       turno: 'Matutino',
-      responsavel: 'Osvaldo Costa Teixeira',
+      nomeResponsavel: 'Osvaldo Costa Teixeira',
       status: 'inativo'
     },
   ];
@@ -73,7 +76,10 @@ function TableEstudantes({ filtrar }) {
           </thead>
           <tbody>
             {dadosPaginados.map((item, index) => (
-              <tr key={index}>
+              <tr key={index} onClick={() => {
+                setModalOpen('visualizar');
+                setEstudanteSelecionado(item);
+              }}>
                 <td>
                   <span
                     className={`status ${item.status === 'ativo' ? 'verde' : 'vermelho'}`}
@@ -84,17 +90,34 @@ function TableEstudantes({ filtrar }) {
                 <td>{item.dataNascimento}</td>
                 <td>{item.serie}</td>
                 <td>{item.turno}</td>
-                <td>{item.responsavel}</td>
+                <td>{item.nomeResponsavel}</td>
                 <td className="acoes">
-                  <button className="editar">
+                  <button 
+                    className="editar" 
+                    onClick={(e) => {
+                      e.stopPropagation(); 
+                      setModalOpen('editar');
+                      setEstudanteSelecionado(item);
+                    }}
+                    >
                       Editar <span className="icon editar-icon" />
                   </button>
-                  <button className="arquivar" onClick={() => setModalOpen('arquivar')}>
+                  <button 
+                    className="arquivar"
+                    onClick={(e) => {e.stopPropagation();  setModalOpen('arquivar')}
+                  }>
                       Arquivar <span className="icon arquivar-icon"/>
                   </button>
                 </td>
               </tr>
             ))}
+            {/* {Array.from({ length: 8 - dadosPaginados.length }).map((_, i) => (
+              <tr key={`empty-${i}`} className="empty-row">
+                {Array.from({ length: 8 }).map((_, j) => (
+                  <td key={j}>&nbsp;</td>
+                ))}
+              </tr>
+            ))} */}
             {dadosPaginados.length === 0 && (
             <tr>
               <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
@@ -128,6 +151,8 @@ function TableEstudantes({ filtrar }) {
         </div>
       </div>
       {modalOpen === 'arquivar' && (<ModalArquivar handlleCloseModal={handlleCloseModal}/>)}
+      {modalOpen === 'editar' && (<ModalEditar handlleCloseModal={handlleCloseModal} estudante={estudanteSelecionado}/>)}
+      {modalOpen === 'visualizar' && (<ModalVisualizar handlleCloseModal={handlleCloseModal} estudante={estudanteSelecionado}/>)}
     </div>
   );
 }
