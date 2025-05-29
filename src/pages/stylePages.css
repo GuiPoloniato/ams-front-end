@@ -1,0 +1,61 @@
+.body-page{
+    display: flex;
+}
+
+.body-page .content-page{
+    margin-top: 45px;
+}
+
+.body-page .content-page .h2-route{
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 40px;
+    letter-spacing: 0px;
+    color: #3B4E5D;
+}
+
+.body-page .content-page .gerenciamento{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.body-page .content-page .gerenciamento .h1-gerenciamento{
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.body-page .content-page .gerenciamento .buttons-gerenciamento {
+    display: flex;
+    gap: 30px;
+}
+
+.body-page .content-page .gerenciamento .buttons-gerenciamento .btn-cadastrar,
+.body-page .content-page .gerenciamento .buttons-gerenciamento .btn-exportar{
+    color: white;
+    background-color: #6A97B3;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 15px;
+    font-weight: 800;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.body-page .content-page .gerenciamento .buttons-gerenciamento .btn-cadastrar:hover,
+.body-page .content-page .gerenciamento .buttons-gerenciamento .btn-exportar:hover{
+    background-color: #1090CB;
+}
+
+.body-page .content-page .gerenciamento .buttons-gerenciamento .btn-cadastrar img{
+    width: 12px;
+    height: 12px;
+}
+
+.body-page .content-page .gerenciamento .buttons-gerenciamento .btn-exportar img{
+    width: 20px;
+    height: 20px;
+}

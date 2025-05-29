@@ -1,13 +1,12 @@
 import React, {useState} from 'react';
 import SideBar from '../../components/sideBar/sideBar';
 import MaisIcon from "../../assets/iconsSvg/mais.svg";
-import ExportarIcon from "../../assets/iconsSvg/exportar.svg";
-import NovaTurmaModal from '../../components/cadastrar/turma/novaTruma';
-import TableTurmas from '../../components/table/turmas/tableTurmas';
+import NovaPermissaoUsuarioModal from '../../components/cadastrar/permissoes/usuario';
+import TablePermissoes from '../../components/table/permissoes/permissoes';
 import FiltrarTable from '../../components/filtrar/filtrarTable';
 import '../stylePages.css'
 
-function Turmas() {
+function Permissoes() {
     const [ modalOpen, setModalOpen ] = useState(false);
     const [ filtrar, setFiltrar ] = useState('');
 
@@ -19,20 +18,19 @@ function Turmas() {
         <div className="body-page">
             <SideBar />
             <div className="content-page">
-                <h2 className='h2-route'>Home / Turmas</h2>
+                <h2 className='h2-route'>Home / Permissões</h2>
                 <div className="gerenciamento">
-                    <h1 className='h1-gerenciamento'>Gerenciamento de Turmas</h1>
+                    <h1 className='h1-gerenciamento'>Gerenciamento de Permissões</h1>
                     <div className="buttons-gerenciamento">
-                        <button className='btn-cadastrar' onClick={() => setModalOpen('turma')}><img src={MaisIcon} alt="" /> Nova turma</button>
-                        <button className='btn-exportar'><img src={ExportarIcon} alt="" /> Exportar dados</button>
+                        <button className='btn-cadastrar' onClick={() => setModalOpen('permissao')}><img src={MaisIcon} alt="" /> Novo usuário</button>
                     </div>
                     
                 </div>
                 <FiltrarTable filtro={setFiltrar}/>
-                <TableTurmas filtrar={filtrar}/>
+                <TablePermissoes filtrar={filtrar}/>
             </div>
-            {modalOpen === 'turma' && (<NovaTurmaModal handlleCloseModal={handlleCloseModal}/>)}
+            {modalOpen === 'permissao' && (<NovaPermissaoUsuarioModal handlleCloseModal={handlleCloseModal}/>)}
         </div>
     )
 }
-export default Turmas;
+export default Permissoes;

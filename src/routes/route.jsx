@@ -4,7 +4,7 @@ import Estudantes from "../pages/estudantes/estudantes";
 import Professores from "../pages/professores/professores";
 import Turmas from "../pages/turmas/turmas";
 import Disciplinas from "../pages/disciplinas/disciplinas";
-import Permicoes from "../pages/permicoes/permicoes";
+import Permissoes from "../pages/permissoes/permissoes";
 import Relatorios from "../pages/relatorios/relatorios";
 // import Configuracao from "../pages/configuracoes/config";
 
@@ -17,7 +17,7 @@ function Router(){
                 <Route path="/home/professores" element={<Professores />} />
                 <Route path="/home/turmas" element={<Turmas />} />
                 <Route path="/home/disciplinas" element={<Disciplinas />} />
-                <Route path="/home/permicoes" element={<Permicoes />} />
+                <Route path="/home/permissoes" element={<Permissoes />} />
                 <Route path="/home/relatorios" element={<Relatorios />} />
                 {/* <Route path="/home/configuracao" element={<Configuracao/>} /> */}
             </Routes>

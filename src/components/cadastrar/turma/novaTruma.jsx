@@ -1,11 +1,11 @@
 import React from 'react';
 import './style.css';
 
-function novaTurmaModal({ handlleCloseModal }) {
+function NovaTurmaModal({ handlleCloseModal }) {
   return (
     <div className="body-modalTurma">
       <div className="modal-content">
-        <h1 className='title-cadastroTurma'>Cadastrar novo professor</h1>
+        <h1 className='title-cadastroTurma'>Cadastrar nova turma</h1>
         <hr />
         <div className="formulario">
           <div className="linha-flex">
@@ -37,4 +37,4 @@ function novaTurmaModal({ handlleCloseModal }) {
   );
 }
 
-export default novaTurmaModal;
+export default NovaTurmaModal;

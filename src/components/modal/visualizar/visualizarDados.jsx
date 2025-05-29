@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './style.css';
 
-function ModalVisualizar({ handlleCloseModal, estudante }) {
+function ModalVisualizar({ handleCloseModal, visualizarSelecionado }) {
   const [formData, setFormData] = useState({
     matricula: '',
     nomeCompleto: '',
@@ -29,10 +29,10 @@ function ModalVisualizar({ handlleCloseModal, estudante }) {
   });
 
   useEffect(() => {
-    if (estudante) {
-      setFormData(estudante);
+    if (visualizarSelecionado) {
+      setFormData(visualizarSelecionado);
     }
-  }, [estudante]);
+  }, [visualizarSelecionado]);
 
   return (
     <div className="body-modalVisualizar">
@@ -152,7 +152,7 @@ function ModalVisualizar({ handlleCloseModal, estudante }) {
           </div>
 
           <div className="button">
-            <button className='btn-voltar' onClick={handlleCloseModal}>Voltar</button>
+            <button className='btn-voltar' onClick={handleCloseModal}>Voltar</button>
           </div>
         </div>
       </div>

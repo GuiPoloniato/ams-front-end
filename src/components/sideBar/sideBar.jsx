@@ -6,8 +6,8 @@ import EstudProfIcon from '../../assets/sideBar/estud-prof-icon.svg';
 import EstudProfIconWhite from '../../assets/sideBar/iconsWhite/estud-prof-iconWhite.svg';
 import TurmaDisciIcon from '../../assets/sideBar/turm-disc-icon.svg';
 import TurmaDisciIconWhite from '../../assets/sideBar/iconsWhite/turm-disc-iconWhite.svg';
-import PermicoesIcon from '../../assets/sideBar/permicoes-icon.svg';
-import PermicoesIconWhite from '../../assets/sideBar/iconsWhite/permicoes-iconWhite.svg';
+import PermissoesIcon from '../../assets/sideBar/permissoes-icon.svg';
+import PermissoesIconWhite from '../../assets/sideBar/iconsWhite/permissoes-iconWhite.svg';
 import RelatoriosIcon from '../../assets/sideBar/relatorios-icon.svg';
 import RelatoriosIconWhite from '../../assets/sideBar/iconsWhite/relatorios-iconWhite.svg';
 import ConfigIcon from '../../assets/sideBar/config-icon.svg';
@@ -56,9 +56,9 @@ function SideBar() {
                         <img src={itemActive === '/home/disciplinas' ? TurmaDisciIconWhite : TurmaDisciIcon} alt="Icon Relatorio" />
                         {isHoverBox && <span>Disciplinas</span>}
                     </div>
-                    <div className={`icon-select ${itemActive === '/home/permicoes' ? 'ativo' : ''}`} onClick={() => handleItemClick('/home/permicoes')}>
-                        <img src={itemActive === '/home/permicoes' ? PermicoesIconWhite : PermicoesIcon} alt="Icon Configuracao" />
-                        {isHoverBox && <span>Permições</span>}
+                    <div className={`icon-select ${itemActive === '/home/permissoes' ? 'ativo' : ''}`} onClick={() => handleItemClick('/home/permissoes')}>
+                        <img src={itemActive === '/home/permissoes' ? PermissoesIconWhite : PermissoesIcon} alt="Icon Configuracao" />
+                        {isHoverBox && <span>Permissões</span>}
                     </div>
                     <div className={`icon-select ${itemActive === '/home/relatorios' ? 'ativo' : ''}`} onClick={() => handleItemClick('/home/relatorios')}>
                         <img src={itemActive === '/home/relatorios' ? RelatoriosIconWhite : RelatoriosIcon} alt="Icon Configuracao" />

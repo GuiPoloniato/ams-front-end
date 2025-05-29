@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './style.css';
 
-function ModalEditar({ handlleCloseModal, estudante }) {
+function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
     const [ formData, setFormData ] = useState({
         matricula: '',
         nomeCompleto: '',
@@ -29,15 +29,15 @@ function ModalEditar({ handlleCloseModal, estudante }) {
     })
 
     useEffect(() => {
-        if (estudante) {
-          setFormData(estudante);
+        if (editarSelecionado) {
+          setFormData(editarSelecionado);
         }
-      }, [estudante]);
+      }, [editarSelecionado]);
 
   return (
-    <div className="body-modalEditar">
+    <div className="body-modalEditarEstudante">
       <div className="modal-content">
-        <h1 className='title-modalEditar'>Editar estudante</h1>
+        <h1 className='title-modalEditarEstudante'>Editar estudante</h1>
         <hr />
         <div className="formulario">
           <h2 className='h2-informacoes-pessoais' >Informações pessoais</h2>
@@ -177,7 +177,7 @@ function ModalEditar({ handlleCloseModal, estudante }) {
           <button className="button-responsavel">Adicionar responsável</button>
 
           <div className="buttons-submit">
-            <button className='btn-cancelar' onClick={handlleCloseModal}>Cancelar</button>
+            <button className='btn-cancelar' onClick={handleCloseModal}>Cancelar</button>
             <button className='btn-salvar'>Salvar</button>
           </div>
         </div>
@@ -186,4 +186,4 @@ function ModalEditar({ handlleCloseModal, estudante }) {
   );
 }
 
-export default ModalEditar;
+export default ModalEditarEstudante;

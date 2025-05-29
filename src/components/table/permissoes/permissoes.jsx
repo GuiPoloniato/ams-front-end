@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg"
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
-import ModalArquivar from '../../modal/arquivar/arquivar';
-import ModalEditar from '../../modal/editar/estudante/editarEstudante';
-import ModalVisualizar from '../../modal/visualizar/visualizarDados';
-import '../style.css';
 
-function TableEstudantes({ filtrar }) {
+import ModalArquivar from '../../modal/arquivar/arquivar';
+import ModalEditarUsuario from '../../modal/editar/permissoes/editarUsuario';
+import ModalVisualizar from '../../modal/visualizar/visualizarDados';
+import "../style.css"
+
+function TablePermissoes({ filtrar }) {
   const [ modalOpen, setModalOpen ] = useState(false);
   const [ paginaAtual, setPaginaAtual ] = useState(1);
   const [ dadosSelecionados, setDadosSelecionados ] = useState(null);
@@ -17,106 +18,18 @@ function TableEstudantes({ filtrar }) {
 
   const dados = [
     {
-      matricula: '123456789',
       nomeCompleto: 'João Marques da Silva',
-      dataNascimento: '12/12/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Aline Marques da Silva',
+      email: 'joao_marques@email.com',
+      nivelAcesso: 'Administrador',
       status: 'ativo'
     },
     {
-      matricula: '234567890',
       nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
+      email: 'maria_costa@email.com',
+      nivelAcesso: 'Secretário',
       status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '2310359',
-      nomeCompleto: 'Guilherme Poloniato',
-      dataNascimento: '19/05/2005',
-      serie: '5 Ano',
-      turno: 'Integral',
-      nomeResponsavel: 'Elizangela',
-      status: 'ativo'
     },
 
-   
   ];
 
   const dadosFiltrados = dados.filter((item) =>
@@ -149,12 +62,9 @@ function TableEstudantes({ filtrar }) {
         <table className="table table-relatorio">
           <thead>
             <tr>
-              <th>Matrícula</th>
               <th>Nome Completo</th>
-              <th>Data de Nascimento</th>
-              <th>Série</th>
-              <th>Turno</th>
-              <th>Responsável</th>
+              <th>Email</th>
+              <th>Nível de acesso</th>
               <th className='th-acoes'>Ações</th>
             </tr>
           </thead>
@@ -168,13 +78,10 @@ function TableEstudantes({ filtrar }) {
                   <span
                     className={`status ${item.status === 'ativo' ? 'verde' : 'vermelho'}`}
                   ></span>
-                  {item.matricula}
+                  {item.nomeCompleto}
                 </td>
-                <td>{item.nomeCompleto}</td>
-                <td>{item.dataNascimento}</td>
-                <td>{item.serie}</td>
-                <td>{item.turno}</td>
-                <td>{item.nomeResponsavel}</td>
+                <td>{item.email}</td>
+                <td>{item.nivelAcesso}</td>
                 <td className="acoes">
                   <button 
                     className="editar" 
@@ -197,20 +104,19 @@ function TableEstudantes({ filtrar }) {
             ))}
             {Array.from({ length: Math.max(0, itensPorPagina - dadosPaginados.length) }).map((_, i) => (
               <tr key={`ghost-${i}`} className="linha-fantasma">
-                {Array.from({ length: 7 }).map((_, j) => (
+                {Array.from({ length: 4 }).map((_, j) => (
                   <td key={j}>&nbsp;</td>
                 ))}
               </tr>
             ))}
             {dadosPaginados.length === 0 && (
             <tr>
-              <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
+              <td colSpan="4" style={{ textAlign: 'center', padding: '20px' }}>
                 Nenhum resultado encontrado.
               </td>
             </tr>
           )}
           </tbody>
-          
         </table>
 
         <div className="table-footer">
@@ -234,11 +140,11 @@ function TableEstudantes({ filtrar }) {
           </div>
         </div>
       </div>
-      {modalOpen === 'arquivar' && (<ModalArquivar handleCloseModal={handleCloseModal} nameTable='este estudante' textoArquivar='Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente.'/>)}
-      {modalOpen === 'editar' && (<ModalEditar handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados}/>)}
-      {modalOpen === 'visualizar' && (<ModalVisualizar handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados}/>)}
+      {modalOpen === 'arquivar' && (<ModalArquivar handleCloseModal={handleCloseModal} nameTable='este usuário' textoArquivar='Ao arquivar este usuário, ele será desativado e não poderá mais acessar o sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente.'/>)}
+      {modalOpen === 'editar' && (<ModalEditarUsuario handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados}/>)}
+      {/* {modalOpen === 'visualizar' && (<ModalVisualizar handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados}/>)} */}
     </div>
   );
 }
 
-export default TableEstudantes;
+export default TablePermissoes;
