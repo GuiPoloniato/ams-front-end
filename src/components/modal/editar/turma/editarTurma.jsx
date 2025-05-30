@@ -38,7 +38,7 @@ function ModalEditarTurma({ handleCloseModal, editarSelecionado }) {
                 onChange={(e) => setFormData({ ...formData, tipoEnsino: e.target.value })}></select>
             </div>
             <div className="campo">
-              <label htmlFor="selectTurno">Ano Letivo</label>
+              <label htmlFor="selectTurno">Turno</label>
               <select className='selectTurno' id="selectTurno" value={formData.anoLetivo} 
                 onChange={(e) => setFormData({ ...formData, anoLetivo: e.target.value })}></select>
             </div>

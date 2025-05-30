@@ -4,7 +4,7 @@ import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 
 import ModalArquivar from '../../modal/arquivar/arquivar';
 import ModalEditarUsuario from '../../modal/editar/permissoes/editarUsuario';
-import ModalVisualizar from '../../modal/visualizar/visualizarDados';
+import ModalVisualizarPermissoes from '../../modal/visualizar/permissoes/visualizarPermissoes';
 import "../style.css"
 
 function TablePermissoes({ filtrar }) {
@@ -142,7 +142,7 @@ function TablePermissoes({ filtrar }) {
       </div>
       {modalOpen === 'arquivar' && (<ModalArquivar handleCloseModal={handleCloseModal} nameTable='este usuário' textoArquivar='Ao arquivar este usuário, ele será desativado e não poderá mais acessar o sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente.'/>)}
       {modalOpen === 'editar' && (<ModalEditarUsuario handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados}/>)}
-      {/* {modalOpen === 'visualizar' && (<ModalVisualizar handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados}/>)} */}
+      {modalOpen === 'visualizar' && (<ModalVisualizarPermissoes handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados}/>)}
     </div>
   );
 }

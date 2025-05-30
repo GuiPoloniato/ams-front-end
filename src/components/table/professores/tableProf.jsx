@@ -4,7 +4,7 @@ import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 
 import ModalArquivar from '../../modal/arquivar/arquivar';
 import ModalEditarProfessor from '../../modal/editar/professor/editarProfessor';
-import ModalVisualizar from '../../modal/visualizar/visualizarDados';
+import ModalVisualizarProfessor from '../../modal/visualizar/professores/visualizarProfessor';
 import "../style.css"
 
 function TableProfessor({ filtrar }) {
@@ -71,7 +71,6 @@ function TableProfessor({ filtrar }) {
               <th>Formação</th>
               <th>Turno</th>
               <th>Responsável</th>
-              {/* <th>Responsável</th> */}
               <th className='th-acoes'>Ações</th>
             </tr>
           </thead>
@@ -91,7 +90,6 @@ function TableProfessor({ filtrar }) {
                 <td>{item.formacao}</td>
                 <td>{item.turno}</td>
                 <td>{item.nomeResponsavel}</td>
-                {/* <td>{item.nomeResponsavel}</td> */}
                 <td className="acoes">
                   <button 
                     className="editar" 
@@ -152,7 +150,7 @@ function TableProfessor({ filtrar }) {
       </div>
       {modalOpen === 'arquivar' && (<ModalArquivar handleCloseModal={handleCloseModal} nameTable='este professor' textoArquivar='Ao arquivar este professor, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente.'/>)}
       {modalOpen === 'editar' && (<ModalEditarProfessor handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados}/>)}
-      {/* {modalOpen === 'visualizar' && (<ModalVisualizar handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados}/>)} */}
+      {modalOpen === 'visualizar' && (<ModalVisualizarProfessor handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados}/>)}
     </div>
   );
 }

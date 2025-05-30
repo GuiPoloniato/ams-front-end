@@ -1,0 +1,85 @@
+.body-modalVisualizarPermissoes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.body-modalVisualizarPermissoes .modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    width: 35vw;
+    max-width: 1150px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+
+.body-modalVisualizarPermissoes .modal-content  .title-modalVisualizarPermissoes{
+    color: #000000;
+    font-weight: 700;
+    font-size: 25px;
+    margin-bottom: 15px;
+}
+
+.body-modalVisualizarPermissoes .modal-content  hr{
+    border: 1px solid #E8E8E8;
+    margin-bottom: 30px;
+}
+
+.body-modalVisualizarPermissoes .modal-content .formulario .linha-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-end;
+}
+
+.body-modalVisualizarPermissoes .modal-content .formulario .linha-flex .campo {
+    display: flex;
+    flex-direction: column;
+}
+
+.body-modalVisualizarPermissoes .modal-content .formulario .linha-flex .campo span{
+    font-size: 13px;
+    font-weight: 700;
+    color: #2E2E2E;
+    margin-top: 10px;
+}
+
+
+.body-modalVisualizarPermissoes .modal-content .formulario .linha-flex .campo .inputNomeCompleto,
+.body-modalVisualizarPermissoes .modal-content .formulario .linha-flex .campo .inputEmail  {
+    width: 250px;
+}
+
+.body-modalVisualizarPermissoes .modal-content .formulario .linha-flex .campo .selectNivelAcesso  {
+    width: 150px;
+}
+
+.body-modalVisualizarPermissoes .modal-content .formulario .button {
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+    margin-top: 100px;
+}
+
+.body-modalVisualizarPermissoes .modal-content .formulario .button .btn-voltar{
+    padding: 5px 40px;
+    border: 1px solid #1090CB;
+    background-color: white;
+    color: #1090CB;
+    border-radius: 5px;
+
+}
+
+.body-modalVisualizarPermissoes .modal-content .formulario .button .btn-voltar:hover{
+    border: 1px solid #1090CB;
+    background-color: #1090CB;
+    color: white;
+}

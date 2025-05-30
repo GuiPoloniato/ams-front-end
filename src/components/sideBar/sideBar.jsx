@@ -78,7 +78,7 @@ function SideBar() {
                     </div> */}
                 </div>
                 <div className="sair-inicio">
-                    {isHoverBox ? <span>Desconectar</span> : <img src={SairIcon} alt="Icon Sair" />}
+                    {isHoverBox ? <span onClick={() => handleItemClick('/login')}>Desconectar</span> : <img src={SairIcon} alt="Icon Sair" />}
                 </div>
             </div>
         </div>

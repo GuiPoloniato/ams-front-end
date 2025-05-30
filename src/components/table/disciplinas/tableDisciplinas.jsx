@@ -4,7 +4,7 @@ import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 
 import ModalArquivar from '../../modal/arquivar/arquivar';
 import ModalEditarDisciplina from '../../modal/editar/disciplina/editarDisciplina';
-import ModalVisualizar from '../../modal/visualizar/visualizarDados';
+import ModalVisualizarDisciplinas from '../../modal/visualizar/disciplinas/visualizarDisciplinas';
 import "../style.css"
 
 function TableDisciplinas({ filtrar }) {
@@ -146,7 +146,7 @@ function TableDisciplinas({ filtrar }) {
       </div>
       {modalOpen === 'arquivar' && (<ModalArquivar handleCloseModal={handleCloseModal} nameTable='esta disciplina' textoArquivar='Ao arquivar esta disciplina, ela será desativada e não poderá mais ser utilizada em nenhuma funcionalidade do sistema. Para utilizá-la novamente, será necessário reativá-la manualmente.'/>)}
       {modalOpen === 'editar' && (<ModalEditarDisciplina handleCloseModal={handleCloseModal} editarDados={dadosSelecionados}/>)}
-      {/* {modalOpen === 'visualizar' && (<ModalVisualizar handleCloseModal={handleCloseModal} estudante={dadosSelecionados}/>)} */}
+      {modalOpen === 'visualizar' && (<ModalVisualizarDisciplinas handleCloseModal={handleCloseModal} selecionarDados={dadosSelecionados}/>)}
     </div>
   );
 }

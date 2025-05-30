@@ -4,7 +4,7 @@ import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 
 import ModalArquivar from '../../modal/arquivar/arquivar';
 import ModalEditarTurma from '../../modal/editar/turma/editarTurma';
-import ModalVisualizar from '../../modal/visualizar/visualizarDados';
+import ModalVisualizarTurmas from '../../modal/visualizar/turmas/visualizarTurmas';
 import "../style.css"
 
 function TableTurmas({ filtrar }) {
@@ -146,7 +146,7 @@ function TableTurmas({ filtrar }) {
       </div>
       {modalOpen === 'arquivar' && (<ModalArquivar handleCloseModal={handleCloseModal} nameTable='esta turma' textoArquivar='Ao arquivar esta turma, ela será desativada e não poderá mais ser utilizada em nenhuma funcionalidade do sistema. Para utilizá-la novamente, será necessário reativá-la manualmente.'/>)}
       {modalOpen === 'editar' && (<ModalEditarTurma handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados}/>)}
-      {/* {modalOpen === 'visualizar' && (<ModalVisualizar handleCloseModal={handleCloseModal} estudante={dadosSelecionados}/>)} */}
+      {modalOpen === 'visualizar' && (<ModalVisualizarTurmas handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados}/>)}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './style.css';
 
-function ModalVisualizar({ handleCloseModal, visualizarSelecionado }) {
+function ModalVisualizarEstudante({ handleCloseModal, visualizarSelecionado }) {
   const [formData, setFormData] = useState({
     matricula: '',
     nomeCompleto: '',
@@ -35,9 +35,9 @@ function ModalVisualizar({ handleCloseModal, visualizarSelecionado }) {
   }, [visualizarSelecionado]);
 
   return (
-    <div className="body-modalVisualizar">
+    <div className="body-modalVisualizarEstudante">
       <div className="modal-content">
-        <h1 className='title-modalVisualizar'>Visualizar estudante</h1>
+        <h1 className='title-modalVisualizarEstudante'>Visualizar estudante</h1>
         <hr />
         <div className="formulario">
           <h2 className='h2-informacoes-pessoais'>Informações pessoais</h2>
@@ -160,4 +160,4 @@ function ModalVisualizar({ handleCloseModal, visualizarSelecionado }) {
   );
 }
 
-export default ModalVisualizar;
+export default ModalVisualizarEstudante;

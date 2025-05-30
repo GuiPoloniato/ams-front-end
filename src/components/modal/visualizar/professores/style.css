@@ -1,0 +1,131 @@
+.body-modalVisualizarProfessor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.body-modalVisualizarProfessor .modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    width: 40vw;
+    max-width: 1150px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+
+.body-modalVisualizarProfessor .modal-content  .title-modalVisualizarProfessor{
+    color: #000000;
+    font-weight: 700;
+    font-size: 25px;
+    margin-bottom: 15px;
+}
+
+.body-modalVisualizarProfessor .modal-content  hr{
+    border: 1px solid #E8E8E8;
+}
+
+.body-modalVisualizarProfessor .modal-content  .formulario .h2-informacoes-pessoais{
+    color: #2E2E2E;
+    font-weight: 700;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+.body-modalVisualizarProfessor .modal-content .formulario .h2-responsavel{
+    color: #2E2E2E;
+    font-weight: 700;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .linha-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 25px;
+    align-items: flex-end;
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo {
+    display: flex;
+    flex-direction: column;
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo span{
+    font-size: 13px;
+    font-weight: 700;
+    color: #2E2E2E;
+    margin-top: 10px;
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .inputName {
+    width: 400px;
+}
+.body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .inputTelefone {
+    width: 150px;
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .inputFormacao {
+    width: 150px;
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .inputCep {
+    width: 120px;
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .inputBairro {
+    width: 300px;
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .inputLogradouro {
+    width: 200px;
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .selectPais {
+    width: 220px;
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .selectEstado {
+    width: 100px;
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .selectCidade {
+    width: 260px;
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .selectTurno {
+    width: 150px;
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .button {
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+    margin-top: 120px;
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .button .btn-voltar{
+    padding: 5px 40px;
+    border: 1px solid #1090CB;
+    background-color: white;
+    color: #1090CB;
+    border-radius: 5px;
+
+}
+
+.body-modalVisualizarProfessor .modal-content .formulario .button .btn-voltar:hover{
+    border: 1px solid #1090CB;
+    background-color: #1090CB;
+    color: white;
+}

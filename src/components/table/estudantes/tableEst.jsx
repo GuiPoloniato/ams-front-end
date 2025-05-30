@@ -3,7 +3,7 @@ import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg"
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 import ModalArquivar from '../../modal/arquivar/arquivar';
 import ModalEditar from '../../modal/editar/estudante/editarEstudante';
-import ModalVisualizar from '../../modal/visualizar/visualizarDados';
+import ModalVisualizarEstudante from '../../modal/visualizar/estudantes/visualizarEstudantes';
 import '../style.css';
 
 function TableEstudantes({ filtrar }) {
@@ -236,7 +236,7 @@ function TableEstudantes({ filtrar }) {
       </div>
       {modalOpen === 'arquivar' && (<ModalArquivar handleCloseModal={handleCloseModal} nameTable='este estudante' textoArquivar='Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente.'/>)}
       {modalOpen === 'editar' && (<ModalEditar handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados}/>)}
-      {modalOpen === 'visualizar' && (<ModalVisualizar handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados}/>)}
+      {modalOpen === 'visualizar' && (<ModalVisualizarEstudante handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados}/>)}
     </div>
   );
 }

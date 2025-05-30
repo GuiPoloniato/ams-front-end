@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "../pages/login/login";
 import Home from "../pages/home/home";
 import Estudantes from "../pages/estudantes/estudantes";
 import Professores from "../pages/professores/professores";
@@ -12,6 +13,7 @@ function Router(){
     return (
         <BrowserRouter>
             <Routes>
+                <Route path="/login" element={<Login />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/home/estudantes" element={<Estudantes />} />
                 <Route path="/home/professores" element={<Professores />} />
