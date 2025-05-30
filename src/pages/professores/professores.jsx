@@ -29,7 +29,9 @@ function Professores() {
                     
                 </div>
                 <FiltrarTable filtro={setFiltrar}/>
-                <TableProfessor filtrar={filtrar}/>
+                <div className="tabela-container">
+                    <TableProfessor filtrar={filtrar} />
+                </div>
             </div>
             {modalOpen === 'professor' && (<NovoProfessorModal handlleCloseModal={handlleCloseModal}/>)}
         </div>

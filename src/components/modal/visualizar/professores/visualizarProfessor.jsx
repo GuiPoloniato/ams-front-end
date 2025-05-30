@@ -3,7 +3,7 @@ import './style.css';
 
 function ModalVisualizarProfessor({ handleCloseModal, visualizarSelecionado }) {
   const [ formData, setFormData ] = useState({
-        nomeCompleto: '',
+        nome: '',
         telefone: '',
         formacao: '',
         cep: '',

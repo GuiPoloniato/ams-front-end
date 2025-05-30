@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg"
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
-
 import ModalArquivar from '../../modal/arquivar/arquivar';
 import ModalEditarTurma from '../../modal/editar/turma/editarTurma';
 import ModalVisualizarTurmas from '../../modal/visualizar/turmas/visualizarTurmas';
 import "../style.css"
 
 function TableTurmas({ filtrar }) {
+  const [dados, setDados] = useState([]);
   const [ modalOpen, setModalOpen ] = useState(false);
   const [ paginaAtual, setPaginaAtual ] = useState(1);
   const [ dadosSelecionados, setDadosSelecionados ] = useState(null);
@@ -16,29 +16,31 @@ function TableTurmas({ filtrar }) {
         setModalOpen(false)
     }
 
-  const dados = [
-    {
-      Identificacao: '1ANO_MAT',
-      tipoEnsino: 'Ensino fundamental',
-      anoLetivo: '2025',
-      turno: 'Integral',
-      status: 'ativo'
-    },
-    {
-      Identificacao: '1ANO_VES',
-      tipoEnsino: 'Ensino fundamental',
-      anoLetivo: '2025',
-      turno: 'Vespertino',
-      status: 'inativo'
-    },
+  useEffect(() => {
+    fetch('http://localhost:3000/turma')
+      .then(res => res.json())
+      .then(data => {
+        setDados({ turma: data }); // mantêm compatibilidade com seu uso de dados.estudante
+      })
+      .catch(err => {
+        console.error('Erro ao buscar turmas:', err);
+      });
+  }, []);
 
-  ];
+  
+  useEffect(() => {
+        setPaginaAtual(1);
+    }, [filtrar]);
 
-  const dadosFiltrados = dados.filter((item) =>
-  Object.values(item).some((valor) =>
-    String(valor).toLowerCase().includes(filtrar.toLowerCase())
-  )
-);
+  console.log("dados:", dados);
+
+  const turmasArray = dados.turma || [];
+
+  const dadosFiltrados = turmasArray.filter((item) =>
+    Object.values(item).some((valor) =>
+      String(valor).toLowerCase().includes(filtrar.toLowerCase())
+    )
+  );
 
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);
@@ -81,10 +83,10 @@ function TableTurmas({ filtrar }) {
                   <span
                     className={`status ${item.status === 'ativo' ? 'verde' : 'vermelho'}`}
                   ></span>
-                  {item.Identificacao}
+                  {item.nome}
                 </td>
-                <td>{item.tipoEnsino}</td>
-                <td>{item.anoLetivo}</td>
+                <td>{item.tipo_ensino}</td>
+                <td>{item.ano_letivo}</td>
                 <td>{item.turno}</td>
                 <td className="acoes">
                   <button 

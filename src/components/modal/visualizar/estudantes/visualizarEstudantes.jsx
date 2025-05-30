@@ -3,9 +3,9 @@ import './style.css';
 
 function ModalVisualizarEstudante({ handleCloseModal, visualizarSelecionado }) {
   const [formData, setFormData] = useState({
-    matricula: '',
-    nomeCompleto: '',
-    dataNascimento: '',
+    id: '',
+    nome: '',
+    data_nascimento: '',
     naturalidade: '',
     raca: '',
     cep: '',
@@ -45,15 +45,15 @@ function ModalVisualizarEstudante({ handleCloseModal, visualizarSelecionado }) {
           <div className="linha-flex">
             <div className="campo">
               <label htmlFor="inputMatricula">Matrícula</label>
-              <span className='inputMatricula'>{formData.matricula}</span>
+              <span className='inputMatricula'>{formData.id}</span>
             </div>
             <div className="campo">
               <label htmlFor="inputName">Nome completo</label>
-              <span className='inputName' id="inputName">{formData.nomeCompleto}</span>
+              <span className='inputName' id="inputName">{formData.nome}</span>
             </div>
             <div className="campo">
               <label htmlFor="dataInput">Data de nascimento</label>
-              <span className='dataInput' id="dataInput">{formData.dataNascimento}</span>
+              <span className='dataInput' id="dataInput">{formData.data_nascimento}</span>
             </div>
             <div className="campo">
               <label htmlFor="inputNaturalidade">Naturalidade</label>
@@ -108,7 +108,7 @@ function ModalVisualizarEstudante({ handleCloseModal, visualizarSelecionado }) {
           <div className="linha-flex">
             <div className="campo">
               <label htmlFor="inputNomeResponsavel">Nome completo</label>
-              <span className='inputNomeResponsavel' id="inputNomeResponsavel">{formData.nomeResponsavel}</span>
+              <span className='inputNomeResponsavel' id="inputNomeResponsavel">{formData.nome}</span>
             </div>
             <div className="campo">
               <label htmlFor="inputCpfResponsavel">CPF</label>
@@ -120,7 +120,7 @@ function ModalVisualizarEstudante({ handleCloseModal, visualizarSelecionado }) {
             </div>
             <div className="campo">
               <label htmlFor="inputOrgao">Órgão expedidor</label>
-              <span className='inputOrgao' id="inputOrgao">{formData.orgao}</span>
+              <span className='inputOrgao' id="inputOrgao">{formData.orgao_expedidor}</span>
             </div>
             <div className="campo">
               <label htmlFor="selectUf">UF</label>

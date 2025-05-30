@@ -3,9 +3,9 @@ import './style.css';
 
 function ModalVisualizarTurmas({ handleCloseModal, visualizarSelecionado }) {
     const [ formData, setFormData ] = useState({
-        nomeIdentificacao: '',
-        anoLetivo: '',
-        tipoEnsino: '',
+        nome: '',
+        ano_letivo: '',
+        tipo_ensino: '',
         turno: ''
     })
 
@@ -25,15 +25,15 @@ function ModalVisualizarTurmas({ handleCloseModal, visualizarSelecionado }) {
           <div className="linha-flex">
             <div className="campo">
               <label htmlFor="inputNomeIdentificacao">Nome da identificação</label>
-              <span className='inputNomeIdentificacao'>{formData.nomeIdentificacao}</span>
+              <span className='inputNomeIdentificacao'>{formData.nome}</span>
             </div>
             <div className="campo">
               <label htmlFor="inputAno">Ano letivo</label>
-              <span className='inputAno'>{formData.anoLetivo}</span>
+              <span className='inputAno'>{formData.ano_letivo}</span>
             </div>
             <div className="campo">
               <label htmlFor="selectTipoEnsino">Tipo de Ensino</label>
-              <span className='selectTipoEnsino'>{formData.tipoEnsino}</span>
+              <span className='selectTipoEnsino'>{formData.tipo_ensino}</span>
             </div>
             <div className="campo">
               <label htmlFor="selectTurno">Turno</label>

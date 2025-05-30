@@ -29,7 +29,9 @@ function Estudantes() {
                     
                 </div>
                 <FiltrarTable filtro={setFiltrar}/>
-                <Table filtrar={filtrar}/>
+                <div className="tabela-container">
+                    <Table filtrar={filtrar} />
+                </div>
             </div>
             {modalOpen === 'estudante' && (<NovoEstudanteModal handlleCloseModal={handlleCloseModal}/>)}
         </div>

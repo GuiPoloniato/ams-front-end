@@ -4,6 +4,7 @@
 
 .body-page .content-page{
     margin-top: 45px;
+    flex: 1;
 }
 
 .body-page .content-page .h2-route{
@@ -12,12 +13,51 @@
     line-height: 40px;
     letter-spacing: 0px;
     color: #3B4E5D;
+
+}
+.body-page .content-page .tabela-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    max-width: 100%;
+    /* overflow-x: auto; */
+    /* margin: 0 auto; */
+    margin-right: 148px;
 }
 
-.body-page .content-page .gerenciamento{
+.body-page .content-page .tabela-container table {
+    width: 100%;
+}
+
+.body-page .content-page .gerenciamento
+{
     display: flex;
     justify-content: space-between;
     margin-top: 30px;
+}
+
+.body-page-relatorios .content-page .documentos,
+.body-page-relatorios .content-page .frequencia,
+.body-page-relatorios .content-page .financeiro,
+.body-page-relatorios .content-page .horarios {
+    margin-top: 30px;
+}
+
+.body-page-relatorios .content-page .documentos h2,
+.body-page-relatorios .content-page .frequencia h2,
+.body-page-relatorios .content-page .financeiro h2,
+.body-page-relatorios .content-page .horarios h2{
+    color: #3B4E5D;
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.body-page-relatorios .content-page .horarios{
+    display: flex;
+    /* width: 85vw; */
+    margin-right: 145px;
+    justify-content: space-between;
 }
 
 .body-page .content-page .gerenciamento .h1-gerenciamento{
@@ -25,13 +65,16 @@
     font-weight: 700;
 }
 
-.body-page .content-page .gerenciamento .buttons-gerenciamento {
+.body-page .content-page .gerenciamento .buttons-gerenciamento,
+.body-page-relatorios .content-page .buttons-relatorios {
     display: flex;
     gap: 30px;
+    margin-right: 145px;
 }
 
 .body-page .content-page .gerenciamento .buttons-gerenciamento .btn-cadastrar,
-.body-page .content-page .gerenciamento .buttons-gerenciamento .btn-exportar{
+.body-page .content-page .gerenciamento .buttons-gerenciamento .btn-exportar,
+.body-page-relatorios .content-page .btn-relatorios{
     color: white;
     background-color: #6A97B3;
     border: none;
@@ -46,11 +89,13 @@
 }
 
 .body-page .content-page .gerenciamento .buttons-gerenciamento .btn-cadastrar:hover,
-.body-page .content-page .gerenciamento .buttons-gerenciamento .btn-exportar:hover{
+.body-page .content-page .gerenciamento .buttons-gerenciamento .btn-exportar:hover,
+.body-page-relatorios .content-page .btn-relatorios:hover{
     background-color: #1090CB;
 }
 
-.body-page .content-page .gerenciamento .buttons-gerenciamento .btn-cadastrar img{
+.body-page .content-page .gerenciamento .buttons-gerenciamento .btn-cadastrar img,
+.body-page-relatorios .content-page .btn-relatorios img{
     width: 12px;
     height: 12px;
 }

@@ -29,7 +29,9 @@ function Turmas() {
                     
                 </div>
                 <FiltrarTable filtro={setFiltrar}/>
-                <TableTurmas filtrar={filtrar}/>
+                <div className="tabela-container">
+                    <TableTurmas filtrar={filtrar} />
+                </div>
             </div>
             {modalOpen === 'turma' && (<NovaTurmaModal handlleCloseModal={handlleCloseModal}/>)}
         </div>

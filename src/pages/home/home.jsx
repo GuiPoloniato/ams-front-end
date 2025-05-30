@@ -5,10 +5,14 @@ import NovoEstudanteModal from '../../components/cadastrar/estudante/novoEstudan
 import NovoProfessorModal from '../../components/cadastrar/professor/novoProfessor';
 import NovaTurmaModal from '../../components/cadastrar/turma/novaTruma';
 import { PieChart, Pie, Cell } from 'recharts';
+
+import { useTheme } from '../../contexts/themeContexts';
+
 import './style.css'
 
 function Home() {
     const [ modalOpen, setModalOpen ] = useState(false);
+    const { isDark, toggleTheme } = useTheme();
 
     const handlleCloseModal = () => {
         setModalOpen(false)
@@ -43,6 +47,9 @@ function Home() {
             <SideBar />
             <div className="content-home">
                 <h2 className='h2-route'>Home</h2>
+                {/* <button onClick={toggleTheme} style={{ marginBottom: '1rem' }}>
+                    {isDark ? 'Modo Claro' : 'Modo Escuro'}
+                </button> */}
                 <h1 className='h1-welcome'>Bem vindo(a) de volta, João</h1>
                 <div className="acoes-rapidas">
                     <p>Ações rápidas</p>

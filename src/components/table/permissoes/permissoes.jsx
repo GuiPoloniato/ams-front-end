@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg"
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 
@@ -8,6 +8,7 @@ import ModalVisualizarPermissoes from '../../modal/visualizar/permissoes/visuali
 import "../style.css"
 
 function TablePermissoes({ filtrar }) {
+  const [dados, setDados] = useState([]);
   const [ modalOpen, setModalOpen ] = useState(false);
   const [ paginaAtual, setPaginaAtual ] = useState(1);
   const [ dadosSelecionados, setDadosSelecionados ] = useState(null);
@@ -16,27 +17,31 @@ function TablePermissoes({ filtrar }) {
         setModalOpen(false)
     }
 
-  const dados = [
-    {
-      nomeCompleto: 'João Marques da Silva',
-      email: 'joao_marques@email.com',
-      nivelAcesso: 'Administrador',
-      status: 'ativo'
-    },
-    {
-      nomeCompleto: 'Maria Helena Costa Souza',
-      email: 'maria_costa@email.com',
-      nivelAcesso: 'Secretário',
-      status: 'inativo'
-    },
+  useEffect(() => {
+    fetch('http://localhost:3000/usuario')
+      .then(res => res.json())
+      .then(data => {
+        setDados({ usuario: data }); // mantêm compatibilidade com seu uso de dados.estudante
+      })
+      .catch(err => {
+        console.error('Erro ao buscar usuarios:', err);
+      });
+  }, []);
 
-  ];
+  
+  useEffect(() => {
+        setPaginaAtual(1);
+    }, [filtrar]);
 
-  const dadosFiltrados = dados.filter((item) =>
-  Object.values(item).some((valor) =>
-    String(valor).toLowerCase().includes(filtrar.toLowerCase())
-  )
-);
+  console.log("dados:", dados);
+
+  const usuariosArray = dados.usuario || [];
+
+  const dadosFiltrados = usuariosArray.filter((item) =>
+    Object.values(item).some((valor) =>
+      String(valor).toLowerCase().includes(filtrar.toLowerCase())
+    )
+  );
 
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);
@@ -78,10 +83,10 @@ function TablePermissoes({ filtrar }) {
                   <span
                     className={`status ${item.status === 'ativo' ? 'verde' : 'vermelho'}`}
                   ></span>
-                  {item.nomeCompleto}
+                  {item.nome}
                 </td>
                 <td>{item.email}</td>
-                <td>{item.nivelAcesso}</td>
+                <td>{item.nivel_acesso}</td>
                 <td className="acoes">
                   <button 
                     className="editar" 

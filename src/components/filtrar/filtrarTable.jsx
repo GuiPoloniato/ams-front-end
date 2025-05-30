@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PesquisaIcon from "../../assets/iconsSvg/pesquisaIcon.svg";
 import FiltroIcon from "../../assets/iconsSvg/filtroAvancado.svg";
 import FecharFiltro from "../../assets/iconsSvg/xFecharIcon.svg"
@@ -19,6 +19,7 @@ function FiltrarTable({ filtro }) {
         setFiltrosAvancados(filtrosSelecionados);
         setModalOpen(false);
     }
+
 
     return (
         <>

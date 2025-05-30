@@ -2,6 +2,58 @@ import React from 'react';
 import './style.css';
 
 function NovoEstudanteModal({ handlleCloseModal }) {
+  const handleSubmit = async () => {
+  const novoEstudante = {
+    matricula: document.getElementById("inputMatricula").value,
+    nome: document.getElementById("inputName").value,
+    nascimento: document.getElementById("dataInput").value,
+    naturalidade: document.getElementById("inputNaturalidade").value,
+    raca: document.getElementById("selectRaca").value,
+    endereco: {
+      cep: document.getElementById("inputCep").value,
+      bairro: document.getElementById("inputBairro").value,
+      logradouro: document.getElementById("inputLogradouro").value,
+      numero: document.getElementById("inputNumber").value,
+      pais: document.getElementById("selectPais").value,
+      estado: document.getElementById("selectEstado").value,
+      cidade: document.getElementById("selectCidade").value
+    },
+    turno: document.getElementById("selectTurno").value,
+    responsavel1: {
+      nome: document.getElementById("inputNomeResponsavel").value,
+      cpf: document.getElementById("inputCpfResponsavel").value,
+      rg: document.getElementById("inputRgResponsavel").value,
+      orgaoExpedidor: document.getElementById("inputOrgao").value,
+      uf: document.getElementById("selectUf").value,
+      telefone: document.getElementById("inputTelefone").value,
+      comercial: document.getElementById("inputComercial").value,
+      celular: document.getElementById("inputCelular").value,
+      email: document.getElementById("inputEmail").value,
+      profissao: document.getElementById("inputProfissao").value
+    }
+  };
+
+  try {
+    const response = await fetch("http://localhost:3000/estudantes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(novoEstudante)
+    });
+
+    if (response.ok) {
+      alert("Estudante cadastrado com sucesso!");
+      handlleCloseModal();
+    } else {
+      alert("Erro ao cadastrar estudante.");
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+  }
+};
+
+
   return (
     <div className="body-modalEstudante">
       <div className="modal-content">
@@ -29,7 +81,14 @@ function NovoEstudanteModal({ handlleCloseModal }) {
             </div>
             <div className="campo">
               <label htmlFor="selectRaca">Raça</label>
-              <select className='selectRaca' id="selectRaca"></select>
+              <select className='selectRaca' id="selectRaca">
+                <option value=""></option>
+                <option value="branca">Branca</option>
+                <option value="preta">Preta</option>
+                <option value="parda">Parda</option>
+                <option value="amarela">Amarela</option>
+                <option value="indigena">Indígena</option>
+              </select>
             </div>
           </div>
 
@@ -55,19 +114,31 @@ function NovoEstudanteModal({ handlleCloseModal }) {
           <div className="linha-flex">
             <div className="campo">
               <label htmlFor="selectPais">País</label>
-              <select className='selectPais' id="selectPais"></select>
+              <select className='selectPais' id="selectPais">
+                <option value=""></option>
+                <option value="brasil">Brasil</option>
+              </select>
             </div>
             <div className="campo">
               <label htmlFor="selectEstado">Estado</label>
-              <select className='selectEstado' id="selectEstado"></select>
+              <select className='selectEstado' id="selectEstado">
+                <option value=""></option>
+                <option value="Go">Goias</option>
+              </select>
             </div>
             <div className="campo">
               <label htmlFor="selectCidade">Cidade</label>
-              <select className='selectCidade' id="selectCidade"></select>
+              <select className='selectCidade' id="selectCidade">
+                <option value=""></option>
+                <option value="anapolis">Anápolis</option>
+              </select>
             </div>
             <div className="campo">
               <label htmlFor="selectTurno">Turno</label>
-              <select className='selectTurno' id="selectTurno"></select>
+              <select className='selectTurno' id="selectTurno">
+                <option value=""></option>
+                <option value="vespertino">vespertino</option>
+              </select>
             </div>
           </div>
 
@@ -92,7 +163,10 @@ function NovoEstudanteModal({ handlleCloseModal }) {
             </div>
             <div className="campo">
               <label htmlFor="selectUf">UF</label>
-              <select className='selectUf' id="selectUf"></select>
+              <select className='selectUf' id="selectUf">
+                <option value=""></option>
+                <option value="GO">GO</option>
+              </select>
             </div>
           </div>
 
@@ -123,7 +197,7 @@ function NovoEstudanteModal({ handlleCloseModal }) {
 
           <div className="buttons-submit">
             <button className='btn-cancelar' onClick={handlleCloseModal}>Cancelar</button>
-            <button className='btn-salvar'>Salvar</button>
+            <button className='btn-salvar' onClick={handleSubmit}>Salvar</button>
           </div>
         </div>
       </div>

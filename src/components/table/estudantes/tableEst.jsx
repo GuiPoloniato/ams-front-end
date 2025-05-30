@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg"
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 import ModalArquivar from '../../modal/arquivar/arquivar';
@@ -7,123 +7,44 @@ import ModalVisualizarEstudante from '../../modal/visualizar/estudantes/visualiz
 import '../style.css';
 
 function TableEstudantes({ filtrar }) {
+  const [dados, setDados] = useState({ estudante: [] });
+  const [responsaveis, setResponsaveis] = useState([]);
+
   const [ modalOpen, setModalOpen ] = useState(false);
   const [ paginaAtual, setPaginaAtual ] = useState(1);
   const [ dadosSelecionados, setDadosSelecionados ] = useState(null);
 
-    const handleCloseModal = () => {
-        setModalOpen(false)
-    }
+  const handleCloseModal = () => {
+    setModalOpen(false)
+  }
 
-  const dados = [
-    {
-      matricula: '123456789',
-      nomeCompleto: 'João Marques da Silva',
-      dataNascimento: '12/12/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Aline Marques da Silva',
-      status: 'ativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '234567890',
-      nomeCompleto: 'Maria Helena Costa Souza',
-      dataNascimento: '01/01/2012',
-      serie: '1 Ano',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
-    {
-      matricula: '2310359',
-      nomeCompleto: 'Guilherme Poloniato',
-      dataNascimento: '19/05/2005',
-      serie: '5 Ano',
-      turno: 'Integral',
-      nomeResponsavel: 'Elizangela',
-      status: 'ativo'
-    },
+  useEffect(() => {
+    const fetchEstudantes = fetch('http://localhost:3000/estudante').then(res => res.json());
+    const fetchResponsaveis = fetch('http://localhost:3000/responsavel').then(res => res.json());
 
-   
-  ];
+  Promise.all([fetchEstudantes, fetchResponsaveis])
+    .then(([estudantesData, responsaveisData]) => {
+      setDados({ estudante: estudantesData });
+      setResponsaveis(responsaveisData);
+    })
+    .catch(err => {
+      console.error('Erro ao buscar dados:', err);
+    });
+}, []);
 
-  const dadosFiltrados = dados.filter((item) =>
-  Object.values(item).some((valor) =>
-    String(valor).toLowerCase().includes(filtrar.toLowerCase())
-  )
-);
+  useEffect(() => {
+        setPaginaAtual(1);
+    }, [filtrar]);
+
+  console.log("dados:", dados);
+
+  const estudantesArray = dados.estudante || [];
+
+  const dadosFiltrados = estudantesArray.filter((item) =>
+    Object.values(item).some((valor) =>
+      String(valor).toLowerCase().includes(filtrar.toLowerCase())
+    )
+  );
 
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);
@@ -161,35 +82,67 @@ function TableEstudantes({ filtrar }) {
           <tbody>
             {dadosPaginados.map((item, index) => (
               <tr key={index} onClick={() => {
+                const responsavel = responsaveis.find(resp => resp._id === item.responsavel_id);
+                const dadosComResponsavel = {
+                  ...item,
+                  nomeResponsavel: responsavel?.nome || '',
+                  cpfResponsavel: responsavel?.cpf || '',
+                  rgResponsavel: responsavel?.rg || '',
+                  orgao_expedidor: responsavel?.orgao_expedidor || '',
+                  uf: responsavel?.uf || '',
+                  telefoneResidencial: responsavel?.telefone_residencial || '',
+                  telefoneComercial: responsavel?.telefone_comercial || '',
+                  celular: responsavel?.celular || '',
+                  email: responsavel?.email || '',
+                  profissao: responsavel?.profissao || ''
+                };
                 setModalOpen('visualizar');
-                setDadosSelecionados(item);
+                setDadosSelecionados(dadosComResponsavel);
               }}>
                 <td>
                   <span
                     className={`status ${item.status === 'ativo' ? 'verde' : 'vermelho'}`}
                   ></span>
-                  {item.matricula}
+                  {item.id}
                 </td>
-                <td>{item.nomeCompleto}</td>
-                <td>{item.dataNascimento}</td>
-                <td>{item.serie}</td>
+                <td>{item.nome}</td>
+                <td>{item.data_nascimento}</td>
+                <td>{item.turma_id}</td>
                 <td>{item.turno}</td>
-                <td>{item.nomeResponsavel}</td>
+                <td>{item.nome}</td>
                 <td className="acoes">
                   <button 
                     className="editar" 
                     onClick={(e) => {
+                      const responsavel = responsaveis.find(resp => resp._id === item.responsavel_id);
+                      const dadosComResponsavel = {
+                        ...item,
+                        nomeResponsavel: responsavel?.nome || '',
+                        cpfResponsavel: responsavel?.cpf || '',
+                        rgResponsavel: responsavel?.rg || '',
+                        orgao_expedidor: responsavel?.orgao_expedidor || '',
+                        uf: responsavel?.uf || '',
+                        telefoneResidencial: responsavel?.telefone_residencial || '',
+                        telefoneComercial: responsavel?.telefone_comercial || '',
+                        celular: responsavel?.celular || '',
+                        email: responsavel?.email || '',
+                        profissao: responsavel?.profissao || ''
+                      };
                       e.stopPropagation(); 
                       setModalOpen('editar');
-                      setDadosSelecionados(item);
+                      setDadosSelecionados(dadosComResponsavel);
                     }}
                     >
                       Editar <span className="icon editar-icon" />
                   </button>
                   <button 
                     className="arquivar"
-                    onClick={(e) => {e.stopPropagation();  setModalOpen('arquivar')}
-                  }>
+                    onClick={(e) => {
+                      e.stopPropagation();  
+                      setModalOpen('arquivar');
+                      setDadosSelecionados(item);
+                    }}
+                    >
                       Arquivar <span className="icon arquivar-icon"/>
                   </button>
                 </td>
@@ -202,13 +155,13 @@ function TableEstudantes({ filtrar }) {
                 ))}
               </tr>
             ))}
-            {dadosPaginados.length === 0 && (
+            {/* {dadosPaginados.length === 0 && (
             <tr>
-              <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
+              <td colSpan="7" style={{ textAlign: 'center', padding: '0px' }}>
                 Nenhum resultado encontrado.
               </td>
             </tr>
-          )}
+          )} */}
           </tbody>
           
         </table>

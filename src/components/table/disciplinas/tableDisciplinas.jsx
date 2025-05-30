@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg"
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 
@@ -8,6 +8,7 @@ import ModalVisualizarDisciplinas from '../../modal/visualizar/disciplinas/visua
 import "../style.css"
 
 function TableDisciplinas({ filtrar }) {
+  const [dados, setDados] = useState([]);
   const [ modalOpen, setModalOpen ] = useState(false);
   const [ paginaAtual, setPaginaAtual ] = useState(1);
   const [ dadosSelecionados, setDadosSelecionados ] = useState(null);
@@ -16,29 +17,31 @@ function TableDisciplinas({ filtrar }) {
         setModalOpen(false)
     }
 
-  const dados = [
-    {
-      identificacao: 'MAT01',
-      nomeDisciplina: 'Matemática Básica',
-      cargaHoraria: '80',
-      turno: 'Integral',
-      status: 'ativo'
-    },
-    {
-      identificacao: 'MAT02',
-      nomeDisciplina: 'Geografia',
-      cargaHoraria: '100',
-      turno: 'Vespertino',
-      status: 'inativo'
-    },
+  useEffect(() => {
+    fetch('http://localhost:3000/disciplina')
+      .then(res => res.json())
+      .then(data => {
+        setDados({ disciplina: data }); // mantêm compatibilidade com seu uso de dados.estudante
+      })
+      .catch(err => {
+        console.error('Erro ao buscar disciplinas:', err);
+      });
+  }, []);
 
-  ];
+  
+  useEffect(() => {
+        setPaginaAtual(1);
+    }, [filtrar]);
 
-  const dadosFiltrados = dados.filter((item) =>
-  Object.values(item).some((valor) =>
-    String(valor).toLowerCase().includes(filtrar.toLowerCase())
-  )
-);
+  console.log("dados:", dados);
+
+  const disciplinasArray = dados.disciplina || [];
+
+  const dadosFiltrados = disciplinasArray.filter((item) =>
+    Object.values(item).some((valor) =>
+      String(valor).toLowerCase().includes(filtrar.toLowerCase())
+    )
+  );
 
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);
@@ -81,10 +84,10 @@ function TableDisciplinas({ filtrar }) {
                   <span
                     className={`status ${item.status === 'ativo' ? 'verde' : 'vermelho'}`}
                   ></span>
-                  {item.identificacao}
+                  {item.turma_id}
                 </td>
-                <td>{item.nomeDisciplina}</td>
-                <td>{item.cargaHoraria}</td>
+                <td>{item.nome}</td>
+                <td>{item.carga_horaria}</td>
                 <td>{item.turno}</td>
                 <td className="acoes">
                   <button 

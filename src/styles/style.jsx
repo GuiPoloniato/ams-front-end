@@ -6,4 +6,10 @@ export const GlobalStyle = createGlobalStyle`
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
+body {
+    background: ${({ theme }) => theme.body};
+    color: ${({ theme }) => theme.text};
+    transition: all 0.3s linear;
+  }
+
 `

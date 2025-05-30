@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg"
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
-
 import ModalArquivar from '../../modal/arquivar/arquivar';
 import ModalEditarProfessor from '../../modal/editar/professor/editarProfessor';
 import ModalVisualizarProfessor from '../../modal/visualizar/professores/visualizarProfessor';
 import "../style.css"
 
 function TableProfessor({ filtrar }) {
+  const [dados, setDados] = useState([]);
   const [ modalOpen, setModalOpen ] = useState(false);
   const [ paginaAtual, setPaginaAtual ] = useState(1);
   const [ dadosSelecionados, setDadosSelecionados ] = useState(null);
@@ -16,31 +16,31 @@ function TableProfessor({ filtrar }) {
         setModalOpen(false)
     }
 
-  const dados = [
-    {
-      nomeCompleto: 'João Marques da Silva',
-      telefone: '62 9999999',
-      formacao: 'medio completo',
-      turno: 'Matutino',
-      nomeResponsavel: 'Aline Marques da Silva',
-      status: 'ativo'
-    },
-    {
-      nomeCompleto: 'Maria Helena Costa Souza',
-      telefone: '63 9999999999',
-      formacao: 'medio completo',
-      turno: 'Matutino',
-      nomeResponsavel: 'Osvaldo Costa Teixeira',
-      status: 'inativo'
-    },
+  useEffect(() => {
+    fetch('http://localhost:3000/professor')
+      .then(res => res.json())
+      .then(data => {
+        setDados({ professor: data }); // mantêm compatibilidade com seu uso de dados.estudante
+      })
+      .catch(err => {
+        console.error('Erro ao buscar professores:', err);
+      });
+  }, []);
 
-  ];
+  
+  useEffect(() => {
+        setPaginaAtual(1);
+    }, [filtrar]);
 
-  const dadosFiltrados = dados.filter((item) =>
-  Object.values(item).some((valor) =>
-    String(valor).toLowerCase().includes(filtrar.toLowerCase())
-  )
-);
+  console.log("dados:", dados);
+
+  const professoresArray = dados.professor || [];
+
+  const dadosFiltrados = professoresArray.filter((item) =>
+    Object.values(item).some((valor) =>
+      String(valor).toLowerCase().includes(filtrar.toLowerCase())
+    )
+  );
 
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);
@@ -84,12 +84,12 @@ function TableProfessor({ filtrar }) {
                   <span
                     className={`status ${item.status === 'ativo' ? 'verde' : 'vermelho'}`}
                   ></span>
-                  {item.nomeCompleto}
+                  {item.nome}
                 </td>
                 <td>{item.telefone}</td>
                 <td>{item.formacao}</td>
                 <td>{item.turno}</td>
-                <td>{item.nomeResponsavel}</td>
+                <td>{item.cep}</td>
                 <td className="acoes">
                   <button 
                     className="editar" 

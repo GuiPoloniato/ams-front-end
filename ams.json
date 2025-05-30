@@ -1,0 +1,689 @@
+{
+  "turma": [
+    {
+      "id": 1,
+      "nome": "1º Ano A",
+      "turno": "Matutino",
+      "ano_letivo": 2025,
+      "tipo_ensino": "Fundamental I",
+      "maximo_alunos": 25,
+      "status": "ativo"
+    },
+    {
+      "id": 2,
+      "nome": "1º Ano B",
+      "turno": "Vespertino",
+      "ano_letivo": 2025,
+      "tipo_ensino": "Fundamental I",
+      "maximo_alunos": 25,
+      "status": "ativo"
+    },
+    {
+      "id": 3,
+      "nome": "5º Ano A",
+      "turno": "Matutino",
+      "ano_letivo": 2025,
+      "tipo_ensino": "Fundamental I",
+      "maximo_alunos": 30,
+      "status": "ativo"
+    },
+    {
+      "id": 4,
+      "nome": "9º Ano A",
+      "turno": "Matutino",
+      "ano_letivo": 2025,
+      "tipo_ensino": "Fundamental II",
+      "maximo_alunos": 35,
+      "status": "ativo"
+    },
+    {
+      "id": 5,
+      "nome": "1º Série A",
+      "turno": "Matutino",
+      "ano_letivo": 2025,
+      "tipo_ensino": "Ensino Médio",
+      "maximo_alunos": 40,
+      "status": "ativo"
+    }
+  ],
+  "estudante": [
+    {
+      "id": 1,
+      "nome": "Ana Silva Santos",
+      "naturalidade": "Anápolis",
+      "raca": "Parda",
+      "data_nascimento": "2018-03-15",
+      "turno": "Matutino",
+      "cep": 75000000,
+      "bairro": "Centro",
+      "logradouro": "Rua das Flores",
+      "numero": "123",
+      "pais": "Brasil",
+      "estado": "Goiás",
+      "cidade": "Anápolis",
+      "turma_id": 1,
+      "status": "ativo"
+    },
+    {
+      "id": 2,
+      "nome": "João Pedro Oliveira",
+      "naturalidade": "Goiânia",
+      "raca": "Branca",
+      "data_nascimento": "2018-07-22",
+      "turno": "Vespertino",
+      "cep": 75001000,
+      "bairro": "Jardim América",
+      "logradouro": "Avenida Brasil",
+      "numero": "456",
+      "pais": "Brasil",
+      "estado": "Goiás",
+      "cidade": "Anápolis",
+      "turma_id": 2,
+      "status": "ativo"
+    },
+    {
+      "id": 3,
+      "nome": "Maria Eduarda Costa",
+      "naturalidade": "Anápolis",
+      "raca": "Negra",
+      "data_nascimento": "2014-01-10",
+      "turno": "Matutino",
+      "cep": 75002000,
+      "bairro": "Vila São José",
+      "logradouro": "Rua dos Pinheiros",
+      "numero": "789",
+      "pais": "Brasil",
+      "estado": "Goiás",
+      "cidade": "Anápolis",
+      "turma_id": 3,
+      "status": "ativo"
+    },
+    {
+      "id": 4,
+      "nome": "Carlos Eduardo Lima",
+      "naturalidade": "Brasília",
+      "raca": "Parda",
+      "data_nascimento": "2010-11-05",
+      "turno": "Matutino",
+      "cep": 75003000,
+      "bairro": "Setor Sul",
+      "logradouro": "Quadra 15",
+      "numero": "321",
+      "pais": "Brasil",
+      "estado": "Goiás",
+      "cidade": "Anápolis",
+      "turma_id": 4,
+      "status": "ativo"
+    },
+    {
+      "id": 5,
+      "nome": "Beatriz Ferreira Souza",
+      "naturalidade": "Anápolis",
+      "raca": "Branca",
+      "data_nascimento": "2007-09-18",
+      "turno": "Matutino",
+      "cep": 75004000,
+      "bairro": "Centro",
+      "logradouro": "Rua Principal",
+      "numero": "654",
+      "pais": "Brasil",
+      "estado": "Goiás",
+      "cidade": "Anápolis",
+      "turma_id": 5,
+      "status": "ativo"
+    }
+  ],
+  "responsavel": [
+    {
+      "id": 1,
+      "nome": "Roberto Silva Santos",
+      "profissao": "Engenheiro",
+      "rg": 123456789,
+      "orgao_expedidor": "SSP-GO",
+      "uf": "GO",
+      "cpf": 12345678901,
+      "telefone_residencial": "623456789",
+      "telefone_comercial": "623457890",
+      "celular": "629876543",
+      "email": "roberto.santos@email.com"
+    },
+    {
+      "id": 2,
+      "nome": "Carmen Silva Santos",
+      "profissao": "Professora",
+      "rg": 987654321,
+      "orgao_expedidor": "SSP-GO",
+      "uf": "GO",
+      "cpf": 98765432109,
+      "telefone_residencial": "623456789",
+      "telefone_comercial": "623455555",
+      "celular": "629876544",
+      "email": "carmen.santos@email.com"
+    },
+    {
+      "id": 3,
+      "nome": "Pedro Oliveira Lima",
+      "profissao": "Comerciante",
+      "rg": 111222333,
+      "orgao_expedidor": "SSP-GO",
+      "uf": "GO",
+      "cpf": 11122233344,
+      "telefone_residencial": "623333333",
+      "telefone_comercial": "623444444",
+      "celular": "629999999",
+      "email": "pedro.oliveira@email.com"
+    },
+    {
+      "id": 4,
+      "nome": "Sandra Costa Almeida",
+      "profissao": "Enfermeira",
+      "rg": 444555666,
+      "orgao_expedidor": "SSP-GO",
+      "uf": "GO",
+      "cpf": 44455566677,
+      "telefone_residencial": "623777777",
+      "telefone_comercial": "623888888",
+      "celular": "629111111",
+      "email": "sandra.costa@email.com"
+    },
+    {
+      "id": 5,
+      "nome": "Antonio Lima Pereira",
+      "profissao": "Advogado",
+      "rg": 777888999,
+      "orgao_expedidor": "SSP-GO",
+      "uf": "GO",
+      "cpf": 77788899900,
+      "telefone_residencial": "623222222",
+      "telefone_comercial": "623111111",
+      "celular": "629333333",
+      "email": "antonio.lima@email.com"
+    }
+  ],
+  "estudante_has_responsavel": [
+    {
+      "id": 1,
+      "id_estudante": 1,
+      "id_responsavel": 1,
+      "contratante": 1
+    },
+    {
+      "id": 2,
+      "id_estudante": 1,
+      "id_responsavel": 2,
+      "contratante": 0
+    },
+    {
+      "id": 3,
+      "id_estudante": 2,
+      "id_responsavel": 3,
+      "contratante": 1
+    },
+    {
+      "id": 4,
+      "id_estudante": 3,
+      "id_responsavel": 4,
+      "contratante": 1
+    },
+    {
+      "id": 5,
+      "id_estudante": 4,
+      "id_responsavel": 5,
+      "contratante": 1
+    }
+  ],
+  "professor": [
+    {
+      "id": 1,
+      "nome": "Maria José da Silva",
+      "telefone": "629876543",
+      "formacao": "Pedagogia",
+      "cep": 75010000,
+      "bairro": "Centro",
+      "logradouro": "Rua das Acácias",
+      "numero": "100",
+      "pais": "Brasil",
+      "estado": "Goiás",
+      "cidade": "Anápolis",
+      "turno": "Vespertino",
+      "status": "ativo"
+    },
+    {
+      "id": 2,
+      "nome": "José Carlos Pereira",
+      "telefone": "629876544",
+      "formacao": "Matemática",
+      "cep": 75011000,
+      "bairro": "Vila Nova",
+      "logradouro": "Avenida Central",
+      "numero": "200",
+      "pais": "Brasil",
+      "estado": "Goiás",
+      "cidade": "Anápolis",
+      "turno": "Vespertino",
+      "status": "ativo"
+    },
+    {
+      "id": 3,
+      "nome": "Ana Paula Santos",
+      "telefone": "629876545",
+      "formacao": "Letras",
+      "cep": 75012000,
+      "bairro": "Jardim Primavera",
+      "logradouro": "Rua dos Lírios",
+      "numero": "300",
+      "pais": "Brasil",
+      "estado": "Goiás",
+      "cidade": "Anápolis",
+      "turno": "Vespertino",
+      "status": "ativo"
+    },
+    {
+      "id": 4,
+      "nome": "Roberto Alves Costa",
+      "telefone": "629876546",
+      "formacao": "História",
+      "cep": 75013000,
+      "bairro": "Setor Norte",
+      "logradouro": "Quadra 20",
+      "numero": "400",
+      "pais": "Brasil",
+      "estado": "Goiás",
+      "cidade": "Anápolis",
+      "turno": "Vespertino",
+      "status": "ativo"
+    },
+    {
+      "id": 5,
+      "nome": "Fernanda Lima Oliveira",
+      "telefone": "629876547",
+      "formacao": "Biologia",
+      "cep": 75014000,
+      "bairro": "Vila Esperança",
+      "logradouro": "Rua das Palmeiras",
+      "numero": "500",
+      "pais": "Brasil",
+      "estado": "Goiás",
+      "cidade": "Anápolis",
+      "turno": "Vespertino",
+      "status": "ativo"
+    }
+  ],
+  "disciplina": [
+    {
+      "id": 1,
+      "professor_id": 1,
+      "turma_id": 1,
+      "tipo_ensino": "Fundamental I",
+      "nome": "Português",
+      "carga_horaria": 120,
+      "turno": "vespertino",
+      "status": "ativo"
+    },
+    {
+      "id": 2,
+      "professor_id": 2,
+      "turma_id": 1,
+      "tipo_ensino": "Fundamental I",
+      "nome": "Matemática",
+      "carga_horaria": 120,
+      "turno": "matutino",
+      "status": "ativo"
+    },
+    {
+      "id": 3,
+      "professor_id": 1,
+      "turma_id": 2,
+      "tipo_ensino": "Fundamental I",
+      "nome": "Português",
+      "carga_horaria": 120,
+      "turno": "vespertino",
+      "status": "ativo"
+    },
+    {
+      "id": 4,
+      "professor_id": 3,
+      "turma_id": 3,
+      "tipo_ensino": "Fundamental I",
+      "nome": "Português",
+      "carga_horaria": 120,
+      "turno": "vespertino",
+      "status": "ativo"
+    },
+    {
+      "id": 5,
+      "professor_id": 2,
+      "turma_id": 3,
+      "tipo_ensino": "Fundamental I",
+      "nome": "Matemática",
+      "turno": "vespertino",
+      "carga_horaria": 120,
+      "status": "ativo"
+    },
+    {
+      "id": 6,
+      "professor_id": 4,
+      "turma_id": 4,
+      "tipo_ensino": "Fundamental II",
+      "nome": "História",
+      "turno": "vespertino",
+      "carga_horaria": 80,
+      "status": "ativo"
+    },
+    {
+      "id": 7,
+      "professor_id": 2,
+      "turma_id": 4,
+      "tipo_ensino": "Fundamental II",
+      "nome": "Matemática",
+      "carga_horaria": 120,
+      "turno": "vespertino",
+      "status": "ativo"
+    },
+    {
+      "id": 8,
+      "professor_id": 5,
+      "turma_id": 5,
+      "tipo_ensino": "Ensino Médio",
+      "nome": "Biologia",
+      "carga_horaria": 80,
+      "turno": "vespertino",
+      "status": "ativo"
+    },
+    {
+      "id": 9,
+      "professor_id": 2,
+      "turma_id": 5,
+      "tipo_ensino": "Ensino Médio",
+      "nome": "Matemática",
+      "carga_horaria": 120,
+      "turno": "matutino",
+      "status": "ativo"
+    }
+  ],
+  "frequencia": [
+    {
+      "id": 1,
+      "estudante_id": 1,
+      "disciplina_id": 1,
+      "data": "2025-05-15T08:00:00"
+    },
+    {
+      "id": 2,
+      "estudante_id": 1,
+      "disciplina_id": 2,
+      "data": "2025-05-15T09:00:00"
+    },
+    {
+      "id": 3,
+      "estudante_id": 2,
+      "disciplina_id": 3,
+      "data": "2025-05-15T14:00:00"
+    },
+    {
+      "id": 4,
+      "estudante_id": 3,
+      "disciplina_id": 4,
+      "data": "2025-05-15T08:00:00"
+    },
+    {
+      "id": 5,
+      "estudante_id": 3,
+      "disciplina_id": 5,
+      "data": "2025-05-15T09:00:00"
+    },
+    {
+      "id": 6,
+      "estudante_id": 4,
+      "disciplina_id": 6,
+      "data": "2025-05-15T08:00:00"
+    },
+    {
+      "id": 7,
+      "estudante_id": 4,
+      "disciplina_id": 7,
+      "data": "2025-05-15T09:00:00"
+    },
+    {
+      "id": 8,
+      "estudante_id": 5,
+      "disciplina_id": 8,
+      "data": "2025-05-15T08:00:00"
+    },
+    {
+      "id": 9,
+      "estudante_id": 5,
+      "disciplina_id": 9,
+      "data": "2025-05-15T09:00:00"
+    }
+  ],
+  "nota": [
+    {
+      "id": 1,
+      "estudante_id": 1,
+      "disciplina_id": 1,
+      "date": "2025-05-10T10:00:00",
+      "observacoes": "Excelente participação em sala"
+    },
+    {
+      "id": 2,
+      "estudante_id": 1,
+      "disciplina_id": 2,
+      "date": "2025-05-12T10:00:00",
+      "observacoes": "Precisa melhorar na tabuada"
+    },
+    {
+      "id": 3,
+      "estudante_id": 2,
+      "disciplina_id": 3,
+      "date": "2025-05-10T15:00:00",
+      "observacoes": "Boa leitura e interpretação"
+    },
+    {
+      "id": 4,
+      "estudante_id": 3,
+      "disciplina_id": 4,
+      "date": "2025-05-11T10:00:00",
+      "observacoes": "Desenvolvimento satisfatório"
+    },
+    {
+      "id": 5,
+      "estudante_id": 4,
+      "disciplina_id": 6,
+      "date": "2025-05-13T10:00:00",
+      "observacoes": "Demonstra interesse pela matéria"
+    }
+  ],
+  "horario": [
+    {
+      "id": 1,
+      "nome": "Horário Matutino 1º Ano A",
+      "observacao": "Horário padrão fundamental I",
+      "turma_id": 1
+    },
+    {
+      "id": 2,
+      "nome": "Horário Vespertino 1º Ano B",
+      "observacao": "Horário padrão fundamental I",
+      "turma_id": 2
+    },
+    {
+      "id": 3,
+      "nome": "Horário Matutino 5º Ano A",
+      "observacao": "Horário padrão fundamental I",
+      "turma_id": 3
+    },
+    {
+      "id": 4,
+      "nome": "Horário Matutino 9º Ano A",
+      "observacao": "Horário fundamental II",
+      "turma_id": 4
+    },
+    {
+      "id": 5,
+      "nome": "Horário Matutino 1º Série A",
+      "observacao": "Horário ensino médio",
+      "turma_id": 5
+    }
+  ],
+  "horario_tem_disciplina": [
+    {
+      "id": 1,
+      "horario_id": 1,
+      "disciplina_id": 1,
+      "hora": "08:00:00"
+    },
+    {
+      "id": 2,
+      "horario_id": 1,
+      "disciplina_id": 2,
+      "hora": "09:00:00"
+    },
+    {
+      "id": 3,
+      "horario_id": 2,
+      "disciplina_id": 3,
+      "hora": "14:00:00"
+    },
+    {
+      "id": 4,
+      "horario_id": 3,
+      "disciplina_id": 4,
+      "hora": "08:00:00"
+    },
+    {
+      "id": 5,
+      "horario_id": 3,
+      "disciplina_id": 5,
+      "hora": "09:00:00"
+    },
+    {
+      "id": 6,
+      "horario_id": 4,
+      "disciplina_id": 6,
+      "hora": "08:00:00"
+    },
+    {
+      "id": 7,
+      "horario_id": 4,
+      "disciplina_id": 7,
+      "hora": "09:00:00"
+    },
+    {
+      "id": 8,
+      "horario_id": 5,
+      "disciplina_id": 8,
+      "hora": "08:00:00"
+    },
+    {
+      "id": 9,
+      "horario_id": 5,
+      "disciplina_id": 9,
+      "hora": "09:00:00"
+    }
+  ],
+  "ocorrencia": [
+    {
+      "id": 1,
+      "estudante_id": 2,
+      "date": "2025-05-14T10:30:00",
+      "descricao": "Conversou durante a aula"
+    },
+    {
+      "id": 2,
+      "estudante_id": 4,
+      "date": "2025-05-13T14:15:00",
+      "descricao": "Não trouxe material escolar"
+    },
+    {
+      "id": 3,
+      "estudante_id": 5,
+      "date": "2025-05-12T08:45:00",
+      "descricao": "Chegou atrasado"
+    }
+  ],
+  "mensalidade": [
+    {
+      "id": 1,
+      "estudante_id": 1,
+      "date": "2025-05-01T00:00:00",
+      "pago": 1
+    },
+    {
+      "id": 2,
+      "estudante_id": 2,
+      "date": "2025-05-01T00:00:00",
+      "pago": 1
+    },
+    {
+      "id": 3,
+      "estudante_id": 3,
+      "date": "2025-05-01T00:00:00",
+      "pago": 0
+    },
+    {
+      "id": 4,
+      "estudante_id": 4,
+      "date": "2025-05-01T00:00:00",
+      "pago": 1
+    },
+    {
+      "id": 5,
+      "estudante_id": 5,
+      "date": "2025-05-01T00:00:00",
+      "pago": 0
+    },
+    {
+      "id": 6,
+      "estudante_id": 1,
+      "date": "2025-04-01T00:00:00",
+      "pago": 1
+    },
+    {
+      "id": 7,
+      "estudante_id": 2,
+      "date": "2025-04-01T00:00:00",
+      "pago": 1
+    },
+    {
+      "id": 8,
+      "estudante_id": 3,
+      "date": "2025-04-01T00:00:00",
+      "pago": 1
+    }
+  ],
+  "usuario": [
+    {
+      "id": 1,
+      "nivel_acesso": 1,
+      "nome": "Administrador do Sistema",
+      "email": "admin@escola.com",
+      "password_hash": "admin123",
+      "status": "ativo"
+    },
+    {
+      "id": 2,
+      "nivel_acesso": 2,
+      "nome": "Maria José da Silva",
+      "email": "maria.silva@escola.com",
+      "password_hash": "maria123",
+      "status": "ativo"
+    },
+    {
+      "id": 3,
+      "nivel_acesso": 3,
+      "nome": "José Carlos Pereira",
+      "email": "jose.pereira@escola.com",
+      "password_hash": "jose123",
+      "status": "ativo"
+    },
+    {
+      "id": 4,
+      "nivel_acesso": 2,
+      "nome": "Secretário Escolar",
+      "email": "secretaria@escola.com",
+      "password_hash": "secretaria123",
+      "status": "ativo"
+    }
+  ]
+}

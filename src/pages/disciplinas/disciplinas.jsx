@@ -29,7 +29,9 @@ function Disciplinas() {
                     
                 </div>
                 <FiltrarTable filtro={setFiltrar}/>
-                <TableDisciplinas filtrar={filtrar}/>
+                <div className="tabela-container">
+                    <TableDisciplinas filtrar={filtrar} />
+                </div>
             </div>
             {modalOpen === 'disciplina' && (<NovaDisciplinaModal handlleCloseModal={handlleCloseModal}/>)}
         </div>

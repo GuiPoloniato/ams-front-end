@@ -2,10 +2,10 @@ import React, {useState, useEffect} from 'react';
 import './style.css';
 
 function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
-    const [ formData, setFormData ] = useState({
-        matricula: '',
-        nomeCompleto: '',
-        dataNascimento: '',
+    const [formData, setFormData] = useState({
+        id: '',
+        nome: '',
+        data_nascimento: '',
         naturalidade: '',
         raca: '',
         cep: '',
@@ -19,14 +19,14 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
         nomeResponsavel: '',
         cpfResponsavel: '',
         rgResponsavel: '',
-        orgao: '',
+        orgao_expedidor: '',
         uf: '',
         telefoneResidencial: '',
         telefoneComercial: '',
         celular: '',
         email: '',
         profissao: ''
-    })
+      });
 
     useEffect(() => {
         if (editarSelecionado) {
@@ -45,18 +45,18 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
           <div className="linha-flex">
             <div className="campo">
               <label htmlFor="inputMatricula">Matrícula</label>
-              <input type="number" className='inputMatricula' id="inputMatricula" value={formData.matricula} 
-                onChange={(e) => setFormData({ ...formData, matricula: e.target.value })}/>
+              <input type="number" className='inputMatricula' id="inputMatricula" value={formData.id} 
+                onChange={(e) => setFormData({ ...formData, id: e.target.value })}/>
             </div>
             <div className="campo">
               <label htmlFor="inputName">Nome completo</label>
-              <input type="text" className='inputName' id="inputName" value={formData.nomeCompleto} 
-                onChange={(e) => setFormData({ ...formData, nomeCompleto: e.target.value })}/>
+              <input type="text" className='inputName' id="inputName" value={formData.nome} 
+                onChange={(e) => setFormData({ ...formData, nome: e.target.value })}/>
             </div>
             <div className="campo">
               <label htmlFor="dataInput">Data de nascimento</label>
-              <input type="date" className='dataInput' id="dataInput" value={formData.dataNascimento} 
-                onChange={(e) => setFormData({ ...formData, dataNascimento: e.target.value })}/>
+              <input type="date" className='dataInput' id="dataInput" value={formData.data_nascimento} 
+                onChange={(e) => setFormData({ ...formData, data_nascimento: e.target.value })}/>
             </div>
             <div className="campo">
               <label htmlFor="inputNaturalidade">Naturalidade</label>
@@ -66,7 +66,14 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
             <div className="campo">
               <label htmlFor="selectRaca">Raça</label>
               <select className='selectRaca' id="selectRaca" value={formData.raca} 
-                onChange={(e) => setFormData({ ...formData, raca: e.target.value })}></select>
+                onChange={(e) => setFormData({ ...formData, raca: e.target.value })}>
+                  <option value=""></option>
+                  <option value="Branca">Branca</option>
+                  <option value="Negra">Negra</option>
+                  <option value="Parda">Parda</option>
+                  <option value="Amarela">Amarela</option>
+                  <option value="Indigena">Indígena</option>
+                </select>
             </div>
           </div>
 
@@ -97,22 +104,35 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
             <div className="campo">
               <label htmlFor="selectPais">País</label>
               <select className='selectPais' id="selectPais" value={formData.pais} 
-                onChange={(e) => setFormData({ ...formData, pais: e.target.value })}></select>
+                onChange={(e) => setFormData({ ...formData, pais: e.target.value })}>
+                  <option value=""></option>
+                <option value="Brasil">Brasil</option>
+                </select>
             </div>
             <div className="campo">
               <label htmlFor="selectEstado">Estado</label>
               <select className='selectEstado' id="selectEstado" value={formData.estado} 
-                onChange={(e) => setFormData({ ...formData, estado: e.target.value })}></select>
+                onChange={(e) => setFormData({ ...formData, estado: e.target.value })}>
+                  <option value=""></option>
+                <option value="Goiás">Goiás</option>
+                </select>
             </div>
             <div className="campo">
               <label htmlFor="selectCidade">Cidade</label>
               <select className='selectCidade' id="selectCidade" value={formData.cidade} 
-                onChange={(e) => setFormData({ ...formData, cidade: e.target.value })}></select>
+                onChange={(e) => setFormData({ ...formData, cidade: e.target.value })}>
+                  <option value=""></option>
+                <option value="Anápolis">Anápolis</option>
+                </select>
             </div>
             <div className="campo">
               <label htmlFor="selectTurno">Turno</label>
               <select className='selectTurno' id="selectTurno" value={formData.turno} 
-                onChange={(e) => setFormData({ ...formData, turno: e.target.value })}></select>
+                onChange={(e) => setFormData({ ...formData, turno: e.target.value })}>
+                  <option value=""></option>
+                  <option value="Matutino">Matutino</option>
+                  <option value="Vespertino">Vespertino</option>
+                </select>
             </div>
           </div>
 
@@ -136,13 +156,16 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
             </div>
             <div className="campo">
               <label htmlFor="inputOrgao">Órgão expedidor</label>
-              <input type="text" className='inputOrgao' id="inputOrgao" value={formData.orgao} 
-                onChange={(e) => setFormData({ ...formData, orgao: e.target.value })}/>
+              <input type="text" className='inputOrgao' id="inputOrgao" value={formData.orgao_expedidor} 
+                onChange={(e) => setFormData({ ...formData, orgao_expedidor: e.target.value })}/>
             </div>
             <div className="campo">
               <label htmlFor="selectUf">UF</label>
               <select className='selectUf' id="selectUf" value={formData.uf} 
-                onChange={(e) => setFormData({ ...formData, uf: e.target.value })}></select>
+                onChange={(e) => setFormData({ ...formData, uf: e.target.value })}>
+                  <option value=""></option>
+                <option value="GO">GO</option>
+                </select>
             </div>
           </div>
 

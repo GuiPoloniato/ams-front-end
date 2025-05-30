@@ -27,7 +27,9 @@ function Permissoes() {
                     
                 </div>
                 <FiltrarTable filtro={setFiltrar}/>
-                <TablePermissoes filtrar={filtrar}/>
+                <div className="tabela-container">
+                    <TablePermissoes filtrar={filtrar} />
+                </div>
             </div>
             {modalOpen === 'permissao' && (<NovaPermissaoUsuarioModal handlleCloseModal={handlleCloseModal}/>)}
         </div>
