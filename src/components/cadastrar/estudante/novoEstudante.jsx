@@ -1,37 +1,34 @@
 import React from 'react';
 import './style.css';
+import { api } from '../../../services/service';
 
 function NovoEstudanteModal({ handlleCloseModal }) {
   const handleSubmit = async () => {
-  const novoEstudante = {
-    matricula: document.getElementById("inputMatricula").value,
-    nome: document.getElementById("inputName").value,
-    nascimento: document.getElementById("dataInput").value,
-    naturalidade: document.getElementById("inputNaturalidade").value,
-    raca: document.getElementById("selectRaca").value,
-    endereco: {
-      cep: document.getElementById("inputCep").value,
-      bairro: document.getElementById("inputBairro").value,
-      logradouro: document.getElementById("inputLogradouro").value,
-      numero: document.getElementById("inputNumber").value,
-      pais: document.getElementById("selectPais").value,
-      estado: document.getElementById("selectEstado").value,
-      cidade: document.getElementById("selectCidade").value
-    },
-    turno: document.getElementById("selectTurno").value,
-    responsavel1: {
-      nome: document.getElementById("inputNomeResponsavel").value,
-      cpf: document.getElementById("inputCpfResponsavel").value,
-      rg: document.getElementById("inputRgResponsavel").value,
-      orgaoExpedidor: document.getElementById("inputOrgao").value,
-      uf: document.getElementById("selectUf").value,
-      telefone: document.getElementById("inputTelefone").value,
-      comercial: document.getElementById("inputComercial").value,
-      celular: document.getElementById("inputCelular").value,
-      email: document.getElementById("inputEmail").value,
-      profissao: document.getElementById("inputProfissao").value
-    }
-  };
+    const novoEstudante = {
+      matricula: document.getElementById("inputMatricula").value,
+      nome: document.getElementById("inputName").value,
+      turma: document.getElementById("selectTurma").value, // criar select de turma
+      nascimento: document.getElementById("dataInput").value,
+      naturalidade: document.getElementById("inputNaturalidade").value,
+      raca: document.getElementById("selectRaca").value,
+      turno: document.getElementById("selectTurno").value,
+      endereco: {
+        logradouro: document.getElementById("inputLogradouro").value,
+        numero: document.getElementById("inputNumber").value,
+        bairro: document.getElementById("inputBairro").value,
+        cidade: document.getElementById("selectCidade").value,
+        uf: document.getElementById("selectEstado").value,
+        cep: document.getElementById("inputCep").value,
+        pais: document.getElementById("selectPais").value
+      },
+      responsavel: {
+        nome: document.getElementById("inputNomeResponsavel").value,
+        cpf: document.getElementById("inputCpfResponsavel").value,
+        telefone: document.getElementById("inputCelular").value || document.getElementById("inputTelefone").value,
+        email: document.getElementById("inputEmailResponsavel").value, // criar input específico
+        parentesco: document.getElementById("selectParentesco").value // criar select de parentesco
+      }
+    };
 
   try {
     const response = await fetch("http://localhost:3000/estudantes", {
@@ -46,12 +43,15 @@ function NovoEstudanteModal({ handlleCloseModal }) {
       alert("Estudante cadastrado com sucesso!");
       handlleCloseModal();
     } else {
-      alert("Erro ao cadastrar estudante.");
+      const erroData = await response.json();
+      alert("Erro ao cadastrar estudante: " + (erroData.mensagem || "Verifique os campos."));
     }
   } catch (error) {
     console.error("Erro na requisição:", error);
+    alert("Erro ao conectar com o servidor.");
   }
 };
+
 
 
   return (

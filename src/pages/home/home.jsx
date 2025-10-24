@@ -1,46 +1,56 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import SideBar from '../../components/sideBar/sideBar';
 import { BarChart,Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
 import NovoEstudanteModal from '../../components/cadastrar/estudante/novoEstudante';
 import NovoProfessorModal from '../../components/cadastrar/professor/novoProfessor';
-import NovaTurmaModal from '../../components/cadastrar/turma/novaTruma';
+import NovaTurmaModal from '../../components/cadastrar/turma/novaTurma';
 import { PieChart, Pie, Cell } from 'recharts';
-
 import { useTheme } from '../../contexts/themeContexts';
-
 import './style.css'
 
 function Home() {
     const [ modalOpen, setModalOpen ] = useState(false);
-    const { isDark, toggleTheme } = useTheme();
+    const [alunos, setAlunos] = useState([]);
+    const [professores, setProfessores] = useState([]);
+    const [disciplinas, setDisciplinas] = useState([]);
+    const [salas, setSalas] = useState([]);
+    const { isDark } = useTheme();
 
     const handlleCloseModal = () => {
         setModalOpen(false)
     }
 
-    const data = [
-        { nome: "Infantil 4", alunos: 30 },
-        { nome: "Infantil 5", alunos: 15 },
-        { nome: "1° ano", alunos: 25 },
-        { nome: "2° ano", alunos: 10 },
-        { nome: "3° ano", alunos: 13 },
-        { nome: "4° ano", alunos: 28 },
-        { nome: "5° ano", alunos: 22 },
-    ];
+    // const token = localStorage.getItem("token"); 
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJhZG1pbjEyM0BlbWFpbC5jb20iLCJwYXBlbCI6ImFkbWluIiwiaWF0IjoxNzYwMzI2NjkxLCJleHAiOjE3NjA0MTMwOTF9.KTgpxOb0J3XCz0gAK9OMP3kzPV1mWxPxQoVEXuCM4ko"
 
-    const mediasPorTurma = [
-        // { nome: "Infantil 4", media: 7.5 },
-        // { nome: "Infantil 5", media: 6.8 },
-        { nome: "1° ano", media: 8.2 },
-        { nome: "2° ano", media: 5.9 },
-        { nome: "3° ano", media: 6.3 },
-        { nome: "4° ano", media: 7.8 },
-        { nome: "5° ano", media: 8.5 },
-    ];
+    useEffect(() => {
+        const fetchDados = async (endpoint, setState) => {
+            try {
+                const res = await fetch(`http://localhost:3000/${endpoint}`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (data.sucesso) setState(data.dados || []);
+                else setState([]);
+            } catch (err) {
+                console.error(`Erro ao buscar ${endpoint}:`, err);
+                setState([]);
+            }
+        };
 
-    const cores = ["#6A97B366", "#6A97B3", "#6A97B399", "#6a97b3", "#6a97b369", "#6a97b340", "#6a97b3ea"];
+        fetchDados("alunos", setAlunos);
+        fetchDados("professores", setProfessores);
+        fetchDados("disciplinas", setDisciplinas);
+        fetchDados("api/salas", setSalas);
+    }, []);
 
-
+    const alunosPorSala = salas.map(sala => {
+        const quantidadeAlunos = alunos.filter(a => a.turma_id === sala.id).length;
+        return {
+            nome: sala.nomeSala,
+            alunos: quantidadeAlunos || sala.capacidade || 0
+        }
+    });
         
     return(
         <div className="body-home">
@@ -65,7 +75,7 @@ function Home() {
                         <div className="card">
                             <span className='name-card'>Estudantes</span>
                             <div className="numbers">
-                                <span className='span-number'>100</span>
+                                <span className='span-number'>{alunos.length}</span>
                                 <div className="porcentagem">
                                     <span className='span-porcentagem span-porcentagem-positivo'>+5%</span>
                                 </div>
@@ -74,7 +84,7 @@ function Home() {
                         <div className="card">
                             <span className='name-card'>Professores</span>
                             <div className="numbers">
-                                <span className='span-number'>1</span>
+                                <span className='span-number'>{professores.length}</span>
                                 <div className="porcentagem">
                                     {/* <span className='span-porcentagem'>+5%</span> */}
                                 </div>
@@ -83,7 +93,7 @@ function Home() {
                         <div className="card">
                             <span className='name-card'>Disciplinas</span>
                             <div className="numbers">
-                                <span className='span-number'>10</span>
+                                <span className='span-number'>{disciplinas.length}</span>
                                 <div className="porcentagem">
                                     <span className='span-porcentagem span-porcentagem-positivo'>+1%</span>
                                 </div>
@@ -92,7 +102,7 @@ function Home() {
                         <div className="card">
                             <span className='name-card'>Turmas</span>
                             <div className="numbers">
-                                <span className='span-number'>15</span>
+                                <span className='span-number'>{salas.length}</span>
                                 <div className="porcentagem">
                                     <span className='span-porcentagem span-porcentagem-negativo'>-3%</span>
                                 </div>
@@ -108,41 +118,47 @@ function Home() {
                             <span>Número de Alunos</span>
                             <ResponsiveContainer width="100%" height={250}>
                                 <BarChart
-                                    data={data}
+                                    data={alunosPorSala}
                                     barCategoryGap="20%" 
                                 >
                                     <XAxis dataKey="nome" hide/>
                                     <Tooltip />
-                                    {/* <CartesianGrid /> */}
-                                    {/* <Legend align="right"/> */}
                                     <Bar dataKey="alunos" fill="#6A97B3BF" />
                                 </BarChart>
                             </ResponsiveContainer>
-                            <span className='span-legend'>Turmas</span>
+                            <span className='span-legend'>salas</span>
                         </div>
                         <div className="card-deshboard grafico-pizza">
-                            <p>Distribuição de Notas</p>
+                            <p>Proporção de Alunos por Turno</p>
                             <span>Percentual</span>
                             <ResponsiveContainer width="100%" height={250}>
                                 <PieChart>
-                                <Pie
-                                    data={mediasPorTurma}
-                                    dataKey="media"
-                                    nameKey="nome"
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={80}
-                                    labelLine={false}
-                                >
-                                    {mediasPorTurma.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={cores[index % cores.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip formatter={(value, name) => [`${value}`, `Média - ${name}`]} />    
+                                    <Pie
+                                        data={[
+                                            { nome: "Matutino", valor: alunos.filter(a => a.turno?.toLowerCase() === "matutino").length },
+                                            { nome: "Vespertino", valor: alunos.filter(a => a.turno?.toLowerCase() === "vespertino").length },
+                                            { nome: "Noturno", valor: alunos.filter(a => a.turno?.toLowerCase() === "noturno").length },
+                                        ].filter(item => item.valor > 0)} 
+                                        dataKey="valor"
+                                        nameKey="nome"
+                                        cx="50%"
+                                        cy="50%"
+                                        outerRadius={80}
+                                        labelLine={false}
+                                        label={({ nome, percent }) => `${nome}: ${(percent * 100).toFixed(1)}%`}
+                                    >
+                                        {["#6A97B3", "#A7C7E7", "#355C7D"].map((color, index) => (
+                                            <Cell key={`cell-${index}`} fill={color} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip
+                                        formatter={(value, name) => [`${value} alunos`, `${name}`]}
+                                    />
                                 </PieChart>
                             </ResponsiveContainer>
-                            <span className='span-legend'>Notas</span>
+                            <span className='span-legend'>Turnos</span>
                         </div>
+
                     </div>
                 </div>
             </div>

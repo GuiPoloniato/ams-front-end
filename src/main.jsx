@@ -4,7 +4,7 @@ import Router from "./routes/route";
 import { ThemeProvider } from "styled-components";
 import { ThemeProviderCustom } from "./contexts/themeContexts";
 import { GlobalStyle } from "./styles/style";
-// import AuthProvider from "./contexts/auth";
+import AuthProvider from "./contexts/auth";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -12,7 +12,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         {(theme) => (
         <ThemeProvider theme={theme}>
           <GlobalStyle />
-          <Router />
+          <AuthProvider>
+            <Router />
+          </AuthProvider>
         </ThemeProvider>
       )}
     </ThemeProviderCustom>

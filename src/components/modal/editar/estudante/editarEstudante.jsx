@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { api } from '../../../../services/service';
 import './style.css';
 
 function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
@@ -29,10 +30,49 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
       });
 
     useEffect(() => {
-        if (editarSelecionado) {
-          setFormData(editarSelecionado);
-        }
-      }, [editarSelecionado]);
+      if (editarSelecionado) {
+        const aluno = editarSelecionado;
+        const responsavel = aluno.responsaveis && aluno.responsaveis[0] ? aluno.responsaveis[0] : {};
+
+        setFormData({
+          id: aluno.id || '',
+          nome: aluno.nome || '',
+          matricula: aluno.matricula || '',
+          data_nascimento: aluno.data_nascimento || '',
+          serie: aluno.serie || '',
+          responsavelNome: responsavel.nome || '',
+          responsavelTelefone: responsavel.telefone || '',
+          responsavelEmail: responsavel.email || ''
+        });
+      }
+    }, [editarSelecionado]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        nome: formData.nome,
+        matricula: formData.matricula,
+        data_nascimento: formData.data_nascimento,
+        serie: formData.serie
+      };
+
+      const res = await api.put(`/alunos/${formData.id}`, payload);
+
+      if (res.data.sucesso) {
+        alert('Aluno atualizado com sucesso!');
+        handleCloseModal();
+        window.location.reload(); // atualiza tabela
+      } else {
+        alert('Erro ao atualizar aluno!');
+        console.log(res.data);
+      }
+    } catch (erro) {
+      console.error('Erro ao atualizar aluno:', erro);
+      alert('Erro ao salvar alterações.');
+    }
+  };
+
 
   return (
     <div className="body-modalEditarEstudante">
@@ -201,7 +241,7 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
 
           <div className="buttons-submit">
             <button className='btn-cancelar' onClick={handleCloseModal}>Cancelar</button>
-            <button className='btn-salvar'>Salvar</button>
+            <button className='btn-salvar' onClick={handleSubmit}>Salvar</button>
           </div>
         </div>
       </div>

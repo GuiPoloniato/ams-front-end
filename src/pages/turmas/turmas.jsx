@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import SideBar from '../../components/sideBar/sideBar';
 import MaisIcon from "../../assets/iconsSvg/mais.svg";
 import ExportarIcon from "../../assets/iconsSvg/exportar.svg";
-import NovaTurmaModal from '../../components/cadastrar/turma/novaTruma';
+import NovaTurmaModal from '../../components/cadastrar/turma/novaTurma';
 import TableTurmas from '../../components/table/turmas/tableTurmas';
 import FiltrarTable from '../../components/filtrar/filtrarTable';
 import '../stylePages.css'

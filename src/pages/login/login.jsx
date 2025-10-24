@@ -1,21 +1,30 @@
-import React, { useState } from 'react';
+import {useContext,  useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/authContext';
 import ImgEclipse1 from "../../assets/eclipse1-login.svg";
 import ImgEclipse2 from "../../assets/eclipse2-login.svg";
 import './style.css';
 
 function Login() {
     const navigate = useNavigate();
+    const {Login} = useContext(AuthContext);
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [erro, setErro] = useState('');
 
-    const handleLogin = () => {
-        if (email === 'admin' && senha === 'admin') {
-            navigate('/home');
-        } else {
-            setErro('Email ou senha incorretos');
+    const handleLogin = async() => {
+        const sucesso = await Login(email, senha);
+        if (sucesso){
+            navigate("/home");
+        } else{
+            setErro("Email ou senha incorretos");
         }
+        
+        // if (email === 'admin' && senha === 'admin') {
+        //     navigate('/home');
+        // } else {
+        //     setErro('Email ou senha incorretos');
+        // }
     }
 
     return (

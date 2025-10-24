@@ -30,7 +30,21 @@ function ModalVisualizarEstudante({ handleCloseModal, visualizarSelecionado }) {
 
   useEffect(() => {
     if (visualizarSelecionado) {
-      setFormData(visualizarSelecionado);
+      const aluno = visualizarSelecionado;
+
+      // Pega o primeiro responsável (se houver)
+      const responsavel = aluno.responsaveis && aluno.responsaveis[0] ? aluno.responsaveis[0] : {};
+
+      setFormData({
+        id: aluno.id || '',
+        nome: aluno.nome || '',
+        matricula: aluno.matricula || '',
+        data_nascimento: aluno.data_nascimento || '',
+        serie: aluno.serie || '',
+        responsavelNome: responsavel.nome || '',
+        responsavelTelefone: responsavel.telefone || '',
+        responsavelEmail: responsavel.email || ''
+      });
     }
   }, [visualizarSelecionado]);
 

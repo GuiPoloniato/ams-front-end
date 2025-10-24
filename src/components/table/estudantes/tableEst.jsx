@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { api } from '../../../services/service';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg"
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 import ModalArquivar from '../../modal/arquivar/arquivar';
@@ -7,30 +8,52 @@ import ModalVisualizarEstudante from '../../modal/visualizar/estudantes/visualiz
 import '../style.css';
 
 function TableEstudantes({ filtrar }) {
-  const [dados, setDados] = useState({ estudante: [] });
+  const [dados, setDados] = useState([]);
   const [responsaveis, setResponsaveis] = useState([]);
 
   const [ modalOpen, setModalOpen ] = useState(false);
   const [ paginaAtual, setPaginaAtual ] = useState(1);
   const [ dadosSelecionados, setDadosSelecionados ] = useState(null);
 
+
   const handleCloseModal = () => {
     setModalOpen(false)
   }
 
-  useEffect(() => {
-    const fetchEstudantes = fetch('http://localhost:3000/estudante').then(res => res.json());
-    const fetchResponsaveis = fetch('http://localhost:3000/responsavel').then(res => res.json());
+//   useEffect(() => {
+//     const fetchEstudantes = fetch('http://localhost:3000/estudante').then(res => res.json());
+//     const fetchResponsaveis = fetch('http://localhost:3000/responsavel').then(res => res.json());
 
-  Promise.all([fetchEstudantes, fetchResponsaveis])
-    .then(([estudantesData, responsaveisData]) => {
-      setDados({ estudante: estudantesData });
-      setResponsaveis(responsaveisData);
-    })
-    .catch(err => {
-      console.error('Erro ao buscar dados:', err);
-    });
-}, []);
+//   Promise.all([fetchEstudantes, fetchResponsaveis])
+//     .then(([estudantesData, responsaveisData]) => {
+//       setDados({ estudante: estudantesData });
+//       setResponsaveis(responsaveisData);
+//     })
+//     .catch(err => {
+//       console.error('Erro ao buscar dados:', err);
+//     });
+// }, []);
+
+  useEffect(() => {
+    async function getDados() {
+    try {
+      const res = await api.get("/alunos");
+      console.log("RESPOSTA DO BACKEND:", res.data);
+      if (res.data.sucesso) {
+        setDados(res.data.dados);
+      } else {
+        console.warn("Resposta inesperada:", res.data);
+      }
+    } catch (erro) {
+      console.error("Erro ao buscar alunos:", erro);
+      if (erro.response?.status === 401) {
+        alert("Token inválido ou expirado.");
+      }
+    }
+  }
+
+    getDados();
+  }, []);
 
   useEffect(() => {
         setPaginaAtual(1);
@@ -38,7 +61,8 @@ function TableEstudantes({ filtrar }) {
 
   console.log("dados:", dados);
 
-  const estudantesArray = dados.estudante || [];
+  const estudantesArray = dados || [];
+
 
   const dadosFiltrados = estudantesArray.filter((item) =>
     Object.values(item).some((valor) =>
