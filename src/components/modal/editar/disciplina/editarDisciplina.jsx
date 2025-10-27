@@ -101,8 +101,8 @@ function ModalEditarDisciplina({ handleCloseModal, editarSelecionado }) {
                 onChange={(e) => setFormData({ ...formData, tipoEnsino: e.target.value })}
               >
                 <option value="">Selecione</option>
-                <option value="ensino fundamental">Ensino Fundamental</option>
-                <option value="ensino medio">Ensino Médio</option>
+                <option value="Ensino Fundamental">Ensino Fundamental</option>
+                <option value="Ensino Medio">Ensino Médio</option>
               </select>
             </div>
           </div>

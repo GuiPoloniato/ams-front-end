@@ -6,7 +6,7 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
   const [formData, setFormData] = useState({
     matricula: '',
     nome: '',
-    dataNascimento: '',
+    nascimento: '',
     naturalidade: '',
     raca: '',
     cep: '',
@@ -39,7 +39,7 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
       setFormData({
         matricula: aluno.matricula || '',
         nome: aluno.nome || '',
-        dataNascimento: aluno.dataNascimento || '',
+        nascimento: aluno.nascimento || '',
         naturalidade: aluno.naturalidade || '',
         raca: aluno.raca || '',
         cep: endereco.cep || '',
@@ -47,7 +47,7 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
         logradouro: endereco.logradouro || '',
         numero: endereco.numero || '',
         pais: endereco.pais || '',
-        estado: endereco.estado || '',
+        estado: endereco.uf || '',
         cidade: endereco.cidade || '',
         turno: aluno.turno || '',
         nomeResponsavel: responsavel.nome || '',
@@ -70,7 +70,7 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
       const alunoAtualizado = {
         nome: formData.nome,
         matricula: formData.matricula,
-        dataNascimento: formData.dataNascimento,
+        nascimento: formData.nascimento,
         naturalidade: formData.naturalidade,
         raca: formData.raca,
         turno: formData.turno,
@@ -80,7 +80,7 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
           logradouro: formData.logradouro,
           numero: formData.numero,
           pais: formData.pais,
-          estado: formData.estado,
+          estado: formData.uf,
           cidade: formData.cidade
         },
         responsavel: {
@@ -142,8 +142,8 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
                 type="date"
                 className="dataInput"
                 id="dataInput"
-                value={formData.dataNascimento}
-                onChange={(e) => setFormData({ ...formData, dataNascimento: e.target.value })}
+                value={formData.nascimento}
+                onChange={(e) => setFormData({ ...formData, nascimento: e.target.value })}
               />
             </div>
             <div className="campo">
@@ -165,11 +165,11 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
                 onChange={(e) => setFormData({ ...formData, raca: e.target.value })}
               >
                 <option value=""></option>
-                <option value="branca">Branca</option>
-                <option value="negra">Negra</option>
-                <option value="narda">Parda</option>
-                <option value="nmarela">Amarela</option>
-                <option value="nndígena">Indígena</option>
+                <option value="Branca">Branca</option>
+                <option value="Negra">Negra</option>
+                <option value="Parda">Parda</option>
+                <option value="Amarela">Amarela</option>
+                <option value="Indígena">Indígena</option>
               </select>
             </div>
           </div>
@@ -227,7 +227,7 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
                 onChange={(e) => setFormData({ ...formData, pais: e.target.value })}
               >
                 <option value=""></option>
-                <option value="brasil">Brasil</option>
+                <option value="Brasil">Brasil</option>
               </select>
             </div>
             <div className="campo">
@@ -235,7 +235,7 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
               <select
                 className="selectEstado"
                 id="selectEstado"
-                value={formData.estado}
+                value={formData.uf}
                 onChange={(e) => setFormData({ ...formData, estado: e.target.value })}
               >
                 <option value=""></option>
@@ -251,7 +251,7 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
                 onChange={(e) => setFormData({ ...formData, cidade: e.target.value })}
               >
                 <option value=""></option>
-                <option value="anapolis">Anápolis</option>
+                <option value="Anapolis">Anápolis</option>
               </select>
             </div>
             <div className="campo">
@@ -263,8 +263,8 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
                 onChange={(e) => setFormData({ ...formData, turno: e.target.value })}
               >
                 <option value=""></option>
-                <option value="matutino">Matutino</option>
-                <option value="vespertino">Vespertino</option>
+                <option value="Matutino">Matutino</option>
+                <option value="Vespertino">Vespertino</option>
               </select>
             </div>
           </div>
@@ -321,7 +321,7 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
                 onChange={(e) => setFormData({ ...formData, uf: e.target.value })}
               >
                 <option value=""></option>
-                <option value="GO">GO</option>
+                <option value="Go">GO</option>
               </select>
             </div>
           </div>

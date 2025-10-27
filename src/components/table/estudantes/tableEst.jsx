@@ -16,6 +16,27 @@ function TableEstudantes({ filtrar }) {
 
   const handleCloseModal = () => setModalOpen(false);
 
+
+  const handleArquivarEstudante = async () => {
+    if (!dadosSelecionados) return;
+    try {
+      await api.delete(`/alunos/${dadosSelecionados.id}`);
+
+      setDados(prev => prev.map(aluno =>
+        aluno.id === dadosSelecionados.id ? { ...aluno, status: 'Inativo' } : aluno
+      ));
+
+      setModalOpen(false);
+      setDadosSelecionados(null);
+
+      alert('Estudante arquivado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao arquivar estudante:', error);
+      alert('Erro ao arquivar estudante. Tente novamente.');
+    }
+  };
+  
+
   useEffect(() => {
     async function getDados() {
       try {
@@ -151,7 +172,7 @@ function TableEstudantes({ filtrar }) {
         </div>
       </div>
 
-      {modalOpen === 'arquivar' && <ModalArquivar handleCloseModal={handleCloseModal} nameTable='este estudante' textoArquivar='Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente.' />}
+      {modalOpen === 'arquivar' && <ModalArquivar handleCloseModal={handleCloseModal} nameTable='este estudante' textoArquivar='Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente.' onConfirm={handleArquivarEstudante}/>}
       {modalOpen === 'editar' && <ModalEditar handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados} />}
       {modalOpen === 'visualizar' && <ModalVisualizarEstudante handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados} />}
     </div>

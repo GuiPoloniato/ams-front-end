@@ -1,7 +1,7 @@
+// ModalArquivar.jsx
 import './style.css';
 
-function ModalArquivar({ handleCloseModal, nameTitulo, textoArquivar }) {
-
+function ModalArquivar({ handleCloseModal, nameTitulo, textoArquivar, onConfirm }) {
   return (
     <div className="body-modalArquivar">
       <div className="modal-content">
@@ -9,11 +9,10 @@ function ModalArquivar({ handleCloseModal, nameTitulo, textoArquivar }) {
         <hr />
         <p className='p-modalArquivar'>{textoArquivar}</p>
         <div className="buttons">
-            <button className='btn-cancelar' onClick={handleCloseModal}>Cancelar</button>
-            <button className='btn-continuar'>Continuar</button>
-          </div>
+          <button className='btn-cancelar' onClick={handleCloseModal}>Cancelar</button>
+          <button className='btn-continuar' onClick={onConfirm}>Continuar</button>
+        </div>
       </div>
-      
     </div>
   );
 }
