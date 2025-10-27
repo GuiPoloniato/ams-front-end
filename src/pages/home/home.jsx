@@ -3,7 +3,7 @@ import SideBar from '../../components/sideBar/sideBar';
 import { BarChart,Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
 import NovoEstudanteModal from '../../components/cadastrar/estudante/novoEstudante';
 import NovoProfessorModal from '../../components/cadastrar/professor/novoProfessor';
-import NovaTurmaModal from '../../components/cadastrar/turma/novaTurma';
+import NovaSalaModal from '../../components/cadastrar/sala/novaSala';
 import { PieChart, Pie, Cell } from 'recharts';
 import { useTheme } from '../../contexts/themeContexts';
 import './style.css'
@@ -21,7 +21,7 @@ function Home() {
     }
 
     // const token = localStorage.getItem("token"); 
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJhZG1pbjEyM0BlbWFpbC5jb20iLCJwYXBlbCI6ImFkbWluIiwiaWF0IjoxNzYwMzI2NjkxLCJleHAiOjE3NjA0MTMwOTF9.KTgpxOb0J3XCz0gAK9OMP3kzPV1mWxPxQoVEXuCM4ko"
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJhZG1pbjEyM0BlbWFpbC5jb20iLCJpYXQiOjE3NjE0MzA4MTQsImV4cCI6MTc2MTUxNzIxNH0.FSxOg-7H-wJeUvREWEvu2oUom83ax39ouXqFkJZ9kro"
 
     useEffect(() => {
         const fetchDados = async (endpoint, setState) => {
@@ -66,7 +66,7 @@ function Home() {
                     <div className="acoes">
                         <button onClick={() => setModalOpen('estudante')}>Novo estudante</button>
                         <button onClick={() => setModalOpen('professor')}>Novo professor</button>
-                        <button onClick={() => setModalOpen('turma')}>Nova turma</button>
+                        <button onClick={() => setModalOpen('salas')}>Nova salas</button>
                     </div>
                 </div>
                 <div className="visao-geral">
@@ -100,7 +100,7 @@ function Home() {
                             </div>
                         </div>
                         <div className="card">
-                            <span className='name-card'>Turmas</span>
+                            <span className='name-card'>Salas</span>
                             <div className="numbers">
                                 <span className='span-number'>{salas.length}</span>
                                 <div className="porcentagem">
@@ -114,7 +114,7 @@ function Home() {
                     <p className='p-performance'>Performance Acadêmica</p>
                     <div className="cards-deshboards">
                         <div className="card-deshboard grafico-barra">
-                            <p>Número de Alunos por Turma</p>
+                            <p>Número de Alunos por Sala</p>
                             <span>Número de Alunos</span>
                             <ResponsiveContainer width="100%" height={250}>
                                 <BarChart
@@ -164,7 +164,7 @@ function Home() {
             </div>
             {modalOpen === 'estudante' && (<NovoEstudanteModal handlleCloseModal={handlleCloseModal}/>)}
             {modalOpen === 'professor' && (<NovoProfessorModal handlleCloseModal={handlleCloseModal}/>)}
-            {modalOpen === 'turma' && (<NovaTurmaModal handlleCloseModal={handlleCloseModal}/>)}
+            {modalOpen === 'salas' && (<NovaSalaModal handlleCloseModal={handlleCloseModal}/>)}
         </div>
     )
 }

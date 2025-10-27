@@ -1,4 +1,4 @@
-.body-modalVisualizarTurmas {
+.body-modalVisualizarSalas {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,7 +11,7 @@
     z-index: 9999;
 }
 
-.body-modalVisualizarTurmas .modal-content {
+.body-modalVisualizarSalas .modal-content {
     background: white;
     padding: 40px;
     border-radius: 8px;
@@ -21,19 +21,19 @@
 }
 
 
-.body-modalVisualizarTurmas .modal-content  .title-modalVisualizarTurmas{
+.body-modalVisualizarSalas .modal-content  .title-modalVisualizarSalas{
     color: #000000;
     font-weight: 700;
     font-size: 25px;
     margin-bottom: 15px;
 }
 
-.body-modalVisualizarTurmas .modal-content  hr{
+.body-modalVisualizarSalas .modal-content  hr{
     border: 1px solid #E8E8E8;
     margin-bottom: 30px;
 }
 
-.body-modalVisualizarTurmas .modal-content  .formulario .h2-informacoes-pessoais{
+.body-modalVisualizarSalas .modal-content  .formulario .h2-informacoes-pessoais{
     color: #2E2E2E;
     font-weight: 700;
     font-size: 20px;
@@ -41,7 +41,7 @@
     margin-bottom: 20px;
 }
 
-.body-modalVisualizarTurmas .modal-content .formulario .linha-flex {
+.body-modalVisualizarSalas .modal-content .formulario .linha-flex {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -49,38 +49,38 @@
     align-items: flex-end;
 }
 
-.body-modalVisualizarTurmas .modal-content .formulario .linha-flex .campo {
+.body-modalVisualizarSalas .modal-content .formulario .linha-flex .campo {
     display: flex;
     flex-direction: column;
 }
 
-.body-modalVisualizarTurmas .modal-content .formulario .linha-flex .campo span{
-    font-size: 13px;
-    font-weight: 700;
-    color: #2E2E2E;
+.body-modalVisualizarSalas .modal-content .formulario .linha-flex .campo span{
+    font-size: 15px;
+    font-weight: 500;
+    color: #1090CB;
     margin-top: 10px;
 }
 
-.body-modalVisualizarTurmas .modal-content .formulario .linha-flex .campo .inputNomeIdentificacao  {
+.body-modalVisualizarSalas .modal-content .formulario .linha-flex .campo .spanNomeSala  {
     width: 350px;
 }
 
-.body-modalVisualizarTurmas .modal-content .formulario .linha-flex .campo .selectTipoEnsino  {
+.body-modalVisualizarSalas .modal-content .formulario .linha-flex .campo .spanCapacidade  {
     width: 170px;
 }
 
-.body-modalVisualizarTurmas .modal-content .formulario .linha-flex .campo .selectTurno  {
+.body-modalVisualizarSalas .modal-content .formulario .linha-flex .campo .spanTipoSala  {
     width: 150px;
 }
 
-.body-modalVisualizarTurmas .modal-content .formulario .button {
+.body-modalVisualizarSalas .modal-content .formulario .button {
     display: flex;
     justify-content: flex-end;
     gap: 30px;
     margin-top: 120px;
 }
 
-.body-modalVisualizarTurmas .modal-content .formulario .button .btn-voltar{
+.body-modalVisualizarSalas .modal-content .formulario .button .btn-voltar{
     padding: 5px 40px;
     border: 1px solid #1090CB;
     background-color: white;
@@ -89,7 +89,7 @@
 
 }
 
-.body-modalVisualizarTurmas .modal-content .formulario .button .btn-voltar:hover{
+.body-modalVisualizarSalas .modal-content .formulario .button .btn-voltar:hover{
     border: 1px solid #1090CB;
     background-color: #1090CB;
     color: white;

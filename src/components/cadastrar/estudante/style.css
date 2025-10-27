@@ -141,6 +141,10 @@
     width: 190px;
 }
 
+.body-modalEstudante .modal-content .formulario .linha-flex .campo .inputParentesco {
+    width: 190px;
+}
+
 .body-modalEstudante .modal-content .formulario .button-responsavel {
     margin-top: 20px;
     border: 1px solid #1090CB;

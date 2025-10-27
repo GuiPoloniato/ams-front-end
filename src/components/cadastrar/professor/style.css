@@ -80,6 +80,10 @@
     width: 200px;
 }
 
+.body-modalProfessor .modal-content .formulario .linha-flex .campo .inputEmail  {
+    width: 350px;
+}
+
 .body-modalProfessor .modal-content .formulario .linha-flex .campo .inputBairro  {
     width: 200px;
 }
@@ -98,10 +102,6 @@
 
 .body-modalProfessor .modal-content .formulario .linha-flex .campo .selectCidade  {
     width: 190px;
-}
-
-.body-modalProfessor .modal-content .formulario .linha-flex .campo .selectTurno  {
-    width: 180px;
 }
 
 .body-modalProfessor .modal-content .formulario .buttons-submit {

@@ -4,8 +4,8 @@ import DeshboardIcon from '../../assets/sideBar/deshboard-icon.svg';
 import DeshboardIconWhite from '../../assets/sideBar/iconsWhite/deshboard-iconWhite.svg';
 import EstudProfIcon from '../../assets/sideBar/estud-prof-icon.svg';
 import EstudProfIconWhite from '../../assets/sideBar/iconsWhite/estud-prof-iconWhite.svg';
-import TurmaDisciIcon from '../../assets/sideBar/turm-disc-icon.svg';
-import TurmaDisciIconWhite from '../../assets/sideBar/iconsWhite/turm-disc-iconWhite.svg';
+import SalaDiscIcon from '../../assets/sideBar/sala-disc-icon.svg';
+import SalaDiscIconWhite from '../../assets/sideBar/iconsWhite/sala-disc-iconWhite.svg';
 import PermissoesIcon from '../../assets/sideBar/permissoes-icon.svg';
 import PermissoesIconWhite from '../../assets/sideBar/iconsWhite/permissoes-iconWhite.svg';
 import RelatoriosIcon from '../../assets/sideBar/relatorios-icon.svg';
@@ -48,12 +48,12 @@ function SideBar() {
                         <img src={itemActive === '/home/professores' ? EstudProfIconWhite : EstudProfIcon} alt="Icon Book" />
                         {isHoverBox && <span>Professores</span>}
                     </div>
-                    <div className={`icon-select ${itemActive === '/home/turmas' ? 'ativo' : ''}`} onClick={() => handleItemClick('/home/turmas')}>
-                        <img src={itemActive === '/home/turmas' ? TurmaDisciIconWhite : TurmaDisciIcon} alt="Icon Cadeado" />
-                        {isHoverBox && <span>Turmas</span>}
+                    <div className={`icon-select ${itemActive === '/home/salas' ? 'ativo' : ''}`} onClick={() => handleItemClick('/home/salas')}>
+                        <img src={itemActive === '/home/salas' ? SalaDiscIconWhite : SalaDiscIcon} alt="Icon Cadeado" />
+                        {isHoverBox && <span>Salas</span>}
                     </div>
                     <div className={`icon-select ${itemActive === '/home/disciplinas' ? 'ativo' : ''}`} onClick={() => handleItemClick('/home/disciplinas')}>
-                        <img src={itemActive === '/home/disciplinas' ? TurmaDisciIconWhite : TurmaDisciIcon} alt="Icon Relatorio" />
+                        <img src={itemActive === '/home/disciplinas' ? SalaDiscIconWhite : SalaDiscIcon} alt="Icon Relatorio" />
                         {isHoverBox && <span>Disciplinas</span>}
                     </div>
                     <div className={`icon-select ${itemActive === '/home/permissoes' ? 'ativo' : ''}`} onClick={() => handleItemClick('/home/permissoes')}>

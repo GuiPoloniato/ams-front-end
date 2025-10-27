@@ -63,25 +63,25 @@
 }
 
 .body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo span{
-    font-size: 13px;
-    font-weight: 700;
-    color: #2E2E2E;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1090CB;
     margin-top: 10px;
 }
 
 .body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .inputName {
-    width: 400px;
+    width: 310px;
 }
 .body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .inputTelefone {
     width: 150px;
 }
 
 .body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .inputFormacao {
-    width: 150px;
+    width: 280px;
 }
 
 .body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .inputCep {
-    width: 120px;
+    width: 130px;
 }
 
 .body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .inputBairro {
@@ -97,7 +97,7 @@
 }
 
 .body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .selectEstado {
-    width: 100px;
+    width: 150px;
 }
 
 .body-modalVisualizarProfessor .modal-content .formulario .linha-flex .campo .selectCidade {

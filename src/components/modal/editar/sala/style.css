@@ -1,4 +1,4 @@
-.body-modalEditarTurma {
+.body-modalEditarSala {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,7 +11,7 @@
     z-index: 9999;
 }
 
-.body-modalEditarTurma .modal-content {
+.body-modalEditarSala .modal-content {
     background: white;
     padding: 40px;
     border-radius: 8px;
@@ -21,19 +21,19 @@
 }
 
 
-.body-modalEditarTurma .modal-content  .title-modalEditarTurma{
+.body-modalEditarSala .modal-content  .title-modalEditarSala{
     color: #000000;
     font-weight: 700;
     font-size: 25px;
     margin-bottom: 15px;
 }
 
-.body-modalEditarTurma .modal-content  hr{
+.body-modalEditarSala .modal-content  hr{
     border: 1px solid #E8E8E8;
     margin-bottom: 30px;
 }
 
-.body-modalEditarTurma .modal-content  .formulario .h2-informacoes-pessoais{
+.body-modalEditarSala .modal-content  .formulario .h2-informacoes-pessoais{
     color: #2E2E2E;
     font-weight: 700;
     font-size: 20px;
@@ -42,7 +42,7 @@
 }
 
 
-.body-modalEditarTurma .modal-content .formulario .h2-responsavel{
+.body-modalEditarSala .modal-content .formulario .h2-responsavel{
     color: #2E2E2E;
     font-weight: 700;
     font-size: 20px;
@@ -50,7 +50,7 @@
     margin-bottom: 20px;
 }
 
-.body-modalEditarTurma .modal-content .formulario .linha-flex {
+.body-modalEditarSala .modal-content .formulario .linha-flex {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -58,42 +58,42 @@
     align-items: flex-end;
 }
 
-.body-modalEditarTurma .modal-content .formulario .linha-flex .campo {
+.body-modalEditarSala .modal-content .formulario .linha-flex .campo {
     display: flex;
     flex-direction: column;
 }
 
-.body-modalEditarTurma .modal-content .formulario .linha-flex .campo input,
-.body-modalEditarTurma .modal-content .formulario .linha-flex .campo select  {
+.body-modalEditarSala .modal-content .formulario .linha-flex .campo input,
+.body-modalEditarSala .modal-content .formulario .linha-flex .campo select  {
     border: 1px solid #CECECE;
     border-radius: 5px;
     padding: 8px;
 }
 
-.body-modalEditarTurma .modal-content .formulario .linha-flex .campo input:focus {
+.body-modalEditarSala .modal-content .formulario .linha-flex .campo input:focus {
     outline: none;
 }
 
-.body-modalEditarTurma .modal-content .formulario .linha-flex .campo .inputNomeIdentificacao  {
+.body-modalEditarSala .modal-content .formulario .linha-flex .campo .inputNomeIdentificacao  {
     width: 350px;
 }
 
-.body-modalEditarTurma .modal-content .formulario .linha-flex .campo .selectTipoEnsino  {
+.body-modalEditarSala .modal-content .formulario .linha-flex .campo .selectTipoEnsino  {
     width: 170px;
 }
 
-.body-modalEditarTurma .modal-content .formulario .linha-flex .campo .selectTurno  {
+.body-modalEditarSala .modal-content .formulario .linha-flex .campo .selectTurno  {
     width: 150px;
 }
 
-.body-modalEditarTurma .modal-content .formulario .buttons-submit {
+.body-modalEditarSala .modal-content .formulario .buttons-submit {
     display: flex;
     justify-content: flex-end;
     gap: 30px;
     margin-top: 60px;
 }
 
-.body-modalEditarTurma .modal-content .formulario .buttons-submit .btn-cancelar{
+.body-modalEditarSala .modal-content .formulario .buttons-submit .btn-cancelar{
     padding: 7px 35px;
     border: 1px solid #1090CB;
     background-color: white;
@@ -101,13 +101,13 @@
     border-radius: 5px;
 }
 
-.body-modalEditarTurma .modal-content .formulario .buttons-submit .btn-cancelar:hover{
+.body-modalEditarSala .modal-content .formulario .buttons-submit .btn-cancelar:hover{
     border: 1px solid #1090CB;
     background-color: #1090CB;
     color: white;
 }
 
-.body-modalEditarTurma .modal-content .formulario .buttons-submit .btn-salvar{
+.body-modalEditarSala .modal-content .formulario .buttons-submit .btn-salvar{
     padding: 7px 45px;
     font-size: 15px;
     font-weight: 400;
@@ -117,6 +117,6 @@
     border-radius: 5px;
 }
 
-.body-modalEditarTurma .modal-content .formulario .buttons-submit .btn-salvar:hover{
+.body-modalEditarSala .modal-content .formulario .buttons-submit .btn-salvar:hover{
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.23);
 }

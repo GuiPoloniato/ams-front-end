@@ -74,11 +74,19 @@
 }
 
 .body-modalEditarProfessor .modal-content .formulario .linha-flex .campo .inputName {
-    width: 400px;
+    width: 350px;
+}
+
+.body-modalEditarProfessor .modal-content .formulario .linha-flex .campo .inputTelefone {
+    width: 150px;
 }
 
 .body-modalEditarProfessor .modal-content .formulario .linha-flex .campo .inputFormacao {
-    width: 150px;
+    width: 200px;
+}
+
+.body-modalEditarProfessor .modal-content .formulario .linha-flex .campo .inputEmail {
+    width: 350px;
 }
 
 .body-modalEditarProfessor .modal-content .formulario .linha-flex .campo .inputCep {

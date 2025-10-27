@@ -4,46 +4,68 @@ import './style.css';
 function ModalVisualizarEstudante({ handleCloseModal, visualizarSelecionado }) {
   const [formData, setFormData] = useState({
     id: '',
+    matricula: '',
     nome: '',
-    data_nascimento: '',
+    nascimento: '',
     naturalidade: '',
     raca: '',
-    cep: '',
-    bairro: '',
+    turno: '',
     logradouro: '',
     numero: '',
-    pais: '',
-    estado: '',
+    bairro: '',
     cidade: '',
-    turno: '',
+    estado: '',
+    pais: '',
+    cep: '',
+    serie: '',
     nomeResponsavel: '',
     cpfResponsavel: '',
     rgResponsavel: '',
-    orgao: '',
+    orgaoExpedidor: '',
     uf: '',
     telefoneResidencial: '',
     telefoneComercial: '',
     celular: '',
     email: '',
-    profissao: ''
+    profissao: '',
+    parentesco: ''
   });
+
+  const formatValue = (valor) => valor ? valor : 'NAO INFORMADO';
 
   useEffect(() => {
     if (visualizarSelecionado) {
       const aluno = visualizarSelecionado;
-
-      // Pega o primeiro responsável (se houver)
-      const responsavel = aluno.responsaveis && aluno.responsaveis[0] ? aluno.responsaveis[0] : {};
+      const endereco = aluno.endereco || {};
+      const responsavel = aluno.responsavel || {};
 
       setFormData({
-        id: aluno.id || '',
-        nome: aluno.nome || '',
-        matricula: aluno.matricula || '',
-        data_nascimento: aluno.data_nascimento || '',
-        serie: aluno.serie || '',
-        responsavelNome: responsavel.nome || '',
-        responsavelTelefone: responsavel.telefone || '',
-        responsavelEmail: responsavel.email || ''
+        id: aluno.id || 'NAO INFORMADO',
+        matricula: aluno.matricula || 'NAO INFORMADO',
+        nome: aluno.nome || 'NAO INFORMADO',
+        nascimento: aluno.nascimento || 'NAO INFORMADO',
+        naturalidade: aluno.naturalidade || 'NAO INFORMADO',
+        raca: aluno.raca || 'NAO INFORMADO',
+        turno: aluno.turno || 'NAO INFORMADO',
+        serie: aluno.turma || 'NAO INFORMADO',
+        logradouro: endereco.logradouro || 'NAO INFORMADO',
+        numero: endereco.numero || 'NAO INFORMADO',
+        bairro: endereco.bairro || 'NAO INFORMADO',
+        cidade: endereco.cidade || 'NAO INFORMADO',
+        estado: endereco.uf || 'NAO INFORMADO',
+        pais: endereco.pais || 'NAO INFORMADO',
+        cep: endereco.cep || 'NAO INFORMADO',
+        nomeResponsavel: responsavel.nome || 'NAO INFORMADO',
+        cpfResponsavel: responsavel.cpf || 'NAO INFORMADO',
+        rgResponsavel: responsavel.rg || 'NAO INFORMADO',
+        orgaoExpedidor: responsavel.orgaoExpedidor || 'NAO INFORMADO',
+        uf: responsavel.uf || 'NAO INFORMADO',
+        telefoneResidencial: responsavel.telefoneResidencial || 'NAO INFORMADO',
+        telefoneComercial: responsavel.telefoneComercial || 'NAO INFORMADO',
+        celular: responsavel.celular || 'NAO INFORMADO',
+        email: responsavel.email || 'NAO INFORMADO',
+        profissao: responsavel.profissao || 'NAO INFORMADO',
+        parentesco: responsavel.parentesco || 'NAO INFORMADO'
       });
     }
   }, [visualizarSelecionado]);
@@ -55,113 +77,115 @@ function ModalVisualizarEstudante({ handleCloseModal, visualizarSelecionado }) {
         <hr />
         <div className="formulario">
           <h2 className='h2-informacoes-pessoais'>Informações pessoais</h2>
-
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="inputMatricula">Matrícula</label>
-              <span className='inputMatricula'>{formData.id}</span>
+              <label>Matrícula</label>
+              <span className='spanMatricula'>{formatValue(formData.matricula)}</span>
             </div>
             <div className="campo">
-              <label htmlFor="inputName">Nome completo</label>
-              <span className='inputName' id="inputName">{formData.nome}</span>
+              <label>Nome completo</label>
+              <span className='spanName'>{formatValue(formData.nome)}</span>
             </div>
             <div className="campo">
-              <label htmlFor="dataInput">Data de nascimento</label>
-              <span className='dataInput' id="dataInput">{formData.data_nascimento}</span>
+              <label>Data de nascimento</label>
+              <span className='spanNascimento'>{formatValue(formData.nascimento)}</span>
             </div>
             <div className="campo">
-              <label htmlFor="inputNaturalidade">Naturalidade</label>
-              <span className='inputNaturalidade' id="inputNaturalidade">{formData.naturalidade}</span>
+              <label>Naturalidade</label>
+              <span className='spanNaturalidade'>{formatValue(formData.naturalidade)}</span>
             </div>
             <div className="campo">
-              <label htmlFor="selectRaca">Raça</label>
-              <span className='selectRaca' id="selectRaca">{formData.raca}</span>
+              <label>Raça</label>
+              <span className='spanRaca'>{formatValue(formData.raca)}</span>
             </div>
           </div>
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="inputCep">CEP</label>
-              <span className='inputCep' id="inputCep">{formData.cep}</span>
+              <label>CEP</label>
+              <span className='spanCep'>{formatValue(formData.cep)}</span>
             </div>
             <div className="campo">
-              <label htmlFor="inputBairro">Bairro</label>
-              <span className='inputBairro' id="inputBairro">{formData.bairro}</span>
+              <label>Bairro</label>
+              <span className='spanBairro'>{formatValue(formData.bairro)}</span>
             </div>
             <div className="campo">
-              <label htmlFor="inputLogradouro">Logradouro</label>
-              <span className='inputLogradouro' id="inputLogradouro">{formData.logradouro}</span>
+              <label>Logradouro</label>
+              <span className='spanLogradouro'>{formatValue(formData.logradouro)}</span>
             </div>
             <div className="campo">
-              <label htmlFor="inputNumber">Número</label>
-              <span className='inputNumber' id="inputNumber">{formData.numero}</span>
-            </div>
-          </div>
-
-          <div className="linha-flex">
-            <div className="campo">
-              <label htmlFor="selectPais">País</label>
-              <span className='selectPais' id="selectPais">{formData.pais}</span>
-            </div>
-            <div className="campo">
-              <label htmlFor="selectEstado">Estado</label>
-              <span className='selectEstado' id="selectEstado">{formData.estado}</span>
-            </div>
-            <div className="campo">
-              <label htmlFor="selectCidade">Cidade</label>
-              <span className='selectCidade' id="selectCidade">{formData.cidade}</span>
-            </div>
-            <div className="campo">
-              <label htmlFor="selectTurno">Turno</label>
-              <span className='selectTurno' id="selectTurno">{formData.turno}</span>
-            </div>
-          </div>
-
-          <h2 className='h2-responsavel'>Responsável 1</h2>
-
-          <div className="linha-flex">
-            <div className="campo">
-              <label htmlFor="inputNomeResponsavel">Nome completo</label>
-              <span className='inputNomeResponsavel' id="inputNomeResponsavel">{formData.nome}</span>
-            </div>
-            <div className="campo">
-              <label htmlFor="inputCpfResponsavel">CPF</label>
-              <span className='inputCpfResponsavel' id="inputCpfResponsavel">{formData.cpfResponsavel}</span>
-            </div>
-            <div className="campo">
-              <label htmlFor="inputRgResponsavel">RG</label>
-              <span className='inputRgResponsavel' id="inputRgResponsavel">{formData.rgResponsavel}</span>
-            </div>
-            <div className="campo">
-              <label htmlFor="inputOrgao">Órgão expedidor</label>
-              <span className='inputOrgao' id="inputOrgao">{formData.orgao_expedidor}</span>
-            </div>
-            <div className="campo">
-              <label htmlFor="selectUf">UF</label>
-              <span className='selectUf' id="selectUf">{formData.uf}</span>
+              <label>Número</label>
+              <span className='spanNumero'>{formatValue(formData.numero)}</span>
             </div>
           </div>
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="inputTelefone">Telefone residencial</label>
-              <span className='inputTelefone' id="inputTelefone">{formData.telefoneResidencial}</span>
+              <label>País</label>
+              <span className='spanPais'>{formatValue(formData.pais)}</span>
             </div>
             <div className="campo">
-              <label htmlFor="inputComercial">Telefone comercial</label>
-              <span className='inputComercial' id="inputComercial">{formData.telefoneComercial}</span>
+              <label>Estado</label>
+              <span className='spanEstado'>{formatValue(formData.estado)}</span>
             </div>
             <div className="campo">
-              <label htmlFor="inputCelular">Celular</label>
-              <span className='inputCelular' id="inputCelular">{formData.celular}</span>
+              <label>Cidade</label>
+              <span className='spanCidade'>{formatValue(formData.cidade)}</span>
             </div>
             <div className="campo">
-              <label htmlFor="inputEmail">Email</label>
-              <span className='inputEmail' id="inputEmail">{formData.email}</span>
+              <label>Turno</label>
+              <span className='spanTurno'>{formatValue(formData.turno)}</span>
+            </div>
+          </div>
+
+          <h2 className='h2-responsavel'>Responsável</h2>
+          <div className="linha-flex">
+            <div className="campo">
+              <label>Nome completo</label>
+              <span className='spanNomeResponsavel'>{formatValue(formData.nomeResponsavel)}</span>
             </div>
             <div className="campo">
-              <label htmlFor="inputProfissao">Profissão</label>
-              <span className='inputProfissao' id="inputProfissao">{formData.profissao}</span>
+              <label>CPF</label>
+              <span className='spanCpfResponsavel'>{formatValue(formData.cpfResponsavel)}</span>
+            </div>
+            <div className="campo">
+              <label>RG</label>
+              <span className='spanRgResponsavel'>{formatValue(formData.rgResponsavel)}</span>
+            </div>
+            <div className="campo">
+              <label>Órgão expedidor</label>
+              <span className='spanOrgao'>{formatValue(formData.orgaoExpedidor)}</span>
+            </div>
+            <div className="campo">
+              <label>UF</label>
+              <span className='spanUf'>{formatValue(formData.uf)}</span>
+            </div>
+          </div>
+
+          <div className="linha-flex">
+            <div className="campo">
+              <label>Telefone residencial</label>
+              <span className='spanTelefone'>{formatValue(formData.telefoneResidencial)}</span>
+            </div>
+            <div className="campo">
+              <label>Telefone comercial</label>
+              <span className='spanComercial'>{formatValue(formData.telefoneComercial)}</span>
+            </div>
+            <div className="campo">
+              <label>Celular</label>
+              <span className='spanCelular'>{formatValue(formData.celular)}</span>
+            </div>
+            <div className="campo">
+              <label>Email</label>
+              <span className='spanEmail'>{formatValue(formData.email)}</span>
+            </div>
+            <div className="campo">
+              <label>Profissão</label>
+              <span className='spanProfissao'>{formatValue(formData.profissao)}</span>
+            </div>
+            <div className="campo">
+              <label>Parentesco</label>
+              <span className='spanParentesco'>{formatValue(formData.parentesco)}</span>
             </div>
           </div>
 

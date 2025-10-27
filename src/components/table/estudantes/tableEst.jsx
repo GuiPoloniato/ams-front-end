@@ -9,60 +9,34 @@ import '../style.css';
 
 function TableEstudantes({ filtrar }) {
   const [dados, setDados] = useState([]);
-  const [responsaveis, setResponsaveis] = useState([]);
+  const [professores, setProfessores] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [paginaAtual, setPaginaAtual] = useState(1);
+  const [dadosSelecionados, setDadosSelecionados] = useState(null);
 
-  const [ modalOpen, setModalOpen ] = useState(false);
-  const [ paginaAtual, setPaginaAtual ] = useState(1);
-  const [ dadosSelecionados, setDadosSelecionados ] = useState(null);
-
-
-  const handleCloseModal = () => {
-    setModalOpen(false)
-  }
-
-//   useEffect(() => {
-//     const fetchEstudantes = fetch('http://localhost:3000/estudante').then(res => res.json());
-//     const fetchResponsaveis = fetch('http://localhost:3000/responsavel').then(res => res.json());
-
-//   Promise.all([fetchEstudantes, fetchResponsaveis])
-//     .then(([estudantesData, responsaveisData]) => {
-//       setDados({ estudante: estudantesData });
-//       setResponsaveis(responsaveisData);
-//     })
-//     .catch(err => {
-//       console.error('Erro ao buscar dados:', err);
-//     });
-// }, []);
+  const handleCloseModal = () => setModalOpen(false);
 
   useEffect(() => {
     async function getDados() {
-    try {
-      const res = await api.get("/alunos");
-      console.log("RESPOSTA DO BACKEND:", res.data);
-      if (res.data.sucesso) {
-        setDados(res.data.dados);
-      } else {
-        console.warn("Resposta inesperada:", res.data);
-      }
-    } catch (erro) {
-      console.error("Erro ao buscar alunos:", erro);
-      if (erro.response?.status === 401) {
-        alert("Token inválido ou expirado.");
+      try {
+        const res = await api.get("/alunos");
+        setDados(res.data.dados || res.data);
+
+        const resProf = await api.get("/professores");
+        setProfessores(resProf.data.dados || resProf.data);
+
+      } catch (erro) {
+        console.error("Erro ao buscar estudantes:", erro);
       }
     }
-  }
-
     getDados();
   }, []);
 
   useEffect(() => {
-        setPaginaAtual(1);
-    }, [filtrar]);
-
-  console.log("dados:", dados);
+    setPaginaAtual(1);
+  }, [filtrar]);
 
   const estudantesArray = dados || [];
-
 
   const dadosFiltrados = estudantesArray.filter((item) =>
     Object.values(item).some((valor) =>
@@ -91,103 +65,68 @@ function TableEstudantes({ filtrar }) {
   return (
     <div className="body-table">
       <div className="table-wrapper">
-        <table className="table table-relatorio">
+        <table className="table">
           <thead>
             <tr>
               <th>Matrícula</th>
               <th>Nome Completo</th>
               <th>Data de Nascimento</th>
-              <th>Série</th>
               <th>Turno</th>
               <th>Responsável</th>
+              <th>Telefone (celular)</th>
               <th className='th-acoes'>Ações</th>
             </tr>
           </thead>
           <tbody>
-            {dadosPaginados.map((item, index) => (
-              <tr key={index} onClick={() => {
-                const responsavel = responsaveis.find(resp => resp._id === item.responsavel_id);
-                const dadosComResponsavel = {
-                  ...item,
-                  nomeResponsavel: responsavel?.nome || '',
-                  cpfResponsavel: responsavel?.cpf || '',
-                  rgResponsavel: responsavel?.rg || '',
-                  orgao_expedidor: responsavel?.orgao_expedidor || '',
-                  uf: responsavel?.uf || '',
-                  telefoneResidencial: responsavel?.telefone_residencial || '',
-                  telefoneComercial: responsavel?.telefone_comercial || '',
-                  celular: responsavel?.celular || '',
-                  email: responsavel?.email || '',
-                  profissao: responsavel?.profissao || ''
-                };
-                setModalOpen('visualizar');
-                setDadosSelecionados(dadosComResponsavel);
-              }}>
-                <td>
-                  <span
-                    className={`status ${item.status === 'ativo' ? 'verde' : 'vermelho'}`}
-                  ></span>
-                  {item.id}
-                </td>
-                <td>{item.nome}</td>
-                <td>{item.data_nascimento}</td>
-                <td>{item.turma_id}</td>
-                <td>{item.turno}</td>
-                <td>{item.nome}</td>
-                <td className="acoes">
-                  <button 
-                    className="editar" 
-                    onClick={(e) => {
-                      const responsavel = responsaveis.find(resp => resp._id === item.responsavel_id);
-                      const dadosComResponsavel = {
-                        ...item,
-                        nomeResponsavel: responsavel?.nome || '',
-                        cpfResponsavel: responsavel?.cpf || '',
-                        rgResponsavel: responsavel?.rg || '',
-                        orgao_expedidor: responsavel?.orgao_expedidor || '',
-                        uf: responsavel?.uf || '',
-                        telefoneResidencial: responsavel?.telefone_residencial || '',
-                        telefoneComercial: responsavel?.telefone_comercial || '',
-                        celular: responsavel?.celular || '',
-                        email: responsavel?.email || '',
-                        profissao: responsavel?.profissao || ''
-                      };
-                      e.stopPropagation(); 
-                      setModalOpen('editar');
-                      setDadosSelecionados(dadosComResponsavel);
-                    }}
+            {dadosPaginados.map((item, index) => {
+              const responsavel = item.responsavel || {};
+              const professor = professores.find(p => p.id === item.ProfessorId)
+              return (
+                <tr key={index} onClick={() => {
+                  setDadosSelecionados({ ...item, responsavel, professor });
+                  setModalOpen('visualizar');
+                }}>
+                  <td>
+                    <span className={`status ${item.status === 'ativo' ? 'verde' : 'vermelho'}`}>
+                    </span>
+                    {item.matricula}
+                  </td>
+                  <td>{item.nome}</td>
+                  <td>{new Date(item.nascimento).toLocaleDateString('pt-BR')}</td>
+                  <td>{item.turno}</td>
+                  <td>{responsavel.nome || '-'}</td>
+                  <td>{responsavel.celular || '-'}</td>
+                  <td className="acoes">
+                    <button
+                      className="editar"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDadosSelecionados({ ...item, responsavel, professor });
+                        setModalOpen('editar');
+                      }}
                     >
                       Editar <span className="icon editar-icon" />
-                  </button>
-                  <button 
-                    className="arquivar"
-                    onClick={(e) => {
-                      e.stopPropagation();  
-                      setModalOpen('arquivar');
-                      setDadosSelecionados(item);
-                    }}
+                    </button>
+                    <button
+                      className="arquivar"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDadosSelecionados(item);
+                        setModalOpen('arquivar');
+                      }}
                     >
-                      Arquivar <span className="icon arquivar-icon"/>
-                  </button>
-                </td>
-              </tr>
-            ))}
+                      Arquivar <span className="icon arquivar-icon" />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
             {Array.from({ length: Math.max(0, itensPorPagina - dadosPaginados.length) }).map((_, i) => (
               <tr key={`ghost-${i}`} className="linha-fantasma">
-                {Array.from({ length: 7 }).map((_, j) => (
-                  <td key={j}>&nbsp;</td>
-                ))}
+                {Array.from({ length: 7 }).map((_, j) => (<td key={j}>&nbsp;</td>))}
               </tr>
             ))}
-            {/* {dadosPaginados.length === 0 && (
-            <tr>
-              <td colSpan="7" style={{ textAlign: 'center', padding: '0px' }}>
-                Nenhum resultado encontrado.
-              </td>
-            </tr>
-          )} */}
           </tbody>
-          
         </table>
 
         <div className="table-footer">
@@ -211,9 +150,10 @@ function TableEstudantes({ filtrar }) {
           </div>
         </div>
       </div>
-      {modalOpen === 'arquivar' && (<ModalArquivar handleCloseModal={handleCloseModal} nameTable='este estudante' textoArquivar='Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente.'/>)}
-      {modalOpen === 'editar' && (<ModalEditar handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados}/>)}
-      {modalOpen === 'visualizar' && (<ModalVisualizarEstudante handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados}/>)}
+
+      {modalOpen === 'arquivar' && <ModalArquivar handleCloseModal={handleCloseModal} nameTable='este estudante' textoArquivar='Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente.' />}
+      {modalOpen === 'editar' && <ModalEditar handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados} />}
+      {modalOpen === 'visualizar' && <ModalVisualizarEstudante handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados} />}
     </div>
   );
 }

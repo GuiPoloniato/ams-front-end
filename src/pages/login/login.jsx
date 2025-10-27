@@ -7,25 +7,21 @@ import './style.css';
 
 function Login() {
     const navigate = useNavigate();
-    const {Login} = useContext(AuthContext);
+    const { login } = useContext(AuthContext); // <- must be lowercase
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [erro, setErro] = useState('');
 
-    const handleLogin = async() => {
-        const sucesso = await Login(email, senha);
-        if (sucesso){
-            navigate("/home");
-        } else{
-            setErro("Email ou senha incorretos");
+    const handleLogin = async () => {
+        setErro('');
+        const sucesso = await login(email, senha);
+        if (sucesso) {
+        navigate("/home");
+        } else {
+        setErro("Email ou senha incorretos");
         }
-        
-        // if (email === 'admin' && senha === 'admin') {
-        //     navigate('/home');
-        // } else {
-        //     setErro('Email ou senha incorretos');
-        // }
-    }
+    };
+
 
     return (
         <div className="body-login">

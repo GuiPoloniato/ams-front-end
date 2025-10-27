@@ -2,12 +2,12 @@ import React, {useState} from 'react';
 import SideBar from '../../components/sideBar/sideBar';
 import MaisIcon from "../../assets/iconsSvg/mais.svg";
 import ExportarIcon from "../../assets/iconsSvg/exportar.svg";
-import NovaTurmaModal from '../../components/cadastrar/turma/novaTurma';
-import TableTurmas from '../../components/table/turmas/tableTurmas';
+import NovaTurmaModal from '../../components/cadastrar/sala/novaSala';
+import TableSalas from '../../components/table/salas/tableSalas';
 import FiltrarTable from '../../components/filtrar/filtrarTable';
 import '../stylePages.css'
 
-function Turmas() {
+function Salas() {
     const [ modalOpen, setModalOpen ] = useState(false);
     const [ filtrar, setFiltrar ] = useState('');
 
@@ -19,9 +19,9 @@ function Turmas() {
         <div className="body-page">
             <SideBar />
             <div className="content-page">
-                <h2 className='h2-route'>Home / Turmas</h2>
+                <h2 className='h2-route'>Home / Salas</h2>
                 <div className="gerenciamento">
-                    <h1 className='h1-gerenciamento'>Gerenciamento de Turmas</h1>
+                    <h1 className='h1-gerenciamento'>Gerenciamento de Salas</h1>
                     <div className="buttons-gerenciamento">
                         <button className='btn-cadastrar' onClick={() => setModalOpen('turma')}><img src={MaisIcon} alt="" /> Nova turma</button>
                         <button className='btn-exportar'><img src={ExportarIcon} alt="" /> Exportar dados</button>
@@ -30,11 +30,11 @@ function Turmas() {
                 </div>
                 <FiltrarTable filtro={setFiltrar}/>
                 <div className="tabela-container">
-                    <TableTurmas filtrar={filtrar} />
+                    <TableSalas filtrar={filtrar} />
                 </div>
             </div>
             {modalOpen === 'turma' && (<NovaTurmaModal handlleCloseModal={handlleCloseModal}/>)}
         </div>
     )
 }
-export default Turmas;
+export default Salas;

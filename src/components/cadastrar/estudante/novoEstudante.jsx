@@ -4,53 +4,45 @@ import { api } from '../../../services/service';
 
 function NovoEstudanteModal({ handlleCloseModal }) {
   const handleSubmit = async () => {
-    const novoEstudante = {
-      matricula: document.getElementById("inputMatricula").value,
-      nome: document.getElementById("inputName").value,
-      turma: document.getElementById("selectTurma").value, // criar select de turma
-      nascimento: document.getElementById("dataInput").value,
-      naturalidade: document.getElementById("inputNaturalidade").value,
-      raca: document.getElementById("selectRaca").value,
-      turno: document.getElementById("selectTurno").value,
-      endereco: {
-        logradouro: document.getElementById("inputLogradouro").value,
-        numero: document.getElementById("inputNumber").value,
-        bairro: document.getElementById("inputBairro").value,
-        cidade: document.getElementById("selectCidade").value,
-        uf: document.getElementById("selectEstado").value,
-        cep: document.getElementById("inputCep").value,
-        pais: document.getElementById("selectPais").value
-      },
-      responsavel: {
-        nome: document.getElementById("inputNomeResponsavel").value,
-        cpf: document.getElementById("inputCpfResponsavel").value,
-        telefone: document.getElementById("inputCelular").value || document.getElementById("inputTelefone").value,
-        email: document.getElementById("inputEmailResponsavel").value, // criar input específico
-        parentesco: document.getElementById("selectParentesco").value // criar select de parentesco
-      }
-    };
-
-  try {
-    const response = await fetch("http://localhost:3000/estudantes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(novoEstudante)
-    });
-
-    if (response.ok) {
-      alert("Estudante cadastrado com sucesso!");
-      handlleCloseModal();
-    } else {
-      const erroData = await response.json();
-      alert("Erro ao cadastrar estudante: " + (erroData.mensagem || "Verifique os campos."));
-    }
-  } catch (error) {
-    console.error("Erro na requisição:", error);
-    alert("Erro ao conectar com o servidor.");
+  const novoEstudante = {
+  matricula: String(document.getElementById("inputMatricula").value),
+  nome: document.getElementById("inputName").value,
+  nascimento: document.getElementById("dataInput").value,
+  naturalidade: document.getElementById("inputNaturalidade").value,
+  raca: document.getElementById("selectRaca").value,
+  turno: document.getElementById("selectTurno").value, 
+  endereco: {
+    cep: document.getElementById("inputCep").value,
+    bairro: document.getElementById("inputBairro").value,
+    logradouro: document.getElementById("inputLogradouro").value,
+    numero: String(document.getElementById("inputNumber").value),
+    pais: document.getElementById("selectPais").value,
+    uf: document.getElementById("selectEstado").value,
+    cidade: document.getElementById("selectCidade").value
+  },
+  responsavel: {
+    nome: document.getElementById("inputNomeResponsavel").value,
+    cpf: document.getElementById("inputCpfResponsavel").value,
+    rg: document.getElementById("inputRgResponsavel").value,
+    orgaoExpedidor: document.getElementById("inputOrgao").value,
+    uf: document.getElementById("selectUf").value,
+    telefoneResidencial: document.getElementById("inputTelefone").value,
+    telefoneComercial: document.getElementById("inputComercial").value,
+    celular: document.getElementById("inputCelular").value,
+    email: document.getElementById("inputEmail").value,
+    profissao: document.getElementById("inputProfissao").value,
+    parentesco: document.getElementById("inputParentesco").value
   }
 };
+    try {
+      const response = await api.post("/alunos", novoEstudante);
+      alert("Estudante cadastrado com sucesso!");
+      handlleCloseModal();
+    } catch (error) {
+      console.error("Erro ao cadastrar estudante:", error);
+      alert(error.response?.data?.mensagem || "Erro ao cadastrar estudante.");
+    }
+  };
 
 
 
@@ -190,6 +182,10 @@ function NovoEstudanteModal({ handlleCloseModal }) {
             <div className="campo">
               <label htmlFor="inputProfissao">Profissão</label>
               <input type="text" className='inputProfissao' id="inputProfissao" />
+            </div>
+            <div className="campo">
+              <label htmlFor="inputParentesco">Parentesco</label>
+              <input type="text" className='inputParentesco' id="inputParentesco" />
             </div>
           </div>
 

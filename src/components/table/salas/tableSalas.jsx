@@ -1,42 +1,39 @@
 import { useState, useEffect } from 'react';
-import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg"
+import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg";
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
+import { api } from '../../../services/service';
 import ModalArquivar from '../../modal/arquivar/arquivar';
-import ModalEditarTurma from '../../modal/editar/turma/editarTurma';
-import ModalVisualizarTurmas from '../../modal/visualizar/turmas/visualizarTurmas';
-import "../style.css"
+import ModalEditarSala from '../../modal/editar/sala/editarSala';
+import ModalVisualizarTurmas from '../../modal/visualizar/salas/visualizarSalas';
+import "../style.css";
 
-function TableTurmas({ filtrar }) {
+function TableSalas({ filtrar }) {
   const [dados, setDados] = useState([]);
-  const [ modalOpen, setModalOpen ] = useState(false);
-  const [ paginaAtual, setPaginaAtual ] = useState(1);
-  const [ dadosSelecionados, setDadosSelecionados ] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [paginaAtual, setPaginaAtual] = useState(1);
+  const [dadosSelecionados, setDadosSelecionados] = useState(null);
 
-    const handleCloseModal = () => {
-        setModalOpen(false)
-    }
+  const handleCloseModal = () => setModalOpen(false);
 
   useEffect(() => {
-    fetch('http://localhost:3000/turma')
-      .then(res => res.json())
-      .then(data => {
-        setDados({ turma: data }); // mantêm compatibilidade com seu uso de dados.estudante
-      })
-      .catch(err => {
-        console.error('Erro ao buscar turmas:', err);
-      });
+    async function getSalas() {
+      try {
+        const res = await api.get("/salas");
+        setDados(res.data.dados || res.data); // já retorna array direto
+      } catch (err) {
+        console.error("Erro ao buscar salas:", err);
+      }
+    }
+    getSalas();
   }, []);
 
-  
   useEffect(() => {
-        setPaginaAtual(1);
-    }, [filtrar]);
+    setPaginaAtual(1);
+  }, [filtrar]);
 
-  console.log("dados:", dados);
+  const salasArray = dados || [];
 
-  const turmasArray = dados.turma || [];
-
-  const dadosFiltrados = turmasArray.filter((item) =>
+  const dadosFiltrados = salasArray.filter((item) =>
     Object.values(item).some((valor) =>
       String(valor).toLowerCase().includes(filtrar.toLowerCase())
     )
@@ -44,7 +41,6 @@ function TableTurmas({ filtrar }) {
 
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);
-
   const inicio = (paginaAtual - 1) * itensPorPagina;
   const fim = inicio + itensPorPagina;
   const dadosPaginados = dadosFiltrados.slice(inicio, fim);
@@ -66,9 +62,9 @@ function TableTurmas({ filtrar }) {
         <table className="table table-relatorio">
           <thead>
             <tr>
-              <th>Identificação</th>
-              <th>Tipo de ensino</th>
-              <th>Ano letivo</th>
+              <th>Nome da Sala</th>
+              <th>Tipo de Sala</th>
+              <th>Capacidade</th>
               <th>Turno</th>
               <th className='th-acoes'>Ações</th>
             </tr>
@@ -80,30 +76,32 @@ function TableTurmas({ filtrar }) {
                 setDadosSelecionados(item);
               }}>
                 <td>
-                  <span
-                    className={`status ${item.status === 'ativo' ? 'verde' : 'vermelho'}`}
-                  ></span>
-                  {item.nome}
+                  <span className={`status ${item.status === 'ativa' ? 'verde' : 'vermelho'}`}>
+                    </span>
+                  {item.nomeSala}
                 </td>
-                <td>{item.tipo_ensino}</td>
-                <td>{item.ano_letivo}</td>
+                <td>{item.tipoSala}</td>
+                <td>{item.capacidade}</td>
                 <td>{item.turno}</td>
                 <td className="acoes">
-                  <button 
-                    className="editar" 
+                  <button
+                    className="editar"
                     onClick={(e) => {
-                      e.stopPropagation(); 
+                      e.stopPropagation();
                       setModalOpen('editar');
                       setDadosSelecionados(item);
                     }}
-                    >
-                      Editar <span className="icon editar-icon" />
+                  >
+                    Editar <span className="icon editar-icon" />
                   </button>
-                  <button 
+                  <button
                     className="arquivar"
-                    onClick={(e) => {e.stopPropagation();  setModalOpen('arquivar')}
-                  }>
-                      Arquivar <span className="icon arquivar-icon"/>
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModalOpen('arquivar');
+                    }}
+                  >
+                    Arquivar <span className="icon arquivar-icon" />
                   </button>
                 </td>
               </tr>
@@ -116,12 +114,12 @@ function TableTurmas({ filtrar }) {
               </tr>
             ))}
             {dadosPaginados.length === 0 && (
-            <tr>
-              <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
-                Nenhum resultado encontrado.
-              </td>
-            </tr>
-          )}
+              <tr>
+                <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
+                  Nenhum resultado encontrado.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
 
@@ -146,11 +144,28 @@ function TableTurmas({ filtrar }) {
           </div>
         </div>
       </div>
-      {modalOpen === 'arquivar' && (<ModalArquivar handleCloseModal={handleCloseModal} nameTable='esta turma' textoArquivar='Ao arquivar esta turma, ela será desativada e não poderá mais ser utilizada em nenhuma funcionalidade do sistema. Para utilizá-la novamente, será necessário reativá-la manualmente.'/>)}
-      {modalOpen === 'editar' && (<ModalEditarTurma handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados}/>)}
-      {modalOpen === 'visualizar' && (<ModalVisualizarTurmas handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados}/>)}
+
+      {modalOpen === 'arquivar' && (
+        <ModalArquivar
+          handleCloseModal={handleCloseModal}
+          nameTable='esta sala'
+          textoArquivar='Ao arquivar esta sala, ela será desativada e não poderá mais ser utilizada em nenhuma funcionalidade do sistema. Para utilizá-la novamente, será necessário reativá-la manualmente.'
+        />
+      )}
+      {modalOpen === 'editar' && (
+        <ModalEditarSala
+          handleCloseModal={handleCloseModal}
+          editarSelecionado={dadosSelecionados}
+        />
+      )}
+      {modalOpen === 'visualizar' && (
+        <ModalVisualizarTurmas
+          handleCloseModal={handleCloseModal}
+          visualizarSelecionado={dadosSelecionados}
+        />
+      )}
     </div>
   );
 }
 
-export default TableTurmas;
+export default TableSalas;
