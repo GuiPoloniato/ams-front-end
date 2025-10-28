@@ -28,7 +28,7 @@ function Salas() {
                     </div>
                     
                 </div>
-                <FiltrarTable filtro={setFiltrar}/>
+                {/* <FiltrarTable filtro={setFiltrar}/> */}
                 <div className="tabela-container">
                     <TableSalas filtrar={filtrar} />
                 </div>

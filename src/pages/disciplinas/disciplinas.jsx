@@ -28,7 +28,7 @@ function Disciplinas() {
                     </div>
                     
                 </div>
-                <FiltrarTable filtro={setFiltrar}/>
+                {/* <FiltrarTable filtro={setFiltrar}/> */}
                 <div className="tabela-container">
                     <TableDisciplinas filtrar={filtrar} />
                 </div>

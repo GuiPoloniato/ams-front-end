@@ -4,7 +4,7 @@ import MaisIcon from "../../assets/iconsSvg/mais.svg";
 import ExportarIcon from "../../assets/iconsSvg/exportar.svg";
 import NovoProfessorModal from '../../components/cadastrar/professor/novoProfessor';
 import TableProfessor from '../../components/table/professores/tableProf';
-import FiltrarTable from '../../components/filtrar/filtrarTable';
+// import FiltrarTable from '../../components/filtrar/filtrarTable';
 import '../stylePages.css'
 
 function Professores() {
@@ -28,7 +28,7 @@ function Professores() {
                     </div>
                     
                 </div>
-                <FiltrarTable filtro={setFiltrar}/>
+                {/* <FiltrarTable filtro={setFiltrar}/> */}
                 <div className="tabela-container">
                     <TableProfessor filtrar={filtrar} />
                 </div>

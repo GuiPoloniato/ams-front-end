@@ -1,73 +1,79 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react'; // useMemo: otimização de performance
 import { api } from '../../../services/service';
-import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg"
+import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg";
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 import ModalArquivar from '../../modal/arquivar/arquivar';
 import ModalEditar from '../../modal/editar/estudante/editarEstudante';
 import ModalVisualizarEstudante from '../../modal/visualizar/estudantes/visualizarEstudantes';
 import '../style.css';
 
-function TableEstudantes({ filtrar }) {
-  const [dados, setDados] = useState([]);
+function TableEstudantes({ filtros }) {
+  const [todosAlunos, setTodosAlunos] = useState([]);
   const [professores, setProfessores] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [dadosSelecionados, setDadosSelecionados] = useState(null);
 
-  const handleCloseModal = () => setModalOpen(false);
-
-
-  const handleArquivarEstudante = async () => {
-    if (!dadosSelecionados) return;
-    try {
-      await api.delete(`/alunos/${dadosSelecionados.id}`);
-
-      setDados(prev => prev.map(aluno =>
-        aluno.id === dadosSelecionados.id ? { ...aluno, status: 'Inativo' } : aluno
-      ));
-
-      setModalOpen(false);
-      setDadosSelecionados(null);
-
-      alert('Estudante arquivado com sucesso!');
-    } catch (error) {
-      console.error('Erro ao arquivar estudante:', error);
-      alert('Erro ao arquivar estudante. Tente novamente.');
-    }
-  };
-  
-
   useEffect(() => {
-    async function getDados() {
+    const fetchAll = async () => {
       try {
         const res = await api.get("/alunos");
-        setDados(res.data.dados || res.data);
-
+        setTodosAlunos(res.data.dados || []);
+        
         const resProf = await api.get("/professores");
-        setProfessores(resProf.data.dados || resProf.data);
-
-      } catch (erro) {
-        console.error("Erro ao buscar estudantes:", erro);
+        setProfessores(resProf.data.dados || []);
+      } catch (err) {
+        console.error("Erro ao carregar dados:", err);
       }
-    }
-    getDados();
+    };
+    fetchAll();
   }, []);
+
+  const dadosFiltrados = useMemo(() => {
+    let resultado = [...todosAlunos];
+
+    resultado = resultado.filter(aluno => aluno.status === filtros.status);
+
+    if (filtros.termo) {
+      const t = filtros.termo.toLowerCase();
+      resultado = resultado.filter(aluno => {
+        const resp = aluno.responsavel?.nome || '';
+        return (
+          aluno.nome.toLowerCase().includes(t) ||
+          aluno.matricula.toLowerCase().includes(t) ||
+          resp.toLowerCase().includes(t)
+        );
+      });
+    }
+
+    if (filtros.matricula) {
+      resultado = resultado.filter(a => a.matricula.includes(filtros.matricula));
+    }
+    if (filtros.nomeCompleto) {
+      resultado = resultado.filter(a => a.nome.toLowerCase().includes(filtros.nomeCompleto.toLowerCase()));
+    }
+    if (filtros.dataNascimento) {
+      resultado = resultado.filter(a => a.nascimento === filtros.dataNascimento);
+    }
+    if (filtros.turno) {
+      resultado = resultado.filter(a => a.turno === filtros.turno);
+    }
+    if (filtros.nomeResponsavel) {
+      resultado = resultado.filter(a => {
+        const resp = a.responsavel?.nome || '';
+        return resp.toLowerCase().includes(filtros.nomeResponsavel.toLowerCase());
+      });
+    }
+
+    return resultado;
+  }, [todosAlunos, filtros]);
 
   useEffect(() => {
     setPaginaAtual(1);
-  }, [filtrar]);
-
-  const estudantesArray = dados || [];
-
-  const dadosFiltrados = estudantesArray.filter((item) =>
-    Object.values(item).some((valor) =>
-      String(valor).toLowerCase().includes(filtrar.toLowerCase())
-    )
-  );
+  }, [filtros]);
 
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);
-
   const inicio = (paginaAtual - 1) * itensPorPagina;
   const fim = inicio + itensPorPagina;
   const dadosPaginados = dadosFiltrados.slice(inicio, fim);
@@ -82,6 +88,24 @@ function TableEstudantes({ filtrar }) {
   const mudarPagina = (numero) => setPaginaAtual(numero);
   const paginaAnterior = () => setPaginaAtual((prev) => Math.max(prev - 1, 1));
   const proximaPagina = () => setPaginaAtual((prev) => Math.min(prev + 1, totalPaginas));
+
+  const handleCloseModal = () => setModalOpen(false);
+
+  const handleArquivarEstudante = async () => {
+    if (!dadosSelecionados) return;
+    try {
+      await api.delete(`/alunos/${dadosSelecionados.id}`);
+      setTodosAlunos(prev => prev.map(aluno =>
+        aluno.id === dadosSelecionados.id ? { ...aluno, status: 'inativo' } : aluno
+      ));
+      setModalOpen(false);
+      setDadosSelecionados(null);
+      alert('Estudante arquivado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao arquivar estudante:', error);
+      alert('Erro ao arquivar estudante. Tente novamente.');
+    }
+  };
 
   return (
     <div className="body-table">
@@ -101,15 +125,14 @@ function TableEstudantes({ filtrar }) {
           <tbody>
             {dadosPaginados.map((item, index) => {
               const responsavel = item.responsavel || {};
-              const professor = professores.find(p => p.id === item.ProfessorId)
+              const professor = professores.find(p => p.id === item.ProfessorId);
               return (
-                <tr key={index} onClick={() => {
+                <tr key={item.id || index} onClick={() => {
                   setDadosSelecionados({ ...item, responsavel, professor });
                   setModalOpen('visualizar');
                 }}>
                   <td>
-                    <span className={`status ${item.status === 'ativo' ? 'verde' : 'vermelho'}`}>
-                    </span>
+                    <span className={`status ${item.status === 'ativo' ? 'verde' : 'vermelho'}`}></span>
                     {item.matricula}
                   </td>
                   <td>{item.nome}</td>
@@ -172,11 +195,16 @@ function TableEstudantes({ filtrar }) {
         </div>
       </div>
 
-      {modalOpen === 'arquivar' && <ModalArquivar handleCloseModal={handleCloseModal} 
-      nameTable='este estudante' 
-      textoArquivar='Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente.' onConfirm={handleArquivarEstudante}/>}
+      {modalOpen === 'arquivar' && (
+        <ModalArquivar
+          handleCloseModal={handleCloseModal}
+          nameTable="este estudante"
+          textoArquivar="Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente."
+          onConfirm={handleArquivarEstudante}
+        />
+      )}
       {modalOpen === 'editar' && <ModalEditar handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados} />}
-      {modalOpen === 'visualizar' &&  <ModalVisualizarEstudante handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados} />}
+      {modalOpen === 'visualizar' && <ModalVisualizarEstudante handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados} />}
     </div>
   );
 }

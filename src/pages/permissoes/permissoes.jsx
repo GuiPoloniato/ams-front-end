@@ -26,7 +26,7 @@ function Permissoes() {
                     </div>
                     
                 </div>
-                <FiltrarTable filtro={setFiltrar}/>
+                {/* <FiltrarTable filtro={setFiltrar}/> */}
                 <div className="tabela-container">
                     <TablePermissoes filtrar={filtrar} />
                 </div>
