@@ -15,6 +15,25 @@ function TableSalas({ filtrar }) {
 
   const handleCloseModal = () => setModalOpen(false);
 
+  const handleArquivarSalas = async () => {
+    if (!dadosSelecionados) return;
+    try {
+      await api.delete(`/salas/${dadosSelecionados.id}`);
+
+      setDados(prev => prev.map(sala =>
+        sala.id === dadosSelecionados.id ? { ...sala, status: 'Inativo' } : sala
+      ));
+
+      setModalOpen(false);
+      setDadosSelecionados(null);
+
+      alert('Sala arquivado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao arquivar salas:', error);
+      alert('Erro ao arquivar salas. Tente novamente.');
+    }
+  };
+
   useEffect(() => {
     async function getSalas() {
       try {
@@ -98,6 +117,7 @@ function TableSalas({ filtrar }) {
                     className="arquivar"
                     onClick={(e) => {
                       e.stopPropagation();
+                      setDadosSelecionados(item);
                       setModalOpen('arquivar');
                     }}
                   >
@@ -149,7 +169,7 @@ function TableSalas({ filtrar }) {
         <ModalArquivar
           handleCloseModal={handleCloseModal}
           nameTable='esta sala'
-          textoArquivar='Ao arquivar esta sala, ela será desativada e não poderá mais ser utilizada em nenhuma funcionalidade do sistema. Para utilizá-la novamente, será necessário reativá-la manualmente.'
+          textoArquivar='Ao arquivar esta sala, ela será desativada e não poderá mais ser utilizada em nenhuma funcionalidade do sistema. Para utilizá-la novamente, será necessário reativá-la manualmente.' onConfirm={handleArquivarSalas}
         />
       )}
       {modalOpen === 'editar' && (

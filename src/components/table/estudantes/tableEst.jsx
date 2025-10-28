@@ -172,9 +172,11 @@ function TableEstudantes({ filtrar }) {
         </div>
       </div>
 
-      {modalOpen === 'arquivar' && <ModalArquivar handleCloseModal={handleCloseModal} nameTable='este estudante' textoArquivar='Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente.' onConfirm={handleArquivarEstudante}/>}
+      {modalOpen === 'arquivar' && <ModalArquivar handleCloseModal={handleCloseModal} 
+      nameTable='este estudante' 
+      textoArquivar='Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente.' onConfirm={handleArquivarEstudante}/>}
       {modalOpen === 'editar' && <ModalEditar handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados} />}
-      {modalOpen === 'visualizar' && <ModalVisualizarEstudante handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados} />}
+      {modalOpen === 'visualizar' &&  <ModalVisualizarEstudante handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados} />}
     </div>
   );
 }

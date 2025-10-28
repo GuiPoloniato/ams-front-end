@@ -15,6 +15,25 @@ function TableProfessor({ filtrar }) {
 
   const handleCloseModal = () => setModalOpen(false);
 
+  const handleArquivarProfessor = async () => {
+    if (!dadosSelecionados) return;
+    try {
+      await api.delete(`/professores/${dadosSelecionados.id}`);
+
+      setDados(prev => prev.map(professor =>
+        professor.id === dadosSelecionados.id ? { ...professor, status: 'Inativo' } : professor
+      ));
+
+      setModalOpen(false);
+      setDadosSelecionados(null);
+
+      alert('Professor arquivado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao arquivar professor:', error);
+      alert('Erro ao arquivar professor. Tente novamente.');
+    }
+  };
+
   useEffect(() => {
     async function getDados() {
       try {
@@ -102,6 +121,7 @@ function TableProfessor({ filtrar }) {
                     className="arquivar"
                     onClick={(e) => {
                       e.stopPropagation();
+                      setDadosSelecionados(item);
                       setModalOpen('arquivar');
                     }}
                   >
@@ -153,7 +173,7 @@ function TableProfessor({ filtrar }) {
         <ModalArquivar
           handleCloseModal={handleCloseModal}
           nameTable='este professor'
-          textoArquivar='Ao arquivar este professor, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente.'
+          textoArquivar='Ao arquivar este professor, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente.' onConfirm={handleArquivarProfessor}
         />
       )}
       {modalOpen === 'editar' && (

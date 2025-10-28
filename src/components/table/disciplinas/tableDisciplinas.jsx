@@ -16,6 +16,25 @@ function TableDisciplinas({ filtrar }) {
 
   const handleCloseModal = () => setModalOpen(false);
 
+  const handleArquivarDisiplinas = async () => {
+    if (!dadosSelecionados) return;
+    try {
+      await api.delete(`/disciplinas/${dadosSelecionados.id}`);
+
+      setDados(prev => prev.map(disciplina =>
+        disciplina.id === dadosSelecionados.id ? { ...disciplina, status: 'Inativo' } : disciplina
+      ));
+
+      setModalOpen(false);
+      setDadosSelecionados(null);
+
+      alert('Disciplina arquivada com sucesso!');
+    } catch (error) {
+      console.error('Erro ao arquivar disciplina:', error);
+      alert('Erro ao arquivar disciplina. Tente novamente.');
+    }
+  };
+
   useEffect(() => {
     async function getDados() {
       try {
@@ -105,6 +124,7 @@ function TableDisciplinas({ filtrar }) {
                       className="arquivar"
                       onClick={(e) => {
                         e.stopPropagation();
+                        setDadosSelecionados(item)
                         setModalOpen('arquivar');
                       }}
                     >
@@ -150,7 +170,7 @@ function TableDisciplinas({ filtrar }) {
         <ModalArquivar
           handleCloseModal={handleCloseModal}
           nameTable='esta disciplina'
-          textoArquivar='Ao arquivar esta disciplina, ela será desativada e não poderá mais ser utilizada em nenhuma funcionalidade do sistema. Para utilizá-la novamente, será necessário reativá-la manualmente.'
+          textoArquivar='Ao arquivar esta disciplina, ela será desativada e não poderá mais ser utilizada em nenhuma funcionalidade do sistema. Para utilizá-la novamente, será necessário reativá-la manualmente.' onConfirm={handleArquivarDisiplinas}
         />
       )}
       {modalOpen === 'editar' && (

@@ -21,7 +21,7 @@ function Home() {
     }
 
     // const token = localStorage.getItem("token"); 
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJhZG1pbjEyM0BlbWFpbC5jb20iLCJpYXQiOjE3NjE0MzA4MTQsImV4cCI6MTc2MTUxNzIxNH0.FSxOg-7H-wJeUvREWEvu2oUom83ax39ouXqFkJZ9kro"
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBlbWFpbC5jb20iLCJwYXBlbCI6ImFkbWluIiwiaWF0IjoxNzYxNjEzNTAzLCJleHAiOjE3NjE2OTk5MDN9.iKe0r0qwvDpPV74Kj6bsqs-LGHw0ivcwwwr8-KvDaW4"
 
     useEffect(() => {
         const fetchDados = async (endpoint, setState) => {
