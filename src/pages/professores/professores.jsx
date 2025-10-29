@@ -1,40 +1,92 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import { api } from '../../services/service';
 import SideBar from '../../components/sideBar/sideBar';
 import MaisIcon from "../../assets/iconsSvg/mais.svg";
 import ExportarIcon from "../../assets/iconsSvg/exportar.svg";
 import NovoProfessorModal from '../../components/cadastrar/professor/novoProfessor';
 import TableProfessor from '../../components/table/professores/tableProf';
-// import FiltrarTable from '../../components/filtrar/filtrarTable';
+import FiltrarTable from '../../components/filtrar/filtrarTable';
 import '../stylePages.css'
 
 function Professores() {
     const [ modalOpen, setModalOpen ] = useState(false);
-    const [ filtrar, setFiltrar ] = useState('');
+    const [dados, setDados] = useState([]);
+    const [filtrosAtuais, setFiltrosAtuais] = useState({
+        termo: '',
+        status: 'ativo',
+        nomeCompleto: '',
+        email: '',
+        telefone: '',
+    });
 
-    const handlleCloseModal = () => {
-        setModalOpen(false)
-    }
+    useEffect(() => {
+        async function fetchData() {
+          try {
+            const res = await api.get('/professores');
+            setDados(res.data.dados || res.data);
+          } catch (error) {
+            console.error('Erro ao buscar professores:', error);
+          }
+        }
+        fetchData();
+      }, []);
 
-    return(
-        <div className="body-page">
-            <SideBar />
-            <div className="content-page">
-                <h2 className='h2-route'>Home / Professores</h2>
-                <div className="gerenciamento">
-                    <h1 className='h1-gerenciamento'>Gerenciamento de Professor</h1>
-                    <div className="buttons-gerenciamento">
-                        <button className='btn-cadastrar' onClick={() => setModalOpen('professor')}><img src={MaisIcon} alt="" /> Novo professor</button>
-                        <button className='btn-exportar'><img src={ExportarIcon} alt="" /> Exportar dados</button>
-                    </div>
-                    
+
+    const handleAplicarFiltros = (filtrosTemp) => {
+        setFiltrosAtuais(filtrosTemp);
+    };
+
+     const exportarParaExcel = () => {
+        if (!dados.length) {
+          alert('Nenhum dado disponível para exportar.');
+          return;
+        }
+    
+        const planilha = XLSX.utils.json_to_sheet(
+          dados.map(item => ({
+            Matrícula: item.matricula,
+            Nome: item.nome,
+            Nascimento: new Date(item.nascimento).toLocaleDateString('pt-BR'),
+            Turno: item.turno,
+            Responsável: item.responsavel?.nome || '',
+            Telefone: item.responsavel?.celular || '',
+            Status: item.status,
+          }))
+        );
+    
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, planilha, 'Estudantes');
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+        const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+        saveAs(blob, 'estudantes.xlsx');
+      };
+
+return(
+    <div className="body-page">
+        <SideBar />
+        <div className="content-page">
+            <h2 className='h2-route'>Home / Professores</h2>
+            <div className="gerenciamento">
+                <h1 className='h1-gerenciamento'>Gerenciamento de Professor</h1>
+                <div className="buttons-gerenciamento">
+                    <button className='btn-cadastrar' onClick={() => setModalOpen('professor')}><img src={MaisIcon} alt="" /> Novo professor</button>
+                    <button className='btn-exportar' onClick={exportarParaExcel}><img src={ExportarIcon} alt="" /> Exportar dados</button>
                 </div>
-                {/* <FiltrarTable filtro={setFiltrar}/> */}
-                <div className="tabela-container">
-                    <TableProfessor filtrar={filtrar} />
-                </div>
+                
             </div>
-            {modalOpen === 'professor' && (<NovoProfessorModal handlleCloseModal={handlleCloseModal}/>)}
+            <FiltrarTable 
+                tipoEntidade="professor"
+                filtrosAtuais={filtrosAtuais} 
+                onAplicarFiltros={handleAplicarFiltros} 
+            />
+            <div className="tabela-container">
+                <TableProfessor filtros={filtrosAtuais} />
+            </div>
         </div>
+        {modalOpen === 'professor' && (<NovoProfessorModal handlleCloseModal={() => setModalOpen(false)}/>)}
+    </div>
     )
 }
 export default Professores;

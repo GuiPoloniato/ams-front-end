@@ -13,7 +13,7 @@
 }
 
 .pesquisarTable  .input-pesquisar img {
-    position: absolute;
+    position: absolute; 
     left: 20px;
     width: 16px;
     height: 16px;
@@ -78,7 +78,7 @@ modal de filtragem avançada
     background: white;
     border-radius: 10px;
     padding: 25px;
-    width: 500px;
+    width: 550px;
     max-width: 90%;
 }
 
@@ -126,15 +126,19 @@ modal de filtragem avançada
     width: 180px;
 }
 
-.body-modalFiltragem .modal-content .formulario-filtros .linha-flex .campo .selectSerie {
-    width: 110px;
-}
-
 .body-modalFiltragem .modal-content .formulario-filtros .linha-flex .campo .selectTurno {
     width: 110px;
 }
 
 .body-modalFiltragem .modal-content .formulario-filtros .linha-flex .campo .inputNomeResponsavel {
+    width: 180px;
+}
+
+.body-modalFiltragem .modal-content .formulario-filtros .linha-flex .campo .inputNomeProfessor {
+    width: 260px;
+}
+
+.body-modalFiltragem .modal-content .formulario-filtros .linha-flex .campo .inputTelefone {
     width: 180px;
 }
 
@@ -156,7 +160,8 @@ modal de filtragem avançada
     border-radius: 5px;
 }
 
-.body-modalFiltragem .modal-content .formulario-filtros .status-buttons .ativo:hover {
+.body-modalFiltragem .modal-content .formulario-filtros .status-buttons .ativo:hover,
+.body-modalFiltragem .modal-content .formulario-filtros .status-buttons .ativoSelecionado {
     background-color: #299220;
     color: white;
     border: 1px solid #299220;
@@ -171,7 +176,8 @@ modal de filtragem avançada
     border-radius: 5px;
 }
 
-.body-modalFiltragem .modal-content .formulario-filtros .status-buttons .inativo:hover {
+.body-modalFiltragem .modal-content .formulario-filtros .status-buttons .inativo:hover,
+.body-modalFiltragem .modal-content .formulario-filtros .status-buttons .inativoSelecionado {
     background-color: #F34444;
     color: white;
     border: 1px solid #F34444;
@@ -223,7 +229,7 @@ modal de filtragem avançada
   cursor: pointer;
 }
 
-.btn-status.ativo-selecionado {
+/* .btn-status.ativo-selecionado {
   background-color: #299220;
   color: white;
   border-color: #299220;
@@ -233,4 +239,4 @@ modal de filtragem avançada
   background-color: #F34444;
   color: white;
   border-color: #F34444;
-}
+} */

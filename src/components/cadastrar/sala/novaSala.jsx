@@ -30,7 +30,7 @@ function NovaSalaModal({ handlleCloseModal }) {
     };
 
     try {
-      await api.post("/api/salas", novaSala);
+      await api.post("/salas", novaSala);
       alert("Sala cadastrada com sucesso!");
       handlleCloseModal();
     } catch (error) {

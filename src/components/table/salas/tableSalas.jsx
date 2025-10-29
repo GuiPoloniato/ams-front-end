@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg";
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 import { api } from '../../../services/service';
@@ -7,7 +7,7 @@ import ModalEditarSala from '../../modal/editar/sala/editarSala';
 import ModalVisualizarTurmas from '../../modal/visualizar/salas/visualizarSalas';
 import "../style.css";
 
-function TableSalas({ filtrar }) {
+function TableSalas({ filtros }) {
   const [dados, setDados] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
@@ -46,17 +46,42 @@ function TableSalas({ filtrar }) {
     getSalas();
   }, []);
 
-  useEffect(() => {
-    setPaginaAtual(1);
-  }, [filtrar]);
+  // useEffect(() => {
+  //   setPaginaAtual(1);
+  // }, [filtrar]);
 
-  const salasArray = dados || [];
+  const dadosFiltrados = useMemo(() => {
+    let resultado = [...dados];
 
-  const dadosFiltrados = salasArray.filter((item) =>
-    Object.values(item).some((valor) =>
-      String(valor).toLowerCase().includes(filtrar.toLowerCase())
-    )
-  );
+    resultado = resultado.filter(salas => salas.status === filtros.status);
+
+    if (filtros.termo) {
+      const t = filtros.termo.toLowerCase();
+      resultado = resultado.filter(salas =>
+        salas.nome.toLowerCase().includes(t) ||
+        (salas.tipoSala && salas.tipoSala.toLowerCase().includes(t))
+      );
+    }
+
+    // 3. Filtros avançados
+    if (filtros.nomeSala) {
+      resultado = resultado.filter(salas =>
+        salas.nomeSala.toLowerCase().includes(filtros.nomeSala.toLowerCase())
+      );
+    }
+    if (filtros.tipoEnsino) {
+      resultado = resultado.filter(salas =>
+        salas.tipoEnsino.toLowerCase().includes(filtros.tipoEnsino.toLowerCase())
+      );
+    }
+    if (filtros.turno) {
+      resultado = resultado.filter(salas =>
+        salas.turno.toLowerCase().includes(filtros.turno.toLowerCase())
+      );
+    }
+
+    return resultado;
+  }, [dados, filtros]);
 
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);
@@ -95,7 +120,7 @@ function TableSalas({ filtrar }) {
                 setDadosSelecionados(item);
               }}>
                 <td>
-                  <span className={`status ${item.status === 'ativa' ? 'verde' : 'vermelho'}`}>
+                  <span className={`status ${item.status === 'ativo' ? 'verde' : 'vermelho'}`}>
                     </span>
                   {item.nomeSala}
                 </td>

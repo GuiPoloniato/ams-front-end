@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { api } from '../../../services/service';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg";
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
@@ -7,7 +7,7 @@ import ModalEditarProfessor from '../../modal/editar/professor/editarProfessor';
 import ModalVisualizarProfessor from '../../modal/visualizar/professores/visualizarProfessor';
 import "../style.css";
 
-function TableProfessor({ filtrar }) {
+function TableProfessor({ filtros }) {
   const [dados, setDados] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
@@ -24,7 +24,7 @@ function TableProfessor({ filtrar }) {
         professor.id === dadosSelecionados.id ? { ...professor, status: 'Inativo' } : professor
       ));
 
-      setModalOpen(false);
+      setModalOpen(false);  
       setDadosSelecionados(null);
 
       alert('Professor arquivado com sucesso!');
@@ -46,17 +46,44 @@ function TableProfessor({ filtrar }) {
     getDados();
   }, []);
 
-  useEffect(() => {
-    setPaginaAtual(1);
-  }, [filtrar]);
+  // useEffect(() => {
+  //   setPaginaAtual(1);
+  // }, [filtros]);
 
-  const professoresArray = dados || [];
+  const dadosFiltrados = useMemo(() => {
+    let resultado = [...dados];
 
-  const dadosFiltrados = professoresArray.filter((item) =>
-    Object.values(item).some((valor) =>
-      String(valor).toLowerCase().includes(filtrar.toLowerCase())
-    )
-  );
+  // 1. Filtro por status
+  resultado = resultado.filter(prof => prof.status === filtros.status);
+
+  // 2. Busca simples (termo)
+  if (filtros.termo) {
+    const t = filtros.termo.toLowerCase();
+    resultado = resultado.filter(prof =>
+      prof.nome.toLowerCase().includes(t) ||
+      (prof.telefone && prof.telefone.toLowerCase().includes(t))
+    );
+  }
+
+  // 3. Filtros avançados
+  if (filtros.nomeCompleto) {
+    resultado = resultado.filter(prof =>
+      prof.nome.toLowerCase().includes(filtros.nomeCompleto.toLowerCase())
+    );
+  }
+  if (filtros.telefone) {
+    resultado = resultado.filter(prof =>
+      prof.telefone && prof.telefone.includes(filtros.telefone)
+    );
+  }
+  if (filtros.email) {
+    resultado = resultado.filter(prof => 
+      prof.email.toLowerCase().includes(filtros.email.toLowerCase())
+    );
+  }
+
+  return resultado;
+  }, [dados, filtros]);
 
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);
