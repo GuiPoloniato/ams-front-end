@@ -1,7 +1,31 @@
-import React from 'react';
+import React, {useState} from 'react';
+import { api } from '../../../services/service';
 import './style.css';
 
 function NovaPermissaoUsuarioModal({ handlleCloseModal }) {
+  const [formData, setFormData] = useState({
+    nome: '',
+    email: '',
+    senha: '',
+    papel: 'admin', // padrão igual à lógica anterior
+  });
+
+  const handleSubmit = async () => {
+    if (!formData.nome || !formData.email || !formData.senha) {
+      alert('Preencha todos os campos obrigatórios!');
+      return;
+    }
+
+    try {
+      await api.post('/auth/register', formData);
+      alert('Usuário criado com sucesso!');
+      handlleCloseModal();
+    } catch (error) {
+      console.error('Erro ao criar usuário:', error);
+      alert(error.response?.data?.mensagem || 'Erro ao criar usuário.');
+    }
+  };
+
   return (
     <div className="body-modalPermissao">
       <div className="modal-content">
@@ -11,27 +35,54 @@ function NovaPermissaoUsuarioModal({ handlleCloseModal }) {
           <div className="linha-flex">
             <div className="campo">
               <label htmlFor="inputNomeCompleto">Nome completo</label>
-              <input type="text" className='inputNomeCompleto' id="inputNomeCompleto" />
+              <input
+                type="text"
+                id="inputNomeCompleto"
+                className="inputNomeCompleto"
+                value={formData.nome}
+                onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+              />
             </div>
             <div className="campo">
               <label htmlFor="selectNivelAcesso">Nível de acesso</label>
-              <select className='selectNivelAcesso' id="selectNivelAcesso"></select>
+              <select
+                id="selectNivelAcesso"
+                className="selectNivelAcesso"
+                value={formData.papel}
+                onChange={(e) => setFormData({ ...formData, papel: e.target.value })}
+              >
+                <option value="admin">Administrador</option>
+                <option value="professor">Professor</option>
+                <option value="aluno">Aluno</option>
+              </select>
             </div>
           </div>
           <div className="linha-flex">
             <div className="campo">
               <label htmlFor="inputEmail">Email</label>
-              <input type="email" className='inputEmail' id="inputEmail" />
+              <input
+                type="email"
+                id="inputEmail"
+                className="inputEmail"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
             </div>
             <div className="campo">
               <label htmlFor="inputSenha">Senha</label>
-              <input type="password" className='inputSenha' id="inputSenha" />
+              <input
+                type="password"
+                id="inputSenha"
+                className="inputSenha"
+                value={formData.senha}
+                onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
+              />
             </div>
           </div>
 
           <div className="buttons-submit">
             <button className='btn-cancelar' onClick={handlleCloseModal}>Cancelar</button>
-            <button className='btn-salvar'>Salvar</button>
+            <button className='btn-salvar' onClick={handleSubmit}>Salvar</button>
           </div>
         </div>
       </div>

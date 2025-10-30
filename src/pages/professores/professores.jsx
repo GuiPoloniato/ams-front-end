@@ -14,11 +14,11 @@ function Professores() {
     const [ modalOpen, setModalOpen ] = useState(false);
     const [dados, setDados] = useState([]);
     const [filtrosAtuais, setFiltrosAtuais] = useState({
-        termo: '',
-        status: 'ativo',
-        nomeCompleto: '',
-        email: '',
-        telefone: '',
+      status: 'ativo',
+      nome: '',
+      papel: '',
+      email: '',
+      senha: '',
     });
 
     useEffect(() => {

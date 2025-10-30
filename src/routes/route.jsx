@@ -8,20 +8,20 @@ import Disciplinas from "../pages/disciplinas/disciplinas";
 import Permissoes from "../pages/permissoes/permissoes";
 import Relatorios from "../pages/relatorios/relatorios";
 // import Configuracao from "../pages/configuracoes/config";
+import PrivateRoute from "../contexts/privateRoute";
 
 function Router(){
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/login" element={<Login />} />
-                <Route path="/home" element={<Home />} />
-                <Route path="/home/estudantes" element={<Estudantes />} />
-                <Route path="/home/professores" element={<Professores />} />
-                <Route path="/home/salas" element={<Salas />} />
-                <Route path="/home/disciplinas" element={<Disciplinas />} />
-                <Route path="/home/permissoes" element={<Permissoes />} />
-                <Route path="/home/relatorios" element={<Relatorios />} />
-                {/* <Route path="/home/configuracao" element={<Configuracao/>} /> */}
+                <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>}/>
+                <Route path="/home/estudantes" element={<PrivateRoute><Estudantes /></PrivateRoute>}/>
+                <Route path="/home/professores" element={<PrivateRoute><Professores /></PrivateRoute> } />
+                <Route path="/home/salas" element={<PrivateRoute><Salas /></PrivateRoute> } />
+                <Route path="/home/disciplinas" element={<PrivateRoute><Disciplinas /></PrivateRoute> } />
+                <Route path="/home/permissoes" element={<PrivateRoute><Permissoes /></PrivateRoute> } />
+                <Route path="/home/relatorios" element={<PrivateRoute><Relatorios /></PrivateRoute> } />
             </Routes>
         </BrowserRouter>
     );

@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import { api } from '../../services/service';
 import SideBar from '../../components/sideBar/sideBar';
 import MaisIcon from "../../assets/iconsSvg/mais.svg";
 import NovaPermissaoUsuarioModal from '../../components/cadastrar/permissoes/usuario';
@@ -8,11 +9,30 @@ import '../stylePages.css'
 
 function Permissoes() {
     const [ modalOpen, setModalOpen ] = useState(false);
-    const [ filtrar, setFiltrar ] = useState('');
+    const [dados, setDados] = useState([]);
+    const [filtrosAtuais, setFiltrosAtuais] = useState({
+            termo: '',
+            status: 'ativo',
+            nomeCompleto: '',
+            email: '',
+            telefone: '',
+        });
 
-    const handlleCloseModal = () => {
-        setModalOpen(false)
+    useEffect(() => {
+    async function fetchData() {
+        try {
+        const res = await api.get('/usuarios');
+        setDados(res.data.dados || res.data);
+        } catch (error) {
+        console.error('Erro ao buscar usuarios:', error);
+        }
     }
+    fetchData();
+    }, []);
+
+    const handleAplicarFiltros = (filtrosTemp) => {
+        setFiltrosAtuais(filtrosTemp);
+    };
 
     return(
         <div className="body-page">
@@ -22,16 +42,20 @@ function Permissoes() {
                 <div className="gerenciamento">
                     <h1 className='h1-gerenciamento'>Gerenciamento de Permissões</h1>
                     <div className="buttons-gerenciamento">
-                        <button className='btn-cadastrar' onClick={() => setModalOpen('permissao')}><img src={MaisIcon} alt="" /> Novo usuário</button>
+                        <button className='btn-cadastrar' onClick={() => setModalOpen('usuarios')}><img src={MaisIcon} alt="" /> Novo usuário</button>
                     </div>
                     
                 </div>
-                {/* <FiltrarTable filtro={setFiltrar}/> */}
+                <FiltrarTable 
+                    tipoEntidade="usuarios"
+                    filtrosAtuais={filtrosAtuais} 
+                    onAplicarFiltros={handleAplicarFiltros} 
+                />
                 <div className="tabela-container">
-                    <TablePermissoes filtrar={filtrar} />
+                    <TablePermissoes filtros={filtrosAtuais} />
                 </div>
             </div>
-            {modalOpen === 'permissao' && (<NovaPermissaoUsuarioModal handlleCloseModal={handlleCloseModal}/>)}
+            {modalOpen === 'usuarios' && (<NovaPermissaoUsuarioModal handlleCloseModal={() => setModalOpen(false)}/>)}
         </div>
     )
 }

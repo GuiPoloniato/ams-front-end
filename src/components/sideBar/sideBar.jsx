@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import DeshboardIcon from '../../assets/sideBar/deshboard-icon.svg';
 import DeshboardIconWhite from '../../assets/sideBar/iconsWhite/deshboard-iconWhite.svg';
@@ -12,11 +12,13 @@ import RelatoriosIcon from '../../assets/sideBar/relatorios-icon.svg';
 import RelatoriosIconWhite from '../../assets/sideBar/iconsWhite/relatorios-iconWhite.svg';
 import ConfigIcon from '../../assets/sideBar/config-icon.svg';
 import SairIcon from '../../assets/sideBar/sair-icon.svg';
+import { AuthContext } from '../../contexts/authContext';
 import './style.css'
 
 function SideBar() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { logout } = useContext(AuthContext);
     const [itemActive, setItemActive] = useState(location.pathname);
     const [isHoverBox, setIsHoverBox] = useState(false);
 
@@ -25,6 +27,11 @@ function SideBar() {
         setIsHoverBox(false);
         navigate(path);
     }
+
+    const handleLogout = () => {
+        logout(); 
+        navigate('/login'); 
+    };
 
     return(
         <div className={`body-sideBar ${isHoverBox ? 'expandir' : ''}`}>
@@ -78,7 +85,7 @@ function SideBar() {
                     </div> */}
                 </div>
                 <div className="sair-inicio">
-                    {isHoverBox ? <span onClick={() => handleItemClick('/login')}>Desconectar</span> : <img src={SairIcon} alt="Icon Sair" />}
+                    {isHoverBox ? <span onClick={handleLogout}>Desconectar</span> : <img src={SairIcon} alt="Icon Sair" onClick={handleLogout}/>}
                 </div>
             </div>
         </div>

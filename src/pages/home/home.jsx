@@ -20,8 +20,7 @@ function Home() {
         setModalOpen(false)
     }
 
-    // const token = localStorage.getItem("token"); 
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBlbWFpbC5jb20iLCJwYXBlbCI6ImFkbWluIiwiaWF0IjoxNzYxNjEzNTAzLCJleHAiOjE3NjE2OTk5MDN9.iKe0r0qwvDpPV74Kj6bsqs-LGHw0ivcwwwr8-KvDaW4"
+    const token = localStorage.getItem("token"); 
 
     useEffect(() => {
         const fetchDados = async (endpoint, setState) => {
@@ -41,7 +40,7 @@ function Home() {
         fetchDados("alunos", setAlunos);
         fetchDados("professores", setProfessores);
         fetchDados("disciplinas", setDisciplinas);
-        fetchDados("api/salas", setSalas);
+        fetchDados("salas", setSalas);
     }, []);
 
     const alunosPorSala = salas.map(sala => {
@@ -57,9 +56,6 @@ function Home() {
             <SideBar />
             <div className="content-home">
                 <h2 className='h2-route'>Home</h2>
-                {/* <button onClick={toggleTheme} style={{ marginBottom: '1rem' }}>
-                    {isDark ? 'Modo Claro' : 'Modo Escuro'}
-                </button> */}
                 <h1 className='h1-welcome'>Bem vindo(a) de volta, João</h1>
                 <div className="acoes-rapidas">
                     <p>Ações rápidas</p>
@@ -77,7 +73,7 @@ function Home() {
                             <div className="numbers">
                                 <span className='span-number'>{alunos.length}</span>
                                 <div className="porcentagem">
-                                    <span className='span-porcentagem span-porcentagem-positivo'>+5%</span>
+                                    {/* <span className='span-porcentagem span-porcentagem-positivo'>+5%</span> */}
                                 </div>
                             </div>
                         </div>
@@ -95,7 +91,7 @@ function Home() {
                             <div className="numbers">
                                 <span className='span-number'>{disciplinas.length}</span>
                                 <div className="porcentagem">
-                                    <span className='span-porcentagem span-porcentagem-positivo'>+1%</span>
+                                    {/* <span className='span-porcentagem span-porcentagem-positivo'>+1%</span> */}
                                 </div>
                             </div>
                         </div>
@@ -104,7 +100,7 @@ function Home() {
                             <div className="numbers">
                                 <span className='span-number'>{salas.length}</span>
                                 <div className="porcentagem">
-                                    <span className='span-porcentagem span-porcentagem-negativo'>-3%</span>
+                                    {/* <span className='span-porcentagem span-porcentagem-negativo'>-3%</span> */}
                                 </div>
                             </div>
                         </div>

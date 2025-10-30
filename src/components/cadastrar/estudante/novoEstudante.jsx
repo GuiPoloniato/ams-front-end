@@ -5,35 +5,35 @@ import { api } from '../../../services/service';
 function NovoEstudanteModal({ handlleCloseModal }) {
   const handleSubmit = async () => {
   const novoEstudante = {
-  matricula: String(document.getElementById("inputMatricula").value),
-  nome: document.getElementById("inputName").value,
-  nascimento: document.getElementById("dataInput").value,
-  naturalidade: document.getElementById("inputNaturalidade").value,
-  raca: document.getElementById("selectRaca").value,
-  turno: document.getElementById("selectTurno").value, 
-  endereco: {
-    cep: document.getElementById("inputCep").value,
-    bairro: document.getElementById("inputBairro").value,
-    logradouro: document.getElementById("inputLogradouro").value,
-    numero: String(document.getElementById("inputNumber").value),
-    pais: document.getElementById("selectPais").value,
-    uf: document.getElementById("selectEstado").value,
-    cidade: document.getElementById("selectCidade").value
-  },
-  responsavel: {
-    nome: document.getElementById("inputNomeResponsavel").value,
-    cpf: document.getElementById("inputCpfResponsavel").value,
-    rg: document.getElementById("inputRgResponsavel").value,
-    orgaoExpedidor: document.getElementById("inputOrgao").value,
-    uf: document.getElementById("selectUf").value,
-    telefoneResidencial: document.getElementById("inputTelefone").value,
-    telefoneComercial: document.getElementById("inputComercial").value,
-    celular: document.getElementById("inputCelular").value,
-    email: document.getElementById("inputEmail").value,
-    profissao: document.getElementById("inputProfissao").value,
-    parentesco: document.getElementById("inputParentesco").value
-  }
-};
+    matricula: String(document.getElementById("inputMatricula").value),
+    nome: document.getElementById("inputName").value,
+    nascimento: document.getElementById("dataInput").value,
+    naturalidade: document.getElementById("inputNaturalidade").value,
+    raca: document.getElementById("selectRaca").value,
+    turno: document.getElementById("selectTurno").value, 
+    endereco: {
+      cep: document.getElementById("inputCep").value,
+      bairro: document.getElementById("inputBairro").value,
+      logradouro: document.getElementById("inputLogradouro").value,
+      numero: String(document.getElementById("inputNumber").value),
+      pais: document.getElementById("selectPais").value,
+      uf: document.getElementById("selectEstado").value,
+      cidade: document.getElementById("selectCidade").value
+    },
+    responsavel: {
+      nome: document.getElementById("inputNomeResponsavel").value,
+      cpf: document.getElementById("inputCpfResponsavel").value,
+      rg: document.getElementById("inputRgResponsavel").value,
+      orgaoExpedidor: document.getElementById("inputOrgao").value,
+      uf: document.getElementById("selectUf").value,
+      telefoneResidencial: document.getElementById("inputTelefone").value,
+      telefoneComercial: document.getElementById("inputComercial").value,
+      celular: document.getElementById("inputCelular").value,
+      email: document.getElementById("inputEmail").value,
+      profissao: document.getElementById("inputProfissao").value,
+      parentesco: document.getElementById("inputParentesco").value
+    }
+  };
     try {
       const response = await api.post("/alunos", novoEstudante);
       alert("Estudante cadastrado com sucesso!");
