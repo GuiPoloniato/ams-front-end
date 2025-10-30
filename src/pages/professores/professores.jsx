@@ -46,21 +46,20 @@ function Professores() {
     
         const planilha = XLSX.utils.json_to_sheet(
           dados.map(item => ({
-            Matrícula: item.matricula,
             Nome: item.nome,
-            Nascimento: new Date(item.nascimento).toLocaleDateString('pt-BR'),
-            Turno: item.turno,
-            Responsável: item.responsavel?.nome || '',
-            Telefone: item.responsavel?.celular || '',
-            Status: item.status,
+            Formacao: item.formacao,
+            Telefone: item.telefone,
+            Email: item.email,
+            Endereco: item.endereco,
+            Status: item.status
           }))
         );
     
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, planilha, 'Estudantes');
+        XLSX.utils.book_append_sheet(wb, planilha, 'Professores');
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
         const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-        saveAs(blob, 'estudantes.xlsx');
+        saveAs(blob, 'Professores.xlsx');
       };
 
 return(

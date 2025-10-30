@@ -12,27 +12,7 @@ function TableSalas({ filtros }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [dadosSelecionados, setDadosSelecionados] = useState(null);
-
-  const handleCloseModal = () => setModalOpen(false);
-
-  const handleArquivarSalas = async () => {
-    if (!dadosSelecionados) return;
-    try {
-      await api.delete(`/salas/${dadosSelecionados.id}`);
-
-      setDados(prev => prev.map(sala =>
-        sala.id === dadosSelecionados.id ? { ...sala, status: 'Inativo' } : sala
-      ));
-
-      setModalOpen(false);
-      setDadosSelecionados(null);
-
-      alert('Sala arquivado com sucesso!');
-    } catch (error) {
-      console.error('Erro ao arquivar salas:', error);
-      alert('Erro ao arquivar salas. Tente novamente.');
-    }
-  };
+  const [acaoPendente, setAcaoPendente] = useState(null);
 
   useEffect(() => {
     async function getSalas() {
@@ -100,6 +80,35 @@ function TableSalas({ filtros }) {
   const paginaAnterior = () => setPaginaAtual((prev) => Math.max(prev - 1, 1));
   const proximaPagina = () => setPaginaAtual((prev) => Math.min(prev + 1, totalPaginas));
 
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setAcaoPendente(null);
+  };
+
+  const handleConfirmarStatus = async () => {
+    if (!dadosSelecionados || !acaoPendente) return;
+
+    try {
+      await api.patch(`/salas/${dadosSelecionados.id}/status`, { status: acaoPendente });
+
+      setDados(prev =>
+        prev.map(sala =>
+          sala.id === dadosSelecionados.id ? { ...sala, status: acaoPendente } : sala
+        )
+      );
+
+      setModalOpen(false);
+      setDadosSelecionados(null);
+      setAcaoPendente(null);
+
+      const acaoTexto = acaoPendente === 'ativo' ? 'reativado' : 'arquivado';
+      alert(`Sala ${acaoTexto} com sucesso!`);
+    } catch (error) {
+      console.error('Erro ao atualizar status:', error);
+      alert('Erro ao atualizar status. Tente novamente.');
+    }
+  };
+
   return (
     <div className="body-table">
       <div className="table-wrapper">
@@ -138,16 +147,31 @@ function TableSalas({ filtros }) {
                   >
                     Editar <span className="icon editar-icon" />
                   </button>
-                  <button
-                    className="arquivar"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDadosSelecionados(item);
-                      setModalOpen('arquivar');
-                    }}
-                  >
-                    Arquivar <span className="icon arquivar-icon" />
-                  </button>
+                  {item.status === 'ativo' ? (
+                    <button
+                      className="arquivar"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDadosSelecionados(item);
+                        setAcaoPendente('inativo');
+                        setModalOpen('arquivar');
+                      }}
+                    >
+                      Arquivar <span className="icon arquivar-icon" />
+                    </button>
+                  ) : (
+                    <button
+                      className="reativar"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDadosSelecionados(item);
+                        setAcaoPendente('ativo');
+                        setModalOpen('arquivar');
+                      }}
+                    >
+                      Reativar <span className="icon arquivar-icon" />
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
@@ -194,7 +218,12 @@ function TableSalas({ filtros }) {
         <ModalArquivar
           handleCloseModal={handleCloseModal}
           nameTable='esta sala'
-          textoArquivar='Ao arquivar esta sala, ela será desativada e não poderá mais ser utilizada em nenhuma funcionalidade do sistema. Para utilizá-la novamente, será necessário reativá-la manualmente.' onConfirm={handleArquivarSalas}
+          textoArquivar={
+            acaoPendente === 'ativo'
+              ? "Ao reativar este estudante, ele voltará a estar disponível em todas as funcionalidades do sistema."
+              : "Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente."
+          }
+          onConfirm={handleConfirmarStatus}
         />
       )}
       {modalOpen === 'editar' && (

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { api } from '../../../services/service';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg"
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
@@ -7,33 +7,13 @@ import ModalEditarDisciplina from '../../modal/editar/disciplina/editarDisciplin
 import ModalVisualizarDisciplinas from '../../modal/visualizar/disciplinas/visualizarDisciplinas';
 import "../style.css"
 
-function TableDisciplinas({ filtrar }) {
+function TableDisciplinas({ filtros }) {
   const [dados, setDados] = useState([]);
   const [salas, setSalas] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [dadosSelecionados, setDadosSelecionados] = useState(null);
-
-  const handleCloseModal = () => setModalOpen(false);
-
-  const handleArquivarDisiplinas = async () => {
-    if (!dadosSelecionados) return;
-    try {
-      await api.delete(`/disciplinas/${dadosSelecionados.id}`);
-
-      setDados(prev => prev.map(disciplina =>
-        disciplina.id === dadosSelecionados.id ? { ...disciplina, status: 'Inativo' } : disciplina
-      ));
-
-      setModalOpen(false);
-      setDadosSelecionados(null);
-
-      alert('Disciplina arquivada com sucesso!');
-    } catch (error) {
-      console.error('Erro ao arquivar disciplina:', error);
-      alert('Erro ao arquivar disciplina. Tente novamente.');
-    }
-  };
+  const [acaoPendente, setAcaoPendente] = useState(null);
 
   useEffect(() => {
     async function getDados() {
@@ -51,17 +31,50 @@ function TableDisciplinas({ filtrar }) {
     getDados();
   }, []);
 
-  useEffect(() => {
-    setPaginaAtual(1);
-  }, [filtrar]);
+  // useEffect(() => {
+  //   setPaginaAtual(1);
+  // }, [filtrar]);
 
-  const disciplinasArray = dados || [];
+  const dadosFiltrados = useMemo(() => {
+    let resultado = [...dados];
 
-  const dadosFiltrados = disciplinasArray.filter((item) =>
-    Object.values(item).some((valor) =>
-      String(valor).toLowerCase().includes(filtrar.toLowerCase())
-    )
-  );
+    resultado = resultado.filter(disc => disc.status === filtros.status);
+
+    if (filtros.termo) {
+      const t = filtros.termo.toLowerCase();
+      resultado = resultado.filter(disc =>
+        disc.nome.toLowerCase().includes(t) ||
+        (disc.telefone && disc.telefone.toLowerCase().includes(t))
+      );
+    }
+
+    if (filtros.nome) {
+      resultado = resultado.filter(disc =>
+        disc.nome.toLowerCase().includes(filtros.nome.toLowerCase())
+      );
+    }
+    if (filtros.cargaHoraria) {
+      resultado = resultado.filter(disc =>
+        disc.cargaHoraria && disc.cargaHoraria.includes(filtros.cargaHoraria)
+      );
+    }
+    if (filtros.tipoEnsino) {
+      resultado = resultado.filter(disc => 
+        disc.tipoEnsino.toLowerCase().includes(filtros.tipoEnsino.toLowerCase())
+      );
+    }
+    if (filtros.professoresReponsaveis) {
+      resultado = resultado.filter(a => {
+        const resp = a.responsavel?.nome || '';
+        return resp.toLowerCase().includes(filtros.professoresReponsaveis.toLowerCase());
+      });
+    }
+    if (filtros.salas) {
+      resultado = resultado.filter(a => a.salas === filtros.salas);
+    }
+
+    return resultado;
+  }, [dados, filtros]);
 
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);
@@ -79,6 +92,35 @@ function TableDisciplinas({ filtrar }) {
   const mudarPagina = (numero) => setPaginaAtual(numero);
   const paginaAnterior = () => setPaginaAtual((prev) => Math.max(prev - 1, 1));
   const proximaPagina = () => setPaginaAtual((prev) => Math.min(prev + 1, totalPaginas));
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setAcaoPendente(null);
+  };
+
+  const handleConfirmarStatus = async () => {
+    if (!dadosSelecionados || !acaoPendente) return;
+
+    try {
+      await api.patch(`/disciplinas/${dadosSelecionados.id}/status`, { status: acaoPendente });
+
+      setDados(prev =>
+        prev.map(disciplina =>
+          disciplina.id === dadosSelecionados.id ? { ...disciplina, status: acaoPendente } : disciplina
+        )
+      );
+
+      setModalOpen(false);
+      setDadosSelecionados(null);
+      setAcaoPendente(null);
+
+      const acaoTexto = acaoPendente === 'ativo' ? 'reativado' : 'arquivado';
+      alert(`Disciplina ${acaoTexto} com sucesso!`);
+    } catch (error) {
+      console.error('Erro ao atualizar status:', error);
+      alert('Erro ao atualizar status. Tente novamente.');
+    }
+  };
 
   return (
     <div className="body-table">
@@ -102,7 +144,7 @@ function TableDisciplinas({ filtrar }) {
                   setDadosSelecionados({ ...item, sala });
                 }}>
                   <td>
-                    <span className={`status ${item.status === 'ativa' ? 'verde' : 'vermelho'}`}>
+                    <span className={`status ${item.status === 'ativo' ? 'verde' : 'vermelho'}`}>
                     </span>
                     {item.nome}
                   </td>
@@ -120,16 +162,31 @@ function TableDisciplinas({ filtrar }) {
                     >
                       Editar <span className="icon editar-icon" />
                     </button>
+                    {item.status === 'ativo' ? (
                     <button
                       className="arquivar"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setDadosSelecionados(item)
+                        setDadosSelecionados(item);
+                        setAcaoPendente('inativo');
                         setModalOpen('arquivar');
                       }}
                     >
                       Arquivar <span className="icon arquivar-icon" />
                     </button>
+                  ) : (
+                    <button
+                      className="reativar"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDadosSelecionados(item);
+                        setAcaoPendente('ativo');
+                        setModalOpen('arquivar');
+                      }}
+                    >
+                      Reativar <span className="icon arquivar-icon" />
+                    </button>
+                  )}
                   </td>
                 </tr>
               );
@@ -170,14 +227,25 @@ function TableDisciplinas({ filtrar }) {
         <ModalArquivar
           handleCloseModal={handleCloseModal}
           nameTable='esta disciplina'
-          textoArquivar='Ao arquivar esta disciplina, ela será desativada e não poderá mais ser utilizada em nenhuma funcionalidade do sistema. Para utilizá-la novamente, será necessário reativá-la manualmente.' onConfirm={handleArquivarDisiplinas}
+          textoArquivar={
+            acaoPendente === 'ativo'
+              ? "Ao reativar este estudante, ele voltará a estar disponível em todas as funcionalidades do sistema."
+              : "Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente."
+          }
+          onConfirm={handleConfirmarStatus}
         />
       )}
       {modalOpen === 'editar' && (
-        <ModalEditarDisciplina handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados} />
+        <ModalEditarDisciplina 
+          handleCloseModal={handleCloseModal} 
+          editarSelecionado={dadosSelecionados} 
+        />
       )}
       {modalOpen === 'visualizar' && (
-        <ModalVisualizarDisciplinas handleCloseModal={handleCloseModal} selecionarDados={dadosSelecionados} visualizarSelecionado={dadosSelecionados}/>
+        <ModalVisualizarDisciplinas 
+          handleCloseModal={handleCloseModal} 
+          selecionarDados={dadosSelecionados} 
+          visualizarSelecionado={dadosSelecionados}/>
       )}
     </div>
   );

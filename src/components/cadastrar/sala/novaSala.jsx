@@ -25,7 +25,7 @@ function NovaSalaModal({ handlleCloseModal }) {
       tipoSala: document.getElementById("inputTipoSala")?.value,
       professorResponsavelId: Number(document.getElementById("selectProfessor")?.value),
       turno: document.getElementById("selectTurno")?.value,
-      status: document.getElementById("selectStatus")?.value || "Ativa",
+      status: document.getElementById("selectStatus")?.value || "ativo",
       observacoes: document.getElementById("inputObservacoes")?.value
     };
 
@@ -87,8 +87,8 @@ function NovaSalaModal({ handlleCloseModal }) {
             {/* <div className="campo">
               <label htmlFor="selectStatus">Status</label>
               <select className='selectStatus' id="selectStatus">
-                <option value="Ativa">Ativa</option>
-                <option value="Inativa">Inativa</option>
+                <option value="ativo">ativo</option>
+                <option value="Indativo">Indativo</option>
               </select>
             </div> */}
           </div>

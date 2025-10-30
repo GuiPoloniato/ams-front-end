@@ -56,10 +56,10 @@ function Salas() {
     );
 
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, planilha, 'Estudantes');
+    XLSX.utils.book_append_sheet(wb, planilha, 'Salas');
     const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    saveAs(blob, 'estudantes.xlsx');
+    saveAs(blob, 'Salas.xlsx');
     };
 
 

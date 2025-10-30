@@ -13,6 +13,7 @@ function TableEstudantes({ filtros }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [dadosSelecionados, setDadosSelecionados] = useState(null);
+  const [acaoPendente, setAcaoPendente] = useState(null);
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -89,21 +90,32 @@ function TableEstudantes({ filtros }) {
   const paginaAnterior = () => setPaginaAtual((prev) => Math.max(prev - 1, 1));
   const proximaPagina = () => setPaginaAtual((prev) => Math.min(prev + 1, totalPaginas));
 
-  const handleCloseModal = () => setModalOpen(false);
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setAcaoPendente(null);
+  };
 
-  const handleArquivarEstudante = async () => {
-    if (!dadosSelecionados) return;
+  const handleConfirmarStatus = async () => {
+    if (!dadosSelecionados || !acaoPendente) return;
+
     try {
-      await api.delete(`/alunos/${dadosSelecionados.id}`);
-      setTodosAlunos(prev => prev.map(aluno =>
-        aluno.id === dadosSelecionados.id ? { ...aluno, status: 'inativo' } : aluno
-      ));
+      await api.patch(`/alunos/${dadosSelecionados.id}/status`, { status: acaoPendente });
+
+      setTodosAlunos(prev =>
+        prev.map(aluno =>
+          aluno.id === dadosSelecionados.id ? { ...aluno, status: acaoPendente } : aluno
+        )
+      );
+
       setModalOpen(false);
       setDadosSelecionados(null);
-      alert('Estudante arquivado com sucesso!');
+      setAcaoPendente(null);
+
+      const acaoTexto = acaoPendente === 'ativo' ? 'reativado' : 'arquivado';
+      alert(`Estudante ${acaoTexto} com sucesso!`);
     } catch (error) {
-      console.error('Erro ao arquivar estudante:', error);
-      alert('Erro ao arquivar estudante. Tente novamente.');
+      console.error('Erro ao atualizar status:', error);
+      alert('Erro ao atualizar status. Tente novamente.');
     }
   };
 
@@ -151,16 +163,31 @@ function TableEstudantes({ filtros }) {
                     >
                       Editar <span className="icon editar-icon" />
                     </button>
+                    {item.status === 'ativo' ? (
                     <button
                       className="arquivar"
                       onClick={(e) => {
                         e.stopPropagation();
                         setDadosSelecionados(item);
+                        setAcaoPendente('inativo'); // define a ação
                         setModalOpen('arquivar');
                       }}
                     >
                       Arquivar <span className="icon arquivar-icon" />
                     </button>
+                  ) : (
+                    <button
+                      className="reativar"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDadosSelecionados(item);
+                        setAcaoPendente('ativo'); // define a ação
+                        setModalOpen('arquivar'); // mesmo modal!
+                      }}
+                    >
+                      Reativar <span className="icon arquivar-icon" />
+                    </button>
+                  )}
                   </td>
                 </tr>
               );
@@ -199,8 +226,12 @@ function TableEstudantes({ filtros }) {
         <ModalArquivar
           handleCloseModal={handleCloseModal}
           nameTable="este estudante"
-          textoArquivar="Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente."
-          onConfirm={handleArquivarEstudante}
+          textoArquivar={
+            acaoPendente === 'ativo'
+              ? "Ao reativar este estudante, ele voltará a estar disponível em todas as funcionalidades do sistema."
+              : "Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente."
+          }
+          onConfirm={handleConfirmarStatus}
         />
       )}
       {modalOpen === 'editar' && <ModalEditar handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados} />}

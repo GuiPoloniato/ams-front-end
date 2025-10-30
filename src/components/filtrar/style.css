@@ -82,6 +82,14 @@ modal de filtragem avançada
     max-width: 90%;
 }
 
+.body-modalFiltragem-disciplinas .modal-content {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    width: 600px;
+    max-width: 90%;
+}
+
 .body-modalFiltragem .modal-content hr{
     border: 1px solid #E8E8E8;
     margin-bottom: 30px;
@@ -140,6 +148,14 @@ modal de filtragem avançada
 
 .body-modalFiltragem .modal-content .formulario-filtros .linha-flex .campo .inputTelefone {
     width: 180px;
+}
+
+.body-modalFiltragem .modal-content .formulario-filtros .linha-flex .campo .inputNomeDisciplina {
+    width: 200px;
+}
+
+.body-modalFiltragem .modal-content .formulario-filtros .linha-flex .campo .inputCargaHoraria {
+    width: 100px;
 }
 
 
