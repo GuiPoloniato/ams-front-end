@@ -7,7 +7,7 @@ import ModalEditarDisciplina from '../../modal/editar/disciplina/editarDisciplin
 import ModalVisualizarDisciplinas from '../../modal/visualizar/disciplinas/visualizarDisciplinas';
 import "../style.css"
 
-function TableDisciplinas({ filtros }) {
+function TableDisciplinas({ filtros, dadosOriginais }) {
   const [dados, setDados] = useState([]);
   const [salas, setSalas] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -30,13 +30,9 @@ function TableDisciplinas({ filtros }) {
     }
     getDados();
   }, []);
-
-  // useEffect(() => {
-  //   setPaginaAtual(1);
-  // }, [filtrar]);
-
+  
   const dadosFiltrados = useMemo(() => {
-    let resultado = [...dados];
+    let resultado = [...((dadosOriginais || []))];
 
     resultado = resultado.filter(disc => disc.status === filtros.status);
 
@@ -74,7 +70,7 @@ function TableDisciplinas({ filtros }) {
     }
 
     return resultado;
-  }, [dados, filtros]);
+  }, [dadosOriginais, filtros]);
 
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);

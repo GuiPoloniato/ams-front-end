@@ -3,7 +3,7 @@ import { api } from '../../../services/service';
 
 import './style.css';
 
-function NovoProfessorModal({ handlleCloseModal }) {
+function NovoProfessorModal({ handlleCloseModal, onProfessoresCriados}) {
   const handleSubmit = async () => {
     const novoProfessor = {
       nome: document.getElementById("inputNome")?.value,
@@ -21,7 +21,6 @@ function NovoProfessorModal({ handlleCloseModal }) {
       },
     };
 
-    // Validação simples
     if (!novoProfessor.nome || !novoProfessor.formacao || !novoProfessor.telefone) {
       alert("Preencha todos os campos obrigatórios!");
       return;
@@ -31,6 +30,11 @@ function NovoProfessorModal({ handlleCloseModal }) {
     try {
       const response = await api.post("/professores", novoProfessor);
       alert("professor cadastrado com sucesso!");
+
+      if (onProfessoresCriados) {
+        onProfessoresCriados();
+      }
+      
       handlleCloseModal();
     } catch (error) {
       console.error("Erro ao cadastrar professor:", error);

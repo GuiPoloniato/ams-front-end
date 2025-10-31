@@ -2,12 +2,12 @@ import React, {useState} from 'react';
 import { api } from '../../../services/service';
 import './style.css';
 
-function NovaPermissaoUsuarioModal({ handlleCloseModal }) {
+function NovaPermissaoUsuarioModal({ handlleCloseModal, onUsuariosCriados }) {
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
     senha: '',
-    papel: 'admin', // padrão igual à lógica anterior
+    papel: 'admin',
   });
 
   const handleSubmit = async () => {
@@ -19,6 +19,11 @@ function NovaPermissaoUsuarioModal({ handlleCloseModal }) {
     try {
       await api.post('/auth/register', formData);
       alert('Usuário criado com sucesso!');
+
+      if (onUsuariosCriados) {
+        onUsuariosCriados();
+      }
+
       handlleCloseModal();
     } catch (error) {
       console.error('Erro ao criar usuário:', error);

@@ -1,4 +1,3 @@
-// ModalArquivar.jsx
 import './style.css';
 
 function ModalArquivar({ handleCloseModal, nameTitulo, textoArquivar, onConfirm }) {

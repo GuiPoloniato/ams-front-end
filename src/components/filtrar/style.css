@@ -158,6 +158,18 @@ modal de filtragem avançada
     width: 100px;
 }
 
+.body-modalFiltragem .modal-content .formulario-filtros .linha-flex .campo .inputNomeCompleto {
+    width: 300px;
+}
+
+.body-modalFiltragem .modal-content .formulario-filtros .linha-flex .campo .selectNivelAcesso {
+    width: 250px;
+}
+
+.body-modalFiltragem .modal-content .formulario-filtros .linha-flex .campo .inputEmail {
+    width: 300px;
+}
+
 
 
 .body-modalFiltragem .modal-content .formulario-filtros .status-buttons {

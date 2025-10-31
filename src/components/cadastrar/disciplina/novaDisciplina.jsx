@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { api } from '../../../services/service';
 import './style.css';
 
-function NovaDisciplinaModal({ handlleCloseModal }) {
+function NovaDisciplinaModal({ handlleCloseModal, onDisciplinasCriadas }) {
   const [professores, setProfessores] = useState([]);
   const [salas, setSalas] = useState([]);
   
@@ -39,6 +39,11 @@ function NovaDisciplinaModal({ handlleCloseModal }) {
       try {
         await api.post("/disciplinas", novaDisciplina);
         alert("Disciplina cadastrada com sucesso!");
+
+        if (onDisciplinasCriadas) {
+          onDisciplinasCriadas();
+        }
+
         handlleCloseModal();
       } catch (error) {
         console.error("Erro ao cadastrar disciplina:", error);

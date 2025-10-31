@@ -7,7 +7,7 @@ import ModalEditarProfessor from '../../modal/editar/professor/editarProfessor';
 import ModalVisualizarProfessor from '../../modal/visualizar/professores/visualizarProfessor';
 import "../style.css";
 
-function TableProfessor({ filtros }) {
+function TableProfessor({ filtros, dadosOriginais }) {
   const [dados, setDados] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
@@ -18,7 +18,7 @@ function TableProfessor({ filtros }) {
     async function getDados() {
       try {
         const res = await api.get("/professores");
-        setDados(res.data.dados || res.data); // já retorna array
+        setDados(res.data.dados || res.data);
       } catch (erro) {
         console.error("Erro ao buscar professores:", erro);
       }
@@ -26,12 +26,9 @@ function TableProfessor({ filtros }) {
     getDados();
   }, []);
 
-  // useEffect(() => {
-  //   setPaginaAtual(1);
-  // }, [filtros]);
 
   const dadosFiltrados = useMemo(() => {
-    let resultado = [...dados];
+    let resultado = [...((dadosOriginais || []))];
 
     resultado = resultado.filter(prof => prof.status === filtros.status);
 
@@ -60,7 +57,7 @@ function TableProfessor({ filtros }) {
     }
 
     return resultado;
-  }, [dados, filtros]);
+  }, [dadosOriginais, filtros]);
 
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);

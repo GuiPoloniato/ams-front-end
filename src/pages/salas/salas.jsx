@@ -21,6 +21,19 @@ function Salas() {
         telefone: '',
     });
 
+    const recarregarSalas = async () => {
+        try {
+          const res = await api.get('/salas');
+          setDados(res.data.dados || []);
+        } catch (error) {
+          console.error('Erro ao recarregar salas:', error);
+        }
+      };
+    
+      useEffect(() => {
+        recarregarSalas();
+      }, []);
+
     useEffect(() => {
         async function fetchData() {
             try {
@@ -82,10 +95,10 @@ return(
                 onAplicarFiltros={handleAplicarFiltros}
             />
             <div className="tabela-container">
-                <TableSalas filtros={filtrosAtuais} />
+                <TableSalas filtros={filtrosAtuais} dadosOriginais={dados}/>
             </div>
         </div>
-        {modalOpen === 'sala' && (<NovaSalaModal handlleCloseModal={() => setModalOpen(false) }/>)}
+        {modalOpen === 'sala' && (<NovaSalaModal handlleCloseModal={() => setModalOpen(false) } onSalasCriadas={recarregarSalas}/>)}
     </div>
 )
 }

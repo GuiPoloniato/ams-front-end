@@ -7,7 +7,7 @@ import './style.css';
 
 function Login() {
     const navigate = useNavigate();
-    const { login } = useContext(AuthContext); // <- must be lowercase
+    const { login } = useContext(AuthContext);
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [erro, setErro] = useState('');

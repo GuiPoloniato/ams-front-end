@@ -11,12 +11,24 @@ function Permissoes() {
     const [ modalOpen, setModalOpen ] = useState(false);
     const [dados, setDados] = useState([]);
     const [filtrosAtuais, setFiltrosAtuais] = useState({
-            termo: '',
-            status: 'ativo',
-            nomeCompleto: '',
-            email: '',
-            telefone: '',
-        });
+        status: 'ativo',
+        nomeCompleto: '',
+        email: '',
+        papel: '',
+    });
+
+    const recarregarUsuarios = async () => {
+        try {
+          const res = await api.get('/usuarios');
+          setDados(res.data.dados || []);
+        } catch (error) {
+          console.error('Erro ao recarregar usuarios:', error);
+        }
+      };
+    
+      useEffect(() => {
+        recarregarUsuarios();
+      }, []);
 
     useEffect(() => {
     async function fetchData() {
@@ -52,10 +64,10 @@ function Permissoes() {
                     onAplicarFiltros={handleAplicarFiltros} 
                 />
                 <div className="tabela-container">
-                    <TablePermissoes filtros={filtrosAtuais} />
+                    <TablePermissoes filtros={filtrosAtuais} dadosOriginais={dados}/>
                 </div>
             </div>
-            {modalOpen === 'usuarios' && (<NovaPermissaoUsuarioModal handlleCloseModal={() => setModalOpen(false)}/>)}
+            {modalOpen === 'usuarios' && (<NovaPermissaoUsuarioModal handlleCloseModal={() => setModalOpen(false)} onUsuariosCriados={recarregarUsuarios}/>)}
         </div>
     )
 }

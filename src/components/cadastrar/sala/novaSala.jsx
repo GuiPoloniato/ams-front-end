@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../../../services/service';
 import './style.css';
 
-function NovaSalaModal({ handlleCloseModal }) {
+function NovaSalaModal({ handlleCloseModal, onSalasCriadas }) {
   const [professores, setProfessores] = useState([]);
 
   useEffect(() => {
@@ -32,6 +32,11 @@ function NovaSalaModal({ handlleCloseModal }) {
     try {
       await api.post("/salas", novaSala);
       alert("Sala cadastrada com sucesso!");
+
+      if (onSalasCriadas) {
+        onSalasCriadas();
+      }
+      
       handlleCloseModal();
     } catch (error) {
       console.error("Erro ao cadastrar sala:", error);

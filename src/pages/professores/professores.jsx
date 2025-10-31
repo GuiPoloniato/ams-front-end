@@ -21,6 +21,19 @@ function Professores() {
       senha: '',
     });
 
+    const recarregarProfessores = async () => {
+      try {
+        const res = await api.get('/professores');
+        setDados(res.data.dados || []);
+      } catch (error) {
+        console.error('Erro ao recarregar professores:', error);
+      }
+    };
+  
+    useEffect(() => {
+      recarregarProfessores();
+    }, []);
+
     useEffect(() => {
         async function fetchData() {
           try {
@@ -81,10 +94,10 @@ return(
                 onAplicarFiltros={handleAplicarFiltros} 
             />
             <div className="tabela-container">
-                <TableProfessor filtros={filtrosAtuais} />
+                <TableProfessor filtros={filtrosAtuais} dadosOriginais={dados}/>
             </div>
         </div>
-        {modalOpen === 'professor' && (<NovoProfessorModal handlleCloseModal={() => setModalOpen(false)}/>)}
+        {modalOpen === 'professor' && (<NovoProfessorModal handlleCloseModal={() => setModalOpen(false)} onProfessoresCriados={recarregarProfessores}/>)}
     </div>
     )
 }

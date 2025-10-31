@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'; // useMemo: otimização de performance
+import { useState, useEffect, useMemo } from 'react';
 import { api } from '../../../services/service';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg";
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
@@ -7,7 +7,7 @@ import ModalEditar from '../../modal/editar/estudante/editarEstudante';
 import ModalVisualizarEstudante from '../../modal/visualizar/estudantes/visualizarEstudantes';
 import '../style.css';
 
-function TableEstudantes({ filtros }) {
+function TableEstudantes({ filtros , dadosOriginais}) {
   const [todosAlunos, setTodosAlunos] = useState([]);
   const [professores, setProfessores] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -31,7 +31,7 @@ function TableEstudantes({ filtros }) {
   }, []);
 
   const dadosFiltrados = useMemo(() => {
-    let resultado = [...todosAlunos];
+    let resultado = [...((dadosOriginais || []))];
 
     resultado = resultado.filter(aluno => aluno.status === filtros.status);
 
@@ -67,7 +67,7 @@ function TableEstudantes({ filtros }) {
     }
 
     return resultado;
-  }, [todosAlunos, filtros]);
+  }, [dadosOriginais, filtros]);
 
   useEffect(() => {
     setPaginaAtual(1);
@@ -169,7 +169,7 @@ function TableEstudantes({ filtros }) {
                       onClick={(e) => {
                         e.stopPropagation();
                         setDadosSelecionados(item);
-                        setAcaoPendente('inativo'); // define a ação
+                        setAcaoPendente('inativo');
                         setModalOpen('arquivar');
                       }}
                     >
@@ -181,8 +181,8 @@ function TableEstudantes({ filtros }) {
                       onClick={(e) => {
                         e.stopPropagation();
                         setDadosSelecionados(item);
-                        setAcaoPendente('ativo'); // define a ação
-                        setModalOpen('arquivar'); // mesmo modal!
+                        setAcaoPendente('ativo');
+                        setModalOpen('arquivar');
                       }}
                     >
                       Reativar <span className="icon arquivar-icon" />

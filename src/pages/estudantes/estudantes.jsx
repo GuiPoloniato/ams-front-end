@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { api } from '../../services/service'; // usa sua API existente
+import { api } from '../../services/service';
 import SideBar from '../../components/sideBar/sideBar';
 import MaisIcon from "../../assets/iconsSvg/mais.svg";
 import ExportarIcon from "../../assets/iconsSvg/exportar.svg";
@@ -22,6 +22,19 @@ function Estudantes() {
     turno: '',
     nomeResponsavel: '',
   });
+
+  const recarregarAlunos = async () => {
+    try {
+      const res = await api.get('/alunos');
+      setDados(res.data.dados || []);
+    } catch (error) {
+      console.error('Erro ao recarregar estudantes:', error);
+    }
+  };
+
+  useEffect(() => {
+    recarregarAlunos();
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -87,11 +100,11 @@ function Estudantes() {
           onAplicarFiltros={handleAplicarFiltros} 
           />
         <div className="tabela-container">
-          <Table filtros={filtrosAtuais} />
+          <Table filtros={filtrosAtuais} dadosOriginais={dados} />
         </div>
       </div>
       {modalOpen === 'estudante' && (
-        <NovoEstudanteModal handlleCloseModal={() => setModalOpen(false)} />
+        <NovoEstudanteModal handlleCloseModal={() => setModalOpen(false)} onEstudanteCriado={recarregarAlunos}/>
       )}
     </div>
   );

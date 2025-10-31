@@ -2,7 +2,7 @@ import React from 'react';
 import './style.css';
 import { api } from '../../../services/service';
 
-function NovoEstudanteModal({ handlleCloseModal }) {
+function NovoEstudanteModal({ handlleCloseModal, onEstudanteCriado }) {
   const handleSubmit = async () => {
   const novoEstudante = {
     matricula: String(document.getElementById("inputMatricula").value),
@@ -37,6 +37,11 @@ function NovoEstudanteModal({ handlleCloseModal }) {
     try {
       const response = await api.post("/alunos", novoEstudante);
       alert("Estudante cadastrado com sucesso!");
+
+      if (onEstudanteCriado) {
+        onEstudanteCriado();
+      }
+
       handlleCloseModal();
     } catch (error) {
       console.error("Erro ao cadastrar estudante:", error);

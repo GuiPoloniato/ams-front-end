@@ -22,11 +22,9 @@ function ModalVisualizarDisciplinas({ handleCloseModal, visualizarSelecionado })
       tipoEnsino: visualizarSelecionado.tipoEnsino || 'NÃO INFORMADO',
     });
 
-    // Professor
     const profNome = visualizarSelecionado.professoresResponsaveis?.[0]?.nome;
     setProfessorNome(profNome || 'NÃO INFORMADO');
 
-    // Sala
     const salaNome = visualizarSelecionado.salaInfo?.nomeSala;
     setSalaNome(salaNome || 'NÃO INFORMADO');
   }, [visualizarSelecionado]);

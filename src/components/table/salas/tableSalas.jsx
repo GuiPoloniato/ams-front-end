@@ -7,7 +7,7 @@ import ModalEditarSala from '../../modal/editar/sala/editarSala';
 import ModalVisualizarTurmas from '../../modal/visualizar/salas/visualizarSalas';
 import "../style.css";
 
-function TableSalas({ filtros }) {
+function TableSalas({ filtros, dadosOriginais }) {
   const [dados, setDados] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
@@ -18,7 +18,7 @@ function TableSalas({ filtros }) {
     async function getSalas() {
       try {
         const res = await api.get("/salas");
-        setDados(res.data.dados || res.data); // já retorna array direto
+        setDados(res.data.dados || res.data);
       } catch (err) {
         console.error("Erro ao buscar salas:", err);
       }
@@ -26,12 +26,9 @@ function TableSalas({ filtros }) {
     getSalas();
   }, []);
 
-  // useEffect(() => {
-  //   setPaginaAtual(1);
-  // }, [filtrar]);
 
   const dadosFiltrados = useMemo(() => {
-    let resultado = [...dados];
+    let resultado = [...((dadosOriginais || []))];
 
     resultado = resultado.filter(salas => salas.status === filtros.status);
 
@@ -43,7 +40,6 @@ function TableSalas({ filtros }) {
       );
     }
 
-    // 3. Filtros avançados
     if (filtros.nomeSala) {
       resultado = resultado.filter(salas =>
         salas.nomeSala.toLowerCase().includes(filtros.nomeSala.toLowerCase())
@@ -61,7 +57,7 @@ function TableSalas({ filtros }) {
     }
 
     return resultado;
-  }, [dados, filtros]);
+  }, [dadosOriginais, filtros]);
 
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);

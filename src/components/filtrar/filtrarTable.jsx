@@ -10,7 +10,6 @@ function FiltrarTable({ filtrosAtuais, onAplicarFiltros, tipoEntidade }) {
   const [professores, setProfessores] = useState([]);
   const [salas, setSalas] = useState([]);
 
-  // Estados temporários (todos inicializados com base nos filtrosAtuais)
   const [termoTemp, setTermoTemp] = useState(filtrosAtuais.termo || '');
   const [statusTemp, setStatusTemp] = useState(filtrosAtuais.status || 'ativo');
   const [matriculaTemp, setMatriculaTemp] = useState(filtrosAtuais.matricula || '');
@@ -25,6 +24,7 @@ function FiltrarTable({ filtrosAtuais, onAplicarFiltros, tipoEntidade }) {
   const [nomeDisciplinaTemp, setNomeDisciplinaTemp] = useState(filtrosAtuais.nome || '');
   const [cargahorariaTemp, setCargaHorariaTemp] = useState(filtrosAtuais.cargaHoraria || '');
   const [professoresReponsaveisTemp, setProfessoresResponsaveistemp] = useState(filtrosAtuais.professoresResponsaveis || '');
+  const [papelTemp, setPapelTemp] = useState(filtrosAtuais.papelTemp || '');
 
   useEffect(() => {
     async function fetchProfessores() {
@@ -47,7 +47,6 @@ function FiltrarTable({ filtrosAtuais, onAplicarFiltros, tipoEntidade }) {
     fetchSalas();
   }, []);
 
-  // Sincroniza os campos temporários ao abrir o modal
   useEffect(() => {
     if (!modalOpen) return;
 
@@ -66,10 +65,10 @@ function FiltrarTable({ filtrosAtuais, onAplicarFiltros, tipoEntidade }) {
     setNomeDisciplinaTemp(filtrosAtuais.nome || '');
     setCargaHorariaTemp(filtrosAtuais.cargaHoraria || '');
     setProfessoresResponsaveistemp(filtrosAtuais.professoresResponsaveis || '');
+    setPapelTemp(filtrosAtuais.papelTemp || '');
   }, [modalOpen, filtrosAtuais]);
 
   const handleAbrirModal = () => {
-    // Mesmo que o useEffect acima, mas explícito
     setTermoTemp(filtrosAtuais.termo || '');
     setStatusTemp(filtrosAtuais.status || 'ativo');
     setMatriculaTemp(filtrosAtuais.matricula || '');
@@ -84,6 +83,7 @@ function FiltrarTable({ filtrosAtuais, onAplicarFiltros, tipoEntidade }) {
     setNomeDisciplinaTemp(filtrosAtuais.nome || '');
     setCargaHorariaTemp(filtrosAtuais.cargaHoraria || '');
     setProfessoresResponsaveistemp(filtrosAtuais.professoresResponsaveis || '');
+    setPapelTemp(filtrosAtuais.papelTemp || '');
     setModalOpen(true);
   };
 
@@ -121,6 +121,12 @@ function FiltrarTable({ filtrosAtuais, onAplicarFiltros, tipoEntidade }) {
         professoresResponsaveis: professoresReponsaveisTemp,
         nomeSala: nomeSalaTemp,
       });
+    } else if (tipoEntidade === 'usuarios') {
+      Object.assign(base, {
+        nomeCompleto: nomeCompletoTemp,
+        papel: papelTemp,
+        email: emailTemp,
+      });
     }
 
     onAplicarFiltros(base);
@@ -146,11 +152,17 @@ function FiltrarTable({ filtrosAtuais, onAplicarFiltros, tipoEntidade }) {
       });
     } else if (tipoEntidade === 'salas') {
       Object.assign(limpos, {
-        nomeDisciplina: nomeDisciplinaTemp,
-        cargaHoraria: cargahorariaTemp,
-        tipoEnsino: tipoEnsinoTemp,
-        professoresResponsaveis: professoresReponsaveisTemp,
-        nomeSala: nomeSalaTemp,
+        nomeDisciplina: '',
+        cargaHoraria: '',
+        tipoEnsino: '',
+        professoresResponsaveis: '',
+        nomeSala: '',
+      });
+    } else if (tipoEntidade === 'usuarios') {
+      Object.assign(limpos, {
+        nomeCompleto: '',
+        papel: '',
+        email: '',
       });
     }
 
@@ -418,6 +430,46 @@ function FiltrarTable({ filtrosAtuais, onAplicarFiltros, tipoEntidade }) {
                       </select>
                     </div>
                     
+                  </div>
+                </>
+              )}
+
+              {tipoEntidade === 'usuarios' && (
+                <>
+                  <div className="linha-flex">
+                    <div className="campo">
+                      <label>Nome Completo</label>
+                      <input
+                        type="text"
+                        className='inputNomeCompleto'
+                        value={nomeCompletoTemp}
+                        onChange={(e) => setNomeCompletoTemp(e.target.value)}
+                      />
+                    </div>
+                    <div className="campo">
+                      <label>Nível de Acesso</label>
+                      <select
+                        id="selectNivelAcesso"
+                        className="selectNivelAcesso"
+                        value={papelTemp}
+                        onChange={(e) => setPapelTemp(e.target.value)}
+                      >
+                        <option value="admin">Administrador</option>
+                        <option value="professor">Professor</option>
+                        <option value="aluno">Aluno</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="linha-flex">
+                    <div className="campo">
+                      <label>Email</label>
+                      <input
+                        type="text"
+                        className='inputEmail'
+                        value={emailTemp}
+                        onChange={(e) => setEmailTemp(e.target.value)}
+                      />
+                    </div>
                   </div>
                 </>
               )}

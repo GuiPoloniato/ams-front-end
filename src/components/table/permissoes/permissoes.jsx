@@ -7,14 +7,13 @@ import ModalEditarUsuario from '../../modal/editar/permissoes/editarUsuario';
 import ModalVisualizarPermissoes from '../../modal/visualizar/permissoes/visualizarPermissoes';
 import "../style.css";
 
-function TablePermissoes({ filtros }) {
+function TablePermissoes({ filtros, dadosOriginais }) {
   const [dados, setDados] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [dadosSelecionados, setDadosSelecionados] = useState(null);
   const [acaoPendente, setAcaoPendente] = useState(null);
 
-  // Carrega todos os usuários
   useEffect(() => {
     const fetchUsuarios = async () => {
       try {
@@ -27,42 +26,34 @@ function TablePermissoes({ filtros }) {
     fetchUsuarios();
   }, []);
 
-  // Filtragem local
   const dadosFiltrados = useMemo(() => {
-    let resultado = [...dados];
+    let resultado = [...((dadosOriginais || []))];
 
-    // resultado = resultado.filter(user => {
-    //   const status = user.ativo ? 'ativo' : 'inativo';
-    //   return status === filtros.status;
-    // });
+    resultado = resultado.filter(user => {
+      const status = user.ativo ? 'ativo' : 'inativo';
+      return status === filtros.status;
+    });
 
-    // if (filtros.termo) {
-    //   const t = filtros.termo.toLowerCase();
-    //   resultado = resultado.filter(user =>
-    //     user.nome.toLowerCase().includes(t) ||
-    //     user.email.toLowerCase().includes(t) ||
-    //     user.papel.toLowerCase().includes(t)
-    //   );
-    // }
+    if (filtros.nomeCompleto) {
+      resultado = resultado.filter(user =>
+        user.nome.toLowerCase().includes(filtros.nomeCompleto.toLowerCase())
+      );
+    }
 
-    // if (filtros.nomeCompleto) {
-    //   resultado = resultado.filter(user =>
-    //     user.nome.toLowerCase().includes(filtros.nomeCompleto.toLowerCase())
-    //   );
-    // }
-    // if (filtros.email) {
-    //   resultado = resultado.filter(user =>
-    //     user.email.toLowerCase().includes(filtros.email.toLowerCase())
-    //   );
-    // }
-    // if (filtros.papel) {
-    //   resultado = resultado.filter(user => user.papel === filtros.papel);
-    // }
+    if (filtros.papel) {
+      resultado = resultado.filter(user => user.papel === filtros.papel);
+    }
+    
+    if (filtros.email) {
+      resultado = resultado.filter(user =>
+        user.email.toLowerCase().includes(filtros.email.toLowerCase())
+      );
+    }
+    
 
     return resultado;
-  }, [dados, filtros]);
+  }, [dadosOriginais, filtros]);
 
-  // Paginação
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);
   const inicio = (paginaAtual - 1) * itensPorPagina;
