@@ -1,18 +1,35 @@
 import { useState, useEffect, useMemo } from 'react';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg";
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { api } from '../../../services/service';
+import { useSnackbar } from '../../../hooks/useSnackbar';
 import ModalArquivar from '../../modal/arquivar/arquivar';
 import ModalEditarSala from '../../modal/editar/sala/editarSala';
 import ModalVisualizarTurmas from '../../modal/visualizar/salas/visualizarSalas';
 import "../style.css";
 
-function TableSalas({ filtros, dadosOriginais }) {
+function TableSalas({ filtros, dadosOriginais, onDadosAtualizados }) {
   const [dados, setDados] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [dadosSelecionados, setDadosSelecionados] = useState(null);
   const [acaoPendente, setAcaoPendente] = useState(null);
+
+  const recarregarDados = async () => {
+    try {
+      const res = await api.get("/salas");
+      setDados(res.data.dados || res.data);
+
+      if (onDadosAtualizados) {
+        onDadosAtualizados(res.data.dados || res.data);
+      }
+    } catch (erro) {
+      console.error("Erro ao buscar salas:", erro);
+      showError("Erro ao carregar salas");
+    }
+  };
 
   useEffect(() => {
     async function getSalas() {
@@ -21,11 +38,13 @@ function TableSalas({ filtros, dadosOriginais }) {
         setDados(res.data.dados || res.data);
       } catch (err) {
         console.error("Erro ao buscar salas:", err);
+        showError("Erro ao carregar dados");
       }
     }
     getSalas();
   }, []);
 
+  const { snackbar, showSuccess, showError, hideSnackbar } = useSnackbar();
 
   const dadosFiltrados = useMemo(() => {
     let resultado = [...((dadosOriginais || []))];
@@ -85,24 +104,27 @@ function TableSalas({ filtros, dadosOriginais }) {
     if (!dadosSelecionados || !acaoPendente) return;
 
     try {
-      await api.patch(`/salas/${dadosSelecionados.id}/status`, { status: acaoPendente });
+      await api.patch(`/salas/${dadosSelecionados.id}/status`, { 
+        status: acaoPendente 
+      });
 
-      setDados(prev =>
-        prev.map(sala =>
-          sala.id === dadosSelecionados.id ? { ...sala, status: acaoPendente } : sala
-        )
-      );
+      await recarregarDados();
 
       setModalOpen(false);
       setDadosSelecionados(null);
       setAcaoPendente(null);
 
-      const acaoTexto = acaoPendente === 'ativo' ? 'reativado' : 'arquivado';
-      alert(`Sala ${acaoTexto} com sucesso!`);
+      const acaoTexto = acaoPendente === 'ativo' ? 'reativada' : 'arquivada';
+      showSuccess(`Sala ${acaoTexto} com sucesso!`);
     } catch (error) {
       console.error('Erro ao atualizar status:', error);
-      alert('Erro ao atualizar status. Tente novamente.');
+      showError('Erro ao atualizar status. Tente novamente.');
     }
+  };
+
+  const handleEdicaoConcluida = async () => {
+    await recarregarDados();
+    handleCloseModal();
   };
 
   return (
@@ -224,7 +246,7 @@ function TableSalas({ filtros, dadosOriginais }) {
       )}
       {modalOpen === 'editar' && (
         <ModalEditarSala
-          handleCloseModal={handleCloseModal}
+          handleCloseModal={handleEdicaoConcluida} 
           editarSelecionado={dadosSelecionados}
         />
       )}
@@ -234,6 +256,20 @@ function TableSalas({ filtros, dadosOriginais }) {
           visualizarSelecionado={dadosSelecionados}
         />
       )}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={hideSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={hideSnackbar} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

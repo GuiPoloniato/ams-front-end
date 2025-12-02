@@ -24,7 +24,7 @@ function Salas() {
     const recarregarSalas = async () => {
         try {
           const res = await api.get('/salas');
-          setDados(res.data.dados || []);
+          setDados(res.data.dados || res.data);
         } catch (error) {
           console.error('Erro ao recarregar salas:', error);
         }
@@ -95,7 +95,7 @@ return(
                 onAplicarFiltros={handleAplicarFiltros}
             />
             <div className="tabela-container">
-                <TableSalas filtros={filtrosAtuais} dadosOriginais={dados}/>
+                <TableSalas filtros={filtrosAtuais} dadosOriginais={dados} onDadosAtualizados={setDados}/>
             </div>
         </div>
         {modalOpen === 'sala' && (<NovaSalaModal handlleCloseModal={() => setModalOpen(false) } onSalasCriadas={recarregarSalas}/>)}

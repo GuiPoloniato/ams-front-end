@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { api } from '../../../services/service';
+import { useSnackbar } from '../../../hooks/useSnackbar';
 import './style.css';
 
 function NovaPermissaoUsuarioModal({ handlleCloseModal, onUsuariosCriados }) {
@@ -10,24 +13,27 @@ function NovaPermissaoUsuarioModal({ handlleCloseModal, onUsuariosCriados }) {
     papel: 'admin',
   });
 
+  const { snackbar, showSuccess, showError, hideSnackbar } = useSnackbar();
+
   const handleSubmit = async () => {
     if (!formData.nome || !formData.email || !formData.senha) {
-      alert('Preencha todos os campos obrigatórios!');
+      showError('Preencha todos os campos obrigatórios!');
       return;
     }
 
     try {
       await api.post('/auth/register', formData);
-      alert('Usuário criado com sucesso!');
+      showSuccess('Usuário criado com sucesso!');
 
-      if (onUsuariosCriados) {
-        onUsuariosCriados();
-      }
-
-      handlleCloseModal();
+      setTimeout(() => {
+        if (onUsuariosCriados) {
+          onEstudanteCriado();
+        }
+        handlleCloseModal();
+      }, 1500);
     } catch (error) {
       console.error('Erro ao criar usuário:', error);
-      alert(error.response?.data?.mensagem || 'Erro ao criar usuário.');
+      showError(error.response?.data?.mensagem || 'Erro ao criar usuário.');
     }
   };
 
@@ -91,6 +97,20 @@ function NovaPermissaoUsuarioModal({ handlleCloseModal, onUsuariosCriados }) {
           </div>
         </div>
       </div>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={hideSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={hideSnackbar} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

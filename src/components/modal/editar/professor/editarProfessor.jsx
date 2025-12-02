@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { api } from '../../../../services/service';
+import { validateForm, formatters, estadosBrasil, professorValidationSchema } from '../../../../utils/validatorUtil';
+import { useSnackbar } from '../../../../hooks/useSnackbar';
 import './style.css';
 
 function ModalEditarProfessor({ handleCloseModal, editarSelecionado }) {
@@ -14,60 +18,93 @@ function ModalEditarProfessor({ handleCloseModal, editarSelecionado }) {
     numero: '',
     pais: '',
     uf: '',
-    cidade: '',
-    turno: ''
+    cidade: ''
   });
+
+  const [loading, setLoading] = useState(false);
+  const { snackbar, showSuccess, showError, hideSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (editarSelecionado) {
       const endereco = editarSelecionado.endereco || {};
-      console.log(endereco)
+      
       setFormData({
         nome: editarSelecionado.nome || '',
         formacao: editarSelecionado.formacao || '',
-        telefone: editarSelecionado.telefone || '',
+        telefone: editarSelecionado.telefone ? formatters.phone(editarSelecionado.telefone) : '',
         email: editarSelecionado.email || '',
-        cep: endereco.cep || '',
+        cep: endereco.cep ? formatters.cep(endereco.cep) : '',
         bairro: endereco.bairro || '',
         logradouro: endereco.logradouro || '',
         numero: endereco.numero || '',
         pais: endereco.pais || '',
         uf: endereco.uf || '',
-        cidade: endereco.cidade || '',
-        turno: editarSelecionado.turno || ''
+        cidade: endereco.cidade || ''
       });
     }
   }, [editarSelecionado]);
 
-  const handleChange = (campo, valor) => {
-    setFormData(prev => ({ ...prev, [campo]: valor }));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    let formattedValue = value;
+    
+    if (name === 'cep') {
+      formattedValue = formatters.cep(value);
+    } else if (name === 'telefone') {
+      formattedValue = formatters.phone(value);
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: formattedValue
+    }));
   };
 
   const handleSubmit = async () => {
-    try {
-      const professorAtualizado = {
-        nome: formData.nome,
-        formacao: formData.formacao,
-        telefone: formData.telefone,
-        email: formData.email,
-        turno: formData.turno,
-        endereco: {
-          cep: formData.cep,
-          bairro: formData.bairro,
-          logradouro: formData.logradouro,
-          numero: formData.numero,
-          pais: formData.pais,
-          uf: formData.uf,
-          cidade: formData.cidade
-        }
-      };
+    const validationErrors = validateForm(formData, professorValidationSchema);
+    
+    if (Object.keys(validationErrors).length > 0) {
+      const firstError = Object.values(validationErrors)[0];
+      showError(firstError);
+      return;
+    }
 
+    const professorAtualizado = {
+      nome: formData.nome,
+      formacao: formData.formacao,
+      telefone: formData.telefone.replace(/\D/g, ''),
+      email: formData.email,
+      endereco: {
+        cep: formData.cep.replace(/\D/g, ''),
+        bairro: formData.bairro,
+        logradouro: formData.logradouro,
+        numero: formData.numero,
+        pais: formData.pais,
+        uf: formData.uf,
+        cidade: formData.cidade
+      }
+    };
+
+    try {
+      setLoading(true);
       await api.put(`/professores/${editarSelecionado.id}`, professorAtualizado);
-      alert('Professor atualizado com sucesso!');
-      handleCloseModal();
+      showSuccess('Professor atualizado com sucesso!');
+      
+      setTimeout(() => {
+        handleCloseModal();
+      }, 1500);
     } catch (error) {
       console.error('Erro ao atualizar professor:', error);
-      alert(error.response?.data?.mensagem || 'Erro ao atualizar professor.');
+      
+      const errorMessage = error.response?.data?.mensagem 
+        || error.request 
+          ? "Não foi possível conectar ao servidor. Verifique sua conexão."
+          : "Erro inesperado. Tente novamente.";
+      
+      showError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -81,122 +118,199 @@ function ModalEditarProfessor({ handleCloseModal, editarSelecionado }) {
 
           <div className="linha-flex">
             <div className="campo">
-              <label>Nome completo</label>
+              <label htmlFor="nome">Nome completo</label>
               <input
                 type="text"
                 className="inputNome"
+                id="nome"
+                name="nome"
                 value={formData.nome}
-                onChange={(e) => handleChange('nome', e.target.value)}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label>Formação</label>
+              <label htmlFor="formacao">Formação</label>
               <input
                 type="text"
                 className="inputFormacao"
+                id="formacao"
+                name="formacao"
                 value={formData.formacao}
-                onChange={(e) => handleChange('formacao', e.target.value)}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label>Telefone</label>
+              <label htmlFor="telefone">Telefone</label>
               <input
                 type="text"
                 className="inputTelefone"
+                id="telefone"
+                name="telefone"
                 value={formData.telefone}
-                onChange={(e) => handleChange('telefone', e.target.value)}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="(00) 00000-0000"
+                maxLength="15"
               />
             </div>
+            
             <div className="campo">
-              <label>Email</label>
+              <label htmlFor="email">Email</label>
               <input
                 type="email"
                 className="inputEmail"
+                id="email"
+                name="email"
                 value={formData.email}
-                onChange={(e) => handleChange('email', e.target.value)}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
           </div>
 
           <div className="linha-flex">
             <div className="campo">
-              <label>CEP</label>
+              <label htmlFor="cep">CEP</label>
               <input
                 type="text"
                 className="inputCep"
+                id="cep"
+                name="cep"
                 value={formData.cep}
-                onChange={(e) => handleChange('cep', e.target.value)}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="00000-000"
+                maxLength="9"
               />
             </div>
+            
             <div className="campo">
-              <label>Bairro</label>
+              <label htmlFor="bairro">Bairro</label>
               <input
                 type="text"
                 className="inputBairro"
+                id="bairro"
+                name="bairro"
                 value={formData.bairro}
-                onChange={(e) => handleChange('bairro', e.target.value)}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label>Logradouro</label>
+              <label htmlFor="logradouro">Logradouro</label>
               <input
                 type="text"
                 className="inputLogradouro"
+                id="logradouro"
+                name="logradouro"
                 value={formData.logradouro}
-                onChange={(e) => handleChange('logradouro', e.target.value)}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label>Número</label>
+              <label htmlFor="numero">Número</label>
               <input
                 type="number"
                 className="inputNumero"
+                id="numero"
+                name="numero"
                 value={formData.numero}
-                onChange={(e) => handleChange('numero', e.target.value)}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
           </div>
 
           <div className="linha-flex">
             <div className="campo">
-              <label>País</label>
+              <label htmlFor="pais">País</label>
               <input
                 type="text"
-                className="selectPais"
+                className="inputPais"
+                id="pais"
+                name="pais"
                 value={formData.pais}
-                onChange={(e) => handleChange('pais', e.target.value)}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="Brasil"
               />
             </div>
+            
             <div className="campo">
-              <label>Estado</label>
-              <input
-                type="text"
+              <label htmlFor="uf">Estado</label>
+              <select
                 className="selectEstado"
+                id="uf"
+                name="uf"
                 value={formData.uf}
-                onChange={(e) => handleChange('uf', e.target.value)}
-              />
+                onChange={handleChange}
+                disabled={loading}
+              >
+                <option value="">Selecione</option>
+                {estadosBrasil.map(estado => (
+                  <option key={estado.value} value={estado.value}>
+                    {estado.label}
+                  </option>
+                ))}
+              </select>
             </div>
+            
             <div className="campo">
-              <label>Cidade</label>
+              <label htmlFor="cidade">Cidade</label>
               <input
                 type="text"
-                className="selectCidade"
+                className="inputCidade"
+                id="cidade"
+                name="cidade"
                 value={formData.cidade}
-                onChange={(e) => handleChange('cidade', e.target.value)}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
           </div>
 
           <div className="buttons-submit">
-            <button className="btn-cancelar" onClick={handleCloseModal}>
+            <button 
+              className="btn-cancelar" 
+              onClick={() => {
+                handleCloseModal();
+              }}
+              disabled={loading}
+            >
               Cancelar
             </button>
-            <button className="btn-salvar" onClick={handleSubmit}>
-              Salvar
+            <button 
+              className="btn-salvar" 
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? 'Salvando...' : 'Salvar'}
             </button>
           </div>
         </div>
       </div>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={hideSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={hideSnackbar} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

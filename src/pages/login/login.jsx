@@ -1,6 +1,9 @@
-import {useContext,  useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { AuthContext } from '../../contexts/authContext';
+import { useSnackbar } from '../../hooks/useSnackbar';
 import ImgEclipse1 from "../../assets/eclipse1-login.svg";
 import ImgEclipse2 from "../../assets/eclipse2-login.svg";
 import './style.css';
@@ -10,18 +13,42 @@ function Login() {
     const { login } = useContext(AuthContext);
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-    const [erro, setErro] = useState('');
+    const [loading, setLoading] = useState(false);
+    
+    const { snackbar, showError, hideSnackbar } = useSnackbar();
 
     const handleLogin = async () => {
-        setErro('');
-        const sucesso = await login(email, senha);
-        if (sucesso) {
-        navigate("/home");
-        } else {
-        setErro("Email ou senha incorretos");
+        if (!email || !senha) {
+            showError('Por favor, preencha email e senha');
+            return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showError('Email inválido');
+            return;
+        }
+
+        setLoading(true);
+        
+        try {
+            const sucesso = await login(email, senha);
+            if (sucesso) {
+                navigate("/home");
+            } else {
+                showError("Email ou senha incorretos");
+            }
+        } catch (error) {
+            showError("Erro ao conectar ao servidor. Tente novamente.");
+        } finally {
+            setLoading(false);
         }
     };
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleLogin();
+        }
+    };
 
     return (
         <div className="body-login">
@@ -43,6 +70,8 @@ function Login() {
                                 placeholder='example@gmail.com'
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                onKeyPress={handleKeyPress}
+                                disabled={loading}
                             />
                         </div>
                     </div>
@@ -59,12 +88,18 @@ function Login() {
                                 placeholder='Insira a sua senha'
                                 value={senha}
                                 onChange={(e) => setSenha(e.target.value)}
+                                onKeyPress={handleKeyPress}
+                                disabled={loading}
                             />
                         </div>
                     </div>
-                    {erro && <p style={{ color: 'red', marginTop: '5px' }}>{erro}</p>}
                     <div className="button">
-                        <button onClick={handleLogin}>Acessar</button>
+                        <button 
+                            onClick={handleLogin}
+                            disabled={loading}
+                        >
+                            {loading ? 'Acessando...' : 'Acessar'}
+                        </button>
                     </div>
                 </div>
                 <div className="footer-box-login">
@@ -73,6 +108,21 @@ function Login() {
                 </div>
             </div>
             <img className='ImgEclipse2' src={ImgEclipse2} alt="" />
+
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={4000}
+                onClose={hideSnackbar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert 
+                    onClose={hideSnackbar} 
+                    severity={snackbar.severity}
+                    sx={{ width: '100%' }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }

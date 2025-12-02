@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { api } from '../../../../services/service';
+import { useSnackbar } from '../../../../hooks/useSnackbar';
 import './style.css';
 
 function ModalEditarDisciplina({ handleCloseModal, editarSelecionado }) {
@@ -12,6 +15,8 @@ function ModalEditarDisciplina({ handleCloseModal, editarSelecionado }) {
     professor_id: '',
     sala_id: ''
   });
+
+  const { snackbar, showSuccess, showError, hideSnackbar } = useSnackbar();
 
   useEffect(() => {
     async function fetchData() {
@@ -53,11 +58,13 @@ function ModalEditarDisciplina({ handleCloseModal, editarSelecionado }) {
       };
 
       await api.put(`/disciplinas/${editarSelecionado.id}`, disciplinaAtualizada);
-      alert('Disciplina atualizada com sucesso!');
-      handleCloseModal();
+      showSuccess('Disciplina atualizada com sucesso!');
+      setTimeout(() => {
+        handleCloseModal();
+      }, 1500);
     } catch (error) {
       console.error('Erro ao atualizar disciplina:', error);
-      alert(error.response?.data?.mensagem || 'Erro ao atualizar disciplina.');
+      showError(error.response?.data?.mensagem || 'Erro ao atualizar disciplina.');
     }
   };
 
@@ -149,6 +156,20 @@ function ModalEditarDisciplina({ handleCloseModal, editarSelecionado }) {
           </div>
         </div>
       </div>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={hideSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={hideSnackbar} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

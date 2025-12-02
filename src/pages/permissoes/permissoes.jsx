@@ -20,7 +20,7 @@ function Permissoes() {
     const recarregarUsuarios = async () => {
         try {
           const res = await api.get('/usuarios');
-          setDados(res.data.dados || []);
+          setDados(res.data.dados || res.data);
         } catch (error) {
           console.error('Erro ao recarregar usuarios:', error);
         }
@@ -64,7 +64,7 @@ function Permissoes() {
                     onAplicarFiltros={handleAplicarFiltros} 
                 />
                 <div className="tabela-container">
-                    <TablePermissoes filtros={filtrosAtuais} dadosOriginais={dados}/>
+                    <TablePermissoes filtros={filtrosAtuais} dadosOriginais={dados} onDadosAtualizados={setDados}/>
                 </div>
             </div>
             {modalOpen === 'usuarios' && (<NovaPermissaoUsuarioModal handlleCloseModal={() => setModalOpen(false)} onUsuariosCriados={recarregarUsuarios}/>)}

@@ -1,30 +1,50 @@
 import { useState, useEffect, useMemo } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { api } from '../../../services/service';
-import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg";
+import { useSnackbar } from '../../../hooks/useSnackbar';
+import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg"
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 import ModalArquivar from '../../modal/arquivar/arquivar';
 import ModalEditar from '../../modal/editar/estudante/editarEstudante';
 import ModalVisualizarEstudante from '../../modal/visualizar/estudantes/visualizarEstudantes';
 import '../style.css';
 
-function TableEstudantes({ filtros , dadosOriginais}) {
-  const [todosAlunos, setTodosAlunos] = useState([]);
+function TableEstudantes({ filtros, dadosOriginais, onDadosAtualizados }) {
+  const [dados, setDados] = useState([]);
   const [professores, setProfessores] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [dadosSelecionados, setDadosSelecionados] = useState(null);
   const [acaoPendente, setAcaoPendente] = useState(null);
+  
+  const { snackbar, showSuccess, showError, hideSnackbar } = useSnackbar();
+
+  const recarregarDados = async () => {
+    try {
+      const res = await api.get("/alunos");
+      setDados(res.data.dados || res.data);
+
+      if (onDadosAtualizados) {
+        onDadosAtualizados(res.data.dados || res.data);
+      }
+    } catch (erro) {
+      console.error("Erro ao buscar estudantes:", erro);
+      showError("Erro ao carregar estudantes");
+    }
+  };
 
   useEffect(() => {
     const fetchAll = async () => {
       try {
         const res = await api.get("/alunos");
-        setTodosAlunos(res.data.dados || []);
+        setDados(res.data.dados || res.data);
         
         const resProf = await api.get("/professores");
-        setProfessores(resProf.data.dados || []);
+        setProfessores(resProf.data.dados || resProf.data);
       } catch (err) {
         console.error("Erro ao carregar dados:", err);
+        showError("Erro ao carregar dados");
       }
     };
     fetchAll();
@@ -47,31 +67,30 @@ function TableEstudantes({ filtros , dadosOriginais}) {
       });
     }
 
-    if (filtros.matricula) {
-      resultado = resultado.filter(a => a.matricula.includes(filtros.matricula));
+    if (filtros.nome) {
+      resultado = resultado.filter(disc =>
+        disc.nome.toLowerCase().includes(filtros.nome.toLowerCase())
+      );
     }
-    if (filtros.nomeCompleto) {
-      resultado = resultado.filter(a => a.nome.toLowerCase().includes(filtros.nomeCompleto.toLowerCase()));
+    if (filtros.cargaHoraria) {
+      resultado = resultado.filter(disc =>
+        disc.cargaHoraria && disc.cargaHoraria.includes(filtros.cargaHoraria)
+      );
     }
-    if (filtros.dataNascimento) {
-      resultado = resultado.filter(a => a.nascimento === filtros.dataNascimento);
+    if (filtros.tipoEnsino) {
+      resultado = resultado.filter(disc => 
+        disc.tipoEnsino.toLowerCase().includes(filtros.tipoEnsino.toLowerCase())
+      );
     }
-    if (filtros.turno) {
-      resultado = resultado.filter(a => a.turno === filtros.turno);
-    }
-    if (filtros.nomeResponsavel) {
+    if (filtros.professoresReponsaveis) {
       resultado = resultado.filter(a => {
         const resp = a.responsavel?.nome || '';
-        return resp.toLowerCase().includes(filtros.nomeResponsavel.toLowerCase());
+        return resp.toLowerCase().includes(filtros.professoresReponsaveis.toLowerCase());
       });
     }
 
     return resultado;
   }, [dadosOriginais, filtros]);
-
-  useEffect(() => {
-    setPaginaAtual(1);
-  }, [filtros]);
 
   const itensPorPagina = 9;
   const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina);
@@ -99,24 +118,27 @@ function TableEstudantes({ filtros , dadosOriginais}) {
     if (!dadosSelecionados || !acaoPendente) return;
 
     try {
-      await api.patch(`/alunos/${dadosSelecionados.id}/status`, { status: acaoPendente });
+      await api.patch(`/alunos/${dadosSelecionados.id}/status`, { 
+        status: acaoPendente 
+      });
 
-      setTodosAlunos(prev =>
-        prev.map(aluno =>
-          aluno.id === dadosSelecionados.id ? { ...aluno, status: acaoPendente } : aluno
-        )
-      );
+      await recarregarDados();
 
       setModalOpen(false);
       setDadosSelecionados(null);
       setAcaoPendente(null);
 
       const acaoTexto = acaoPendente === 'ativo' ? 'reativado' : 'arquivado';
-      alert(`Estudante ${acaoTexto} com sucesso!`);
+      showSuccess(`Estudante ${acaoTexto} com sucesso!`);
     } catch (error) {
       console.error('Erro ao atualizar status:', error);
-      alert('Erro ao atualizar status. Tente novamente.');
+      showError('Erro ao atualizar status. Tente novamente.');
     }
+  };
+
+  const handleEdicaoConcluida = async () => {
+    await recarregarDados();
+    handleCloseModal();
   };
 
   return (
@@ -234,8 +256,35 @@ function TableEstudantes({ filtros , dadosOriginais}) {
           onConfirm={handleConfirmarStatus}
         />
       )}
-      {modalOpen === 'editar' && <ModalEditar handleCloseModal={handleCloseModal} editarSelecionado={dadosSelecionados} />}
-      {modalOpen === 'visualizar' && <ModalVisualizarEstudante handleCloseModal={handleCloseModal} visualizarSelecionado={dadosSelecionados} />}
+      
+      {modalOpen === 'editar' && (
+        <ModalEditar 
+          handleCloseModal={handleEdicaoConcluida} 
+          editarSelecionado={dadosSelecionados} 
+        />
+      )}
+      
+      {modalOpen === 'visualizar' && (
+        <ModalVisualizarEstudante 
+          handleCloseModal={handleCloseModal} 
+          visualizarSelecionado={dadosSelecionados} 
+        />
+      )}
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={hideSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={hideSnackbar} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

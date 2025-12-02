@@ -26,7 +26,7 @@ function Estudantes() {
   const recarregarAlunos = async () => {
     try {
       const res = await api.get('/alunos');
-      setDados(res.data.dados || []);
+      setDados(res.data.dados || res.data);
     } catch (error) {
       console.error('Erro ao recarregar estudantes:', error);
     }
@@ -34,18 +34,6 @@ function Estudantes() {
 
   useEffect(() => {
     recarregarAlunos();
-  }, []);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await api.get('/alunos');
-        setDados(res.data.dados || res.data);
-      } catch (error) {
-        console.error('Erro ao buscar estudantes:', error);
-      }
-    }
-    fetchData();
   }, []);
 
   const handleAplicarFiltros = (filtrosTemp) => {
@@ -98,13 +86,22 @@ function Estudantes() {
           tipoEntidade="estudante"
           filtrosAtuais={filtrosAtuais} 
           onAplicarFiltros={handleAplicarFiltros} 
-          />
+        />
+        
         <div className="tabela-container">
-          <Table filtros={filtrosAtuais} dadosOriginais={dados} />
+          <Table 
+            filtros={filtrosAtuais} 
+            dadosOriginais={dados} 
+            onDadosAtualizados={setDados}
+          />
         </div>
       </div>
+      
       {modalOpen === 'estudante' && (
-        <NovoEstudanteModal handlleCloseModal={() => setModalOpen(false)} onEstudanteCriado={recarregarAlunos}/>
+        <NovoEstudanteModal 
+          handlleCloseModal={() => setModalOpen(false)} 
+          onEstudanteCriado={recarregarAlunos}
+        />
       )}
     </div>
   );

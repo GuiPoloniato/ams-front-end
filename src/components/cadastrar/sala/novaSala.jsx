@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { api } from '../../../services/service';
+import { useSnackbar } from '../../../hooks/useSnackbar';
 import './style.css';
 
 function NovaSalaModal({ handlleCloseModal, onSalasCriadas }) {
   const [professores, setProfessores] = useState([]);
+
+  const { snackbar, showSuccess, showError, hideSnackbar } = useSnackbar();
 
   useEffect(() => {
     async function fetchProfessores() {
@@ -31,16 +36,17 @@ function NovaSalaModal({ handlleCloseModal, onSalasCriadas }) {
 
     try {
       await api.post("/salas", novaSala);
-      alert("Sala cadastrada com sucesso!");
+      showSuccess("Sala cadastrada com sucesso!");
 
-      if (onSalasCriadas) {
-        onSalasCriadas();
-      }
-      
-      handlleCloseModal();
+      setTimeout(() => {
+        if (onSalasCriadas) {
+          onEstudanteCriado();
+        }
+        handlleCloseModal();
+      }, 1500);
     } catch (error) {
       console.error("Erro ao cadastrar sala:", error);
-      alert(error.response?.data?.mensagem || "Erro ao cadastrar sala.");
+      showError(error.response?.data?.mensagem || "Erro ao cadastrar sala.");
     }
   };
 
@@ -111,6 +117,20 @@ function NovaSalaModal({ handlleCloseModal, onSalasCriadas }) {
           </div>
         </div>
       </div>
+      <Snackbar
+          open={snackbar.open}
+          autoHideDuration={4000}
+          onClose={hideSnackbar}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert 
+            onClose={hideSnackbar} 
+            severity={snackbar.severity}
+            sx={{ width: '100%' }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
     </div>
   );
 }

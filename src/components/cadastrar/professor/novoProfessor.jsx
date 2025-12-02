@@ -1,47 +1,95 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { api } from '../../../services/service';
-
+import { validateForm, formatters, estadosBrasil, professorValidationSchema } from '../../../utils/validatorUtil';
+import { useSnackbar } from '../../../hooks/useSnackbar';
 import './style.css';
 
-function NovoProfessorModal({ handlleCloseModal, onProfessoresCriados}) {
-  const handleSubmit = async () => {
-    const novoProfessor = {
-      nome: document.getElementById("inputNome")?.value,
-      formacao: document.getElementById("inputFormacao")?.value,
-      telefone: document.getElementById("inputTelefone")?.value,
-      email: document.getElementById("inputEmail")?.value,
-      endereco: {
-        cep: document.getElementById("inputCep")?.value,
-        bairro: document.getElementById("inputBairro")?.value,
-        logradouro: document.getElementById("inputLogradouro")?.value,
-        numero: String(document.getElementById("inputNumber")?.value),
-        pais: document.getElementById("selectPais")?.value,
-        uf: document.getElementById("selectEstado")?.value,
-        cidade: document.getElementById("selectCidade")?.value
-      },
-    };
+function NovoProfessorModal({ handlleCloseModal, onProfessoresCriados }) {
+  const [formData, setFormData] = useState({
+    nome: '',
+    formacao: '',
+    telefone: '',
+    email: '',
+    cep: '',
+    bairro: '',
+    logradouro: '',
+    numero: '',
+    pais: '',
+    uf: '',
+    cidade: ''
+  });
 
-    if (!novoProfessor.nome || !novoProfessor.formacao || !novoProfessor.telefone) {
-      alert("Preencha todos os campos obrigatórios!");
+  const [loading, setLoading] = useState(false);
+  const { snackbar, showSuccess, showError, hideSnackbar } = useSnackbar();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    let formattedValue = value;
+
+    if (name === 'cep') {
+      formattedValue = formatters.cep(value);
+    } else if (name === 'telefone') {
+      formattedValue = formatters.phone(value);
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: formattedValue
+    }));
+  };
+
+  const handleSubmit = async () => {
+    const validationErrors = validateForm(formData, professorValidationSchema);
+    
+    if (Object.keys(validationErrors).length > 0) {
+      const firstError = Object.values(validationErrors)[0];
+      showError(firstError);
       return;
     }
 
+    const novoProfessor = {
+      nome: formData.nome,
+      formacao: formData.formacao,
+      telefone: formData.telefone.replace(/\D/g, ''),
+      email: formData.email,
+      endereco: {
+        cep: formData.cep.replace(/\D/g, ''),
+        bairro: formData.bairro,
+        logradouro: formData.logradouro,
+        numero: String(formData.numero),
+        pais: formData.pais,
+        uf: formData.uf,
+        cidade: formData.cidade
+      },
+    };
 
     try {
-      const response = await api.post("/professores", novoProfessor);
-      alert("professor cadastrado com sucesso!");
+      setLoading(true);
+      await api.post("/professores", novoProfessor);
+      showSuccess("Professor cadastrado com sucesso!");
 
-      if (onProfessoresCriados) {
-        onProfessoresCriados();
-      }
-      
-      handlleCloseModal();
+      setTimeout(() => {
+        if (onProfessoresCriados) {
+          onProfessoresCriados();
+        }
+        handlleCloseModal();
+      }, 1500);
     } catch (error) {
       console.error("Erro ao cadastrar professor:", error);
-      alert(error.response?.data?.mensagem || "Erro ao cadastrar professor.");
+      
+      const errorMessage = error.response?.data?.mensagem 
+        || error.request 
+          ? "Não foi possível conectar ao servidor. Verifique sua conexão."
+          : "Erro inesperado. Tente novamente.";
+      
+      showError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
-
 
   return (
     <div className="body-modalProfessor">
@@ -53,72 +101,197 @@ function NovoProfessorModal({ handlleCloseModal, onProfessoresCriados}) {
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="inputNome">Nome completo</label>
-              <input type="text" className='inputNome' id="inputNome" />
+              <label htmlFor="nome">Nome completo</label>
+              <input 
+                type="text" 
+                className='inputNome' 
+                id="nome"
+                name="nome"
+                value={formData.nome}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputFormacao">Formação</label>
-              <input type="text" className='inputFormacao' id="inputFormacao" />
+              <label htmlFor="formacao">Formação</label>
+              <input 
+                type="text" 
+                className='inputFormacao' 
+                id="formacao"
+                name="formacao"
+                value={formData.formacao}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputTelefone">Telefone</label>
-              <input type="number" className='inputTelefone' id="inputTelefone" />
+              <label htmlFor="telefone">Telefone</label>
+              <input 
+                type="text" 
+                className='inputTelefone' 
+                id="telefone"
+                name="telefone"
+                value={formData.telefone}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="(00) 00000-0000"
+                maxLength="15"
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputEmail">Email</label>
-              <input type="text" className='inputEmail' id="inputEmail" />
+              <label htmlFor="email">Email</label>
+              <input 
+                type="email" 
+                className='inputEmail' 
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
           </div>
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="inputCep">CEP</label>
-              <input type="text" className='inputCep' id="inputCep" />
+              <label htmlFor="cep">CEP</label>
+              <input 
+                type="text" 
+                className='inputCep' 
+                id="cep"
+                name="cep"
+                value={formData.cep}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="00000-000"
+                maxLength="9"
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputBairro">Bairro</label>
-              <input type="text" className='inputBairro' id="inputBairro" />
+              <label htmlFor="bairro">Bairro</label>
+              <input 
+                type="text" 
+                className='inputBairro' 
+                id="bairro"
+                name="bairro"
+                value={formData.bairro}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputLogradouro">Logradouro</label>
-              <input type="text" className='inputLogradouro' id="inputLogradouro" />
+              <label htmlFor="logradouro">Logradouro</label>
+              <input 
+                type="text" 
+                className='inputLogradouro' 
+                id="logradouro"
+                name="logradouro"
+                value={formData.logradouro}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputNumber">Número</label>
-              <input type="number" className='inputNumber' id="inputNumber" />
+              <label htmlFor="numero">Número</label>
+              <input 
+                type="number" 
+                className='inputNumber' 
+                id="numero"
+                name="numero"
+                value={formData.numero}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
           </div>
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="selectPais">País</label>
-              <select className='selectPais' id="selectPais">
-                <option value=""></option>
-                <option value="brasil">Brasil</option>
+              <label htmlFor="pais">País</label>
+              <input 
+                type="text" 
+                className='inputPais' 
+                id="pais"
+                name="pais"
+                value={formData.pais}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="Brasil"
+              />
+            </div>
+            
+            <div className="campo">
+              <label htmlFor="uf">Estado</label>
+              <select 
+                className='selectEstado' 
+                id="uf"
+                name="uf"
+                value={formData.uf}
+                onChange={handleChange}
+                disabled={loading}
+              >
+                <option value="">Selecione</option>
+                {estadosBrasil.map(estado => (
+                  <option key={estado.value} value={estado.value}>
+                    {estado.label}
+                  </option>
+                ))}
               </select>
             </div>
+            
             <div className="campo">
-              <label htmlFor="selectEstado">Estado</label>
-              <select className='selectEstado' id="selectEstado">
-                <option value=""></option>
-                <option value="Go">Goias</option>
-              </select>
-            </div>
-            <div className="campo">
-              <label htmlFor="selectCidade">Cidade</label>
-              <select className='selectCidade' id="selectCidade">
-                <option value=""></option>
-                <option value="anapolis">Anápolis</option>
-              </select>
+              <label htmlFor="cidade">Cidade</label>
+              <input 
+                type="text" 
+                className='inputCidade' 
+                id="cidade"
+                name="cidade"
+                value={formData.cidade}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
           </div>
 
           <div className="buttons-submit">
-            <button className='btn-cancelar' onClick={handlleCloseModal}>Cancelar</button>
-            <button className='btn-salvar' onClick={handleSubmit}>Salvar</button>
+            <button 
+              className='btn-cancelar' 
+              onClick={handlleCloseModal}
+              disabled={loading}
+            >
+              Cancelar
+            </button>
+            <button 
+              className='btn-salvar' 
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? 'Salvando...' : 'Salvar'}
+            </button>
           </div>
         </div>
       </div>
+      
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={hideSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={hideSnackbar} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

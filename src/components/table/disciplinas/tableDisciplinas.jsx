@@ -1,5 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { api } from '../../../services/service';
+import { useSnackbar } from '../../../hooks/useSnackbar';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg"
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 import ModalArquivar from '../../modal/arquivar/arquivar';
@@ -7,13 +10,29 @@ import ModalEditarDisciplina from '../../modal/editar/disciplina/editarDisciplin
 import ModalVisualizarDisciplinas from '../../modal/visualizar/disciplinas/visualizarDisciplinas';
 import "../style.css"
 
-function TableDisciplinas({ filtros, dadosOriginais }) {
+function TableDisciplinas({ filtros, dadosOriginais, onDadosAtualizados }) {
   const [dados, setDados] = useState([]);
   const [salas, setSalas] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [dadosSelecionados, setDadosSelecionados] = useState(null);
   const [acaoPendente, setAcaoPendente] = useState(null);
+
+  const { snackbar, showSuccess, showError, hideSnackbar } = useSnackbar();
+
+  const recarregarDados = async () => {
+    try {
+      const res = await api.get("/disciplinas");
+      setDados(res.data.dados || res.data);
+
+      if (onDadosAtualizados) {
+        onDadosAtualizados(res.data.dados || res.data);
+      }
+    } catch (erro) {
+      console.error("Erro ao buscar disciplinas:", erro);
+      showError("Erro ao carregar disciplinas");
+    }
+  };
 
   useEffect(() => {
     async function getDados() {
@@ -98,24 +117,27 @@ function TableDisciplinas({ filtros, dadosOriginais }) {
     if (!dadosSelecionados || !acaoPendente) return;
 
     try {
-      await api.patch(`/disciplinas/${dadosSelecionados.id}/status`, { status: acaoPendente });
+      await api.patch(`/disciplinas/${dadosSelecionados.id}/status`, { 
+        status: acaoPendente 
+      });
 
-      setDados(prev =>
-        prev.map(disciplina =>
-          disciplina.id === dadosSelecionados.id ? { ...disciplina, status: acaoPendente } : disciplina
-        )
-      );
+      await recarregarDados();
 
       setModalOpen(false);
       setDadosSelecionados(null);
       setAcaoPendente(null);
 
-      const acaoTexto = acaoPendente === 'ativo' ? 'reativado' : 'arquivado';
-      alert(`Disciplina ${acaoTexto} com sucesso!`);
+      const acaoTexto = acaoPendente === 'ativo' ? 'reativada' : 'arquivada';
+      showSuccess(`Disciplina ${acaoTexto} com sucesso!`);
     } catch (error) {
       console.error('Erro ao atualizar status:', error);
-      alert('Erro ao atualizar status. Tente novamente.');
+      showError('Erro ao atualizar status. Tente novamente.');
     }
+  };
+
+  const handleEdicaoConcluida = async () => {
+    await recarregarDados();
+    handleCloseModal();
   };
 
   return (
@@ -233,7 +255,7 @@ function TableDisciplinas({ filtros, dadosOriginais }) {
       )}
       {modalOpen === 'editar' && (
         <ModalEditarDisciplina 
-          handleCloseModal={handleCloseModal} 
+          handleCloseModal={handleEdicaoConcluida} 
           editarSelecionado={dadosSelecionados} 
         />
       )}
@@ -243,6 +265,20 @@ function TableDisciplinas({ filtros, dadosOriginais }) {
           selecionarDados={dadosSelecionados} 
           visualizarSelecionado={dadosSelecionados}/>
       )}
+      <Snackbar
+          open={snackbar.open}
+          autoHideDuration={4000}
+          onClose={hideSnackbar}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert 
+            onClose={hideSnackbar} 
+            severity={snackbar.severity}
+            sx={{ width: '100%' }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
     </div>
   );
 }

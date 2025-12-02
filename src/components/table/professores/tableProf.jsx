@@ -1,5 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { api } from '../../../services/service';
+import { useSnackbar } from '../../../hooks/useSnackbar';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg";
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 import ModalArquivar from '../../modal/arquivar/arquivar';
@@ -7,12 +10,28 @@ import ModalEditarProfessor from '../../modal/editar/professor/editarProfessor';
 import ModalVisualizarProfessor from '../../modal/visualizar/professores/visualizarProfessor';
 import "../style.css";
 
-function TableProfessor({ filtros, dadosOriginais }) {
+function TableProfessor({ filtros, dadosOriginais, onDadosAtualizados }) {
   const [dados, setDados] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [dadosSelecionados, setDadosSelecionados] = useState(null);
   const [acaoPendente, setAcaoPendente] = useState(null);
+
+  const { snackbar, showSuccess, showError, hideSnackbar } = useSnackbar();
+
+  const recarregarDados = async () => {
+    try {
+      const res = await api.get("/professores");
+      setDados(res.data.dados || res.data);
+      
+      if (onDadosAtualizados) {
+        onDadosAtualizados(res.data.dados || res.data);
+      }
+    } catch (erro) {
+      console.error("Erro ao buscar professores:", erro);
+      showError("Erro ao carregar professores");
+    }
+  };
 
   useEffect(() => {
     async function getDados() {
@@ -21,11 +40,11 @@ function TableProfessor({ filtros, dadosOriginais }) {
         setDados(res.data.dados || res.data);
       } catch (erro) {
         console.error("Erro ao buscar professores:", erro);
+        showError("Erro ao carregar professores");
       }
     }
     getDados();
   }, []);
-
 
   const dadosFiltrados = useMemo(() => {
     let resultado = [...((dadosOriginais || []))];
@@ -87,22 +106,23 @@ function TableProfessor({ filtros, dadosOriginais }) {
     try {
       await api.patch(`/professores/${dadosSelecionados.id}/status`, { status: acaoPendente });
 
-      setDados(prev =>
-        prev.map(professor =>
-          professor.id === dadosSelecionados.id ? { ...professor, status: acaoPendente } : professor
-        )
-      );
+      await recarregarDados();
 
       setModalOpen(false);
       setDadosSelecionados(null);
       setAcaoPendente(null);
 
       const acaoTexto = acaoPendente === 'ativo' ? 'reativado' : 'arquivado';
-      alert(`Professor ${acaoTexto} com sucesso!`);
+      showSuccess(`Professor ${acaoTexto} com sucesso!`);
     } catch (error) {
       console.error('Erro ao atualizar status:', error);
-      alert('Erro ao atualizar status. Tente novamente.');
+      showError('Erro ao atualizar status. Tente novamente.');
     }
+  };
+
+  const handleEdicaoConcluida = async () => {
+    await recarregarDados();
+    handleCloseModal();
   };
 
   return (
@@ -184,7 +204,7 @@ function TableProfessor({ filtros, dadosOriginais }) {
             ))}
             {dadosPaginados.length === 0 && (
               <tr>
-                <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
+                <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
                   Nenhum resultado encontrado.
                 </td>
               </tr>
@@ -220,15 +240,15 @@ function TableProfessor({ filtros, dadosOriginais }) {
           nameTable='este professor'
           textoArquivar={
             acaoPendente === 'ativo'
-              ? "Ao reativar este estudante, ele voltará a estar disponível em todas as funcionalidades do sistema."
-              : "Ao arquivar este estudante, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente."
+              ? "Ao reativar este professor, ele voltará a estar disponível em todas as funcionalidades do sistema."
+              : "Ao arquivar este professor, ele será desativado e não poderá mais ser utilizado em nenhuma funcionalidade do sistema. Para utilizá-lo novamente, será necessário reativá-lo manualmente."
           }
           onConfirm={handleConfirmarStatus}
         />
       )}
       {modalOpen === 'editar' && (
         <ModalEditarProfessor
-          handleCloseModal={handleCloseModal}
+          handleCloseModal={handleEdicaoConcluida}
           editarSelecionado={dadosSelecionados}
         />
       )}
@@ -238,6 +258,21 @@ function TableProfessor({ filtros, dadosOriginais }) {
           visualizarSelecionado={dadosSelecionados}
         />
       )}
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={hideSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={hideSnackbar} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

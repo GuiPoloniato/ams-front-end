@@ -1,5 +1,8 @@
 import React, {useState, useEffect} from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { api } from '../../../../services/service';
+import { useSnackbar } from '../../../../hooks/useSnackbar';
 import './style.css';
 
 function ModalEditarUsuario({ handleCloseModal, editarSelecionado }) {
@@ -8,6 +11,8 @@ function ModalEditarUsuario({ handleCloseModal, editarSelecionado }) {
     email: '',
     papel: '',
   });
+
+  const { snackbar, showSuccess, showError, hideSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (editarSelecionado) {
@@ -22,11 +27,13 @@ function ModalEditarUsuario({ handleCloseModal, editarSelecionado }) {
   const handleSubmit = async () => {
     try {
       await api.put(`/users/${editarSelecionado.id}`, formData);
-      alert('Usuário atualizado com sucesso!');
-      handleCloseModal();
+      showSuccess('Usuário atualizado com sucesso!');
+      setTimeout(() => {
+        handleCloseModal();
+      }, 1500);
     } catch (error) {
       console.error('Erro ao atualizar usuário:', error);
-      alert(error.response?.data?.mensagem || 'Erro ao atualizar usuário.');
+      showError(error.response?.data?.mensagem || 'Erro ao atualizar usuário.');
     }
   };
 
@@ -82,6 +89,20 @@ function ModalEditarUsuario({ handleCloseModal, editarSelecionado }) {
           </div>
         </div>
       </div>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={hideSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={hideSnackbar} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

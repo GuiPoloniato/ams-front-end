@@ -1,55 +1,126 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import './style.css';
 import { api } from '../../../services/service';
+import { validateForm, formatters, estadosBrasil } from '../../../utils/validatorUtil';
+import { estudanteValidationSchema } from '../../../utils/validatorUtil';
+import { useSnackbar } from '../../../hooks/useSnackbar';
 
 function NovoEstudanteModal({ handlleCloseModal, onEstudanteCriado }) {
-  const handleSubmit = async () => {
-  const novoEstudante = {
-    matricula: String(document.getElementById("inputMatricula").value),
-    nome: document.getElementById("inputName").value,
-    nascimento: document.getElementById("dataInput").value,
-    naturalidade: document.getElementById("inputNaturalidade").value,
-    raca: document.getElementById("selectRaca").value,
-    turno: document.getElementById("selectTurno").value, 
-    endereco: {
-      cep: document.getElementById("inputCep").value,
-      bairro: document.getElementById("inputBairro").value,
-      logradouro: document.getElementById("inputLogradouro").value,
-      numero: String(document.getElementById("inputNumber").value),
-      pais: document.getElementById("selectPais").value,
-      uf: document.getElementById("selectEstado").value,
-      cidade: document.getElementById("selectCidade").value
-    },
-    responsavel: {
-      nome: document.getElementById("inputNomeResponsavel").value,
-      cpf: document.getElementById("inputCpfResponsavel").value,
-      rg: document.getElementById("inputRgResponsavel").value,
-      orgaoExpedidor: document.getElementById("inputOrgao").value,
-      uf: document.getElementById("selectUf").value,
-      telefoneResidencial: document.getElementById("inputTelefone").value,
-      telefoneComercial: document.getElementById("inputComercial").value,
-      celular: document.getElementById("inputCelular").value,
-      email: document.getElementById("inputEmail").value,
-      profissao: document.getElementById("inputProfissao").value,
-      parentesco: document.getElementById("inputParentesco").value
+  const [formData, setFormData] = useState({
+    matricula: '',
+    nome: '',
+    nascimento: '',
+    naturalidade: '',
+    raca: '',
+    turno: '',
+    cep: '',
+    bairro: '',
+    logradouro: '',
+    numero: '',
+    pais: '',
+    uf: '',
+    cidade: '',
+    nomeResponsavel: '',
+    cpfResponsavel: '',
+    rgResponsavel: '',
+    orgaoExpedidor: '',
+    ufResponsavel: '',
+    telefoneResidencial: '',
+    telefoneComercial: '',
+    celular: '',
+    email: '',
+    profissao: '',
+    parentesco: ''
+  });
+
+  const [loading, setLoading] = useState(false);
+  const { snackbar, showSuccess, showError, hideSnackbar } = useSnackbar();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    let formattedValue = value;
+    
+    if (name === 'cep') {
+      formattedValue = formatters.cep(value);
+    } else if (name === 'celular' || name === 'telefoneResidencial' || name === 'telefoneComercial') {
+      formattedValue = formatters.phone(value);
+    } else if (name === 'cpfResponsavel') {
+      formattedValue = formatters.cpf(value);
     }
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: formattedValue
+    }));
   };
-    try {
-      const response = await api.post("/alunos", novoEstudante);
-      alert("Estudante cadastrado com sucesso!");
 
-      if (onEstudanteCriado) {
-        onEstudanteCriado();
+  const handleSubmit = async () => {
+    const validationErrors = validateForm(formData, estudanteValidationSchema);
+    
+    if (Object.keys(validationErrors).length > 0) {
+      const firstError = Object.values(validationErrors)[0];
+      showError(firstError);
+      return;
+    }
+
+    const novoEstudante = {
+      matricula: String(formData.matricula),
+      nome: formData.nome,
+      nascimento: formData.nascimento,
+      naturalidade: formData.naturalidade,
+      raca: formData.raca,
+      turno: formData.turno,
+      endereco: {
+        cep: formData.cep.replace(/\D/g, ''),
+        bairro: formData.bairro,
+        logradouro: formData.logradouro,
+        numero: String(formData.numero),
+        pais: formData.pais,
+        uf: formData.uf,
+        cidade: formData.cidade
+      },
+      responsavel: {
+        nome: formData.nomeResponsavel,
+        cpf: formData.cpfResponsavel.replace(/\D/g, ''),
+        rg: formData.rgResponsavel,
+        orgaoExpedidor: formData.orgaoExpedidor,
+        uf: formData.ufResponsavel,
+        telefoneResidencial: formData.telefoneResidencial.replace(/\D/g, ''),
+        telefoneComercial: formData.telefoneComercial.replace(/\D/g, ''),
+        celular: formData.celular.replace(/\D/g, ''),
+        email: formData.email,
+        profissao: formData.profissao,
+        parentesco: formData.parentesco
       }
+    };
 
-      handlleCloseModal();
+    try {
+      setLoading(true);
+      await api.post("/alunos", novoEstudante);
+      showSuccess("Estudante cadastrado com sucesso!");
+
+      setTimeout(() => {
+        if (onEstudanteCriado) {
+          onEstudanteCriado();
+        }
+        handlleCloseModal();
+      }, 1500);
     } catch (error) {
       console.error("Erro ao cadastrar estudante:", error);
-      alert(error.response?.data?.mensagem || "Erro ao cadastrar estudante.");
+      
+      const errorMessage = error.response?.data?.mensagem 
+        || error.request 
+          ? "Não foi possível conectar ao servidor. Verifique sua conexão."
+          : "Erro inesperado. Tente novamente.";
+      
+      showError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
-
-
 
   return (
     <div className="body-modalEstudante">
@@ -61,25 +132,68 @@ function NovoEstudanteModal({ handlleCloseModal, onEstudanteCriado }) {
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="inputMatricula">Matrícula</label>
-              <input type="number" className='inputMatricula' id="inputMatricula" />
+              <label htmlFor="matricula">Matrícula</label>
+              <input 
+                type="number" 
+                className='inputMatricula' 
+                id="matricula"
+                name="matricula"
+                value={formData.matricula}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputName">Nome completo</label>
-              <input type="text" className='inputName' id="inputName" />
+              <label htmlFor="nome">Nome completo</label>
+              <input 
+                type="text" 
+                className='inputName' 
+                id="nome"
+                name="nome"
+                value={formData.nome}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="dataInput">Data de nascimento</label>
-              <input type="date" className='dataInput' id="dataInput" />
+              <label htmlFor="nascimento">Data de nascimento</label>
+              <input 
+                type="date" 
+                className='dataInput' 
+                id="nascimento"
+                name="nascimento"
+                value={formData.nascimento}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputNaturalidade">Naturalidade</label>
-              <input type="text" className='inputNaturalidade' id="inputNaturalidade" />
+              <label htmlFor="naturalidade">Naturalidade</label>
+              <input 
+                type="text" 
+                className='inputNaturalidade' 
+                id="naturalidade"
+                name="naturalidade"
+                value={formData.naturalidade}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="selectRaca">Raça</label>
-              <select className='selectRaca' id="selectRaca">
-                <option value=""></option>
+              <label htmlFor="raca">Raça</label>
+              <select 
+                className='selectRaca' 
+                id="raca"
+                name="raca"
+                value={formData.raca}
+                onChange={handleChange}
+                disabled={loading}
+              >
+                <option value="">Selecione</option>
                 <option value="branca">Branca</option>
                 <option value="preta">Preta</option>
                 <option value="parda">Parda</option>
@@ -91,50 +205,121 @@ function NovoEstudanteModal({ handlleCloseModal, onEstudanteCriado }) {
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="inputCep">CEP</label>
-              <input type="text" className='inputCep' id="inputCep" />
+              <label htmlFor="cep">CEP</label>
+              <input 
+                type="text" 
+                className='inputCep' 
+                id="cep"
+                name="cep"
+                value={formData.cep}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="00000-000"
+                maxLength="9"
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputBairro">Bairro</label>
-              <input type="text" className='inputBairro' id="inputBairro" />
+              <label htmlFor="bairro">Bairro</label>
+              <input 
+                type="text" 
+                className='inputBairro' 
+                id="bairro"
+                name="bairro"
+                value={formData.bairro}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputLogradouro">Logradouro</label>
-              <input type="text" className='inputLogradouro' id="inputLogradouro" />
+              <label htmlFor="logradouro">Logradouro</label>
+              <input 
+                type="text" 
+                className='inputLogradouro' 
+                id="logradouro"
+                name="logradouro"
+                value={formData.logradouro}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputNumber">Número</label>
-              <input type="number" className='inputNumber' id="inputNumber" />
+              <label htmlFor="numero">Número</label>
+              <input 
+                type="number" 
+                className='inputNumber' 
+                id="numero"
+                name="numero"
+                value={formData.numero}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
           </div>
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="selectPais">País</label>
-              <select className='selectPais' id="selectPais">
-                <option value=""></option>
-                <option value="brasil">Brasil</option>
+              <label htmlFor="pais">País</label>
+              <input 
+                type="text" 
+                className='inputPais' 
+                id="pais"
+                name="pais"
+                value={formData.pais}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="Brasil"
+              />
+            </div>
+            
+            <div className="campo">
+              <label htmlFor="uf">Estado</label>
+              <select 
+                className='selectEstado' 
+                id="uf"
+                name="uf"
+                value={formData.uf}
+                onChange={handleChange}
+                disabled={loading}
+              >
+                <option value="">Selecione</option>
+                {estadosBrasil.map(estado => (
+                  <option key={estado.value} value={estado.value}>
+                    {estado.label}
+                  </option>
+                ))}
               </select>
             </div>
+            
             <div className="campo">
-              <label htmlFor="selectEstado">Estado</label>
-              <select className='selectEstado' id="selectEstado">
-                <option value=""></option>
-                <option value="Go">Goias</option>
-              </select>
+              <label htmlFor="cidade">Cidade</label>
+              <input 
+                type="text" 
+                className='inputCidade' 
+                id="cidade"
+                name="cidade"
+                value={formData.cidade}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="selectCidade">Cidade</label>
-              <select className='selectCidade' id="selectCidade">
-                <option value=""></option>
-                <option value="anapolis">Anápolis</option>
-              </select>
-            </div>
-            <div className="campo">
-              <label htmlFor="selectTurno">Turno</label>
-              <select className='selectTurno' id="selectTurno">
-                <option value=""></option>
-                <option value="vespertino">vespertino</option>
+              <label htmlFor="turno">Turno</label>
+              <select 
+                className='selectTurno' 
+                id="turno"
+                name="turno"
+                value={formData.turno}
+                onChange={handleChange}
+                disabled={loading}
+              >
+                <option value="">Selecione</option>
+                <option value="vespertino">Vespertino</option>
+                <option value="matutino">Matutino</option>
+                <option value="noturno">Noturno</option>
               </select>
             </div>
           </div>
@@ -143,65 +328,203 @@ function NovoEstudanteModal({ handlleCloseModal, onEstudanteCriado }) {
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="inputNomeResponsavel">Nome completo</label>
-              <input type="text" className='inputNomeResponsavel' id="inputNomeResponsavel" />
+              <label htmlFor="nomeResponsavel">Nome completo</label>
+              <input 
+                type="text" 
+                className='inputNomeResponsavel' 
+                id="nomeResponsavel"
+                name="nomeResponsavel"
+                value={formData.nomeResponsavel}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputCpfResponsavel">CPF</label>
-              <input type="number" className='inputCpfResponsavel' id="inputCpfResponsavel" />
+              <label htmlFor="cpfResponsavel">CPF</label>
+              <input 
+                type="text" 
+                className='inputCpfResponsavel' 
+                id="cpfResponsavel"
+                name="cpfResponsavel"
+                value={formData.cpfResponsavel}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="000.000.000-00"
+                maxLength="14"
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputRgResponsavel">RG</label>
-              <input type="number" className='inputRgResponsavel' id="inputRgResponsavel" />
+              <label htmlFor="rgResponsavel">RG</label>
+              <input 
+                type="text" 
+                className='inputRgResponsavel' 
+                id="rgResponsavel"
+                name="rgResponsavel"
+                value={formData.rgResponsavel}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputOrgao">Órgão expedidor</label>
-              <input type="text" className='inputOrgao' id="inputOrgao" />
+              <label htmlFor="orgaoExpedidor">Órgão expedidor</label>
+              <input 
+                type="text" 
+                className='inputOrgao' 
+                id="orgaoExpedidor"
+                name="orgaoExpedidor"
+                value={formData.orgaoExpedidor}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="selectUf">UF</label>
-              <select className='selectUf' id="selectUf">
-                <option value=""></option>
-                <option value="GO">GO</option>
+              <label htmlFor="ufResponsavel">UF</label>
+              <select 
+                className='selectUf' 
+                id="ufResponsavel"
+                name="ufResponsavel"
+                value={formData.ufResponsavel}
+                onChange={handleChange}
+                disabled={loading}
+              >
+                <option value="">Selecione</option>
+                {estadosBrasil.map(estado => (
+                  <option key={estado.value} value={estado.value}>
+                    {estado.value}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="inputTelefone">Telefone residencial</label>
-              <input type="number" className='inputTelefone' id="inputTelefone" />
+              <label htmlFor="telefoneResidencial">Telefone residencial</label>
+              <input 
+                type="text" 
+                className='inputTelefone' 
+                id="telefoneResidencial"
+                name="telefoneResidencial"
+                value={formData.telefoneResidencial}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="(00) 0000-0000"
+                maxLength="15"
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputComercial">Telefone comercial</label>
-              <input type="number" className='inputComercial' id="inputComercial" />
+              <label htmlFor="telefoneComercial">Telefone comercial</label>
+              <input 
+                type="text" 
+                className='inputComercial' 
+                id="telefoneComercial"
+                name="telefoneComercial"
+                value={formData.telefoneComercial}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="(00) 0000-0000"
+                maxLength="15"
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputCelular">Celular</label>
-              <input type="number" className='inputCelular' id="inputCelular" />
+              <label htmlFor="celular">Celular</label>
+              <input 
+                type="text" 
+                className='inputCelular' 
+                id="celular"
+                name="celular"
+                value={formData.celular}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="(00) 00000-0000"
+                maxLength="15"
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputEmail">Email</label>
-              <input type="email" className='inputEmail' id="inputEmail" />
+              <label htmlFor="email">Email</label>
+              <input 
+                type="email" 
+                className='inputEmail' 
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputProfissao">Profissão</label>
-              <input type="text" className='inputProfissao' id="inputProfissao" />
+              <label htmlFor="profissao">Profissão</label>
+              <input 
+                type="text" 
+                className='inputProfissao' 
+                id="profissao"
+                name="profissao"
+                value={formData.profissao}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputParentesco">Parentesco</label>
-              <input type="text" className='inputParentesco' id="inputParentesco" />
+              <label htmlFor="parentesco">Parentesco</label>
+              <input 
+                type="text" 
+                className='inputParentesco' 
+                id="parentesco"
+                name="parentesco"
+                value={formData.parentesco}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
           </div>
 
-          <button className="button-responsavel">Adicionar responsável</button>
+          <button className="button-responsavel" disabled={loading}>
+            Adicionar responsável
+          </button>
 
           <div className="buttons-submit">
-            <button className='btn-cancelar' onClick={handlleCloseModal}>Cancelar</button>
-            <button className='btn-salvar' onClick={handleSubmit}>Salvar</button>
+            <button 
+              className='btn-cancelar' 
+              onClick={handlleCloseModal}
+              disabled={loading}
+            >
+              Cancelar
+            </button>
+            <button 
+              className='btn-salvar' 
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? 'Salvando...' : 'Salvar'}
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Snackbar do Material-UI */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={hideSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={hideSnackbar} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

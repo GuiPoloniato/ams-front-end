@@ -5,7 +5,6 @@ import NovoEstudanteModal from '../../components/cadastrar/estudante/novoEstudan
 import NovoProfessorModal from '../../components/cadastrar/professor/novoProfessor';
 import NovaSalaModal from '../../components/cadastrar/sala/novaSala';
 import { PieChart, Pie, Cell } from 'recharts';
-import { useTheme } from '../../contexts/themeContexts';
 import './style.css'
 
 function Home() {
@@ -14,7 +13,6 @@ function Home() {
     const [professores, setProfessores] = useState([]);
     const [disciplinas, setDisciplinas] = useState([]);
     const [salas, setSalas] = useState([]);
-    const { isDark } = useTheme();
 
     const handlleCloseModal = () => {
         setModalOpen(false)
@@ -56,7 +54,7 @@ function Home() {
             <SideBar />
             <div className="content-home">
                 <h2 className='h2-route'>Home</h2>
-                <h1 className='h1-welcome'>Bem vindo(a) de volta, João</h1>
+                <h1 className='h1-welcome'>Bem vindo(a) de volta</h1>
                 <div className="acoes-rapidas">
                     <p>Ações rápidas</p>
                     <div className="acoes">

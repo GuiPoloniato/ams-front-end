@@ -25,7 +25,7 @@ function Disciplinas() {
     const recarregarDisciplinas = async () => {
         try {
           const res = await api.get('/disciplinas');
-          setDados(res.data.dados || []);
+          setDados(res.data.dados || res.data);
         } catch (error) {
           console.error('Erro ao recarregar disciplinas:', error);
         }
@@ -95,7 +95,7 @@ function Disciplinas() {
                     onAplicarFiltros={handleAplicarFiltros} 
                 />
                 <div className="tabela-container">
-                    <TableDisciplinas filtros={filtrosAtuais} dadosOriginais={dados}/>
+                    <TableDisciplinas filtros={filtrosAtuais} dadosOriginais={dados} onDadosAtualizados={setDados}/>
                 </div>
             </div>
             {modalOpen === 'disciplina' && (<NovaDisciplinaModal handlleCloseModal={() => setModalOpen(false)} onDisciplinasCriadas={recarregarDisciplinas}/>)}

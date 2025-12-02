@@ -1,30 +1,35 @@
 import React, {useState, useEffect} from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { api } from '../../../services/service';
+import { useSnackbar } from '../../../hooks/useSnackbar';
 import './style.css';
 
 function NovaDisciplinaModal({ handlleCloseModal, onDisciplinasCriadas }) {
   const [professores, setProfessores] = useState([]);
   const [salas, setSalas] = useState([]);
+
+  const { snackbar, showSuccess, showError, hideSnackbar } = useSnackbar();
   
-    useEffect(() => {
-      async function fetchProfessores() {
-        try {
-          const reponseProfessor = await api.get("/professores");
-          setProfessores(reponseProfessor.data.dados || reponseProfessor.data);
-        } catch (error) {
-          console.error("Erro ao buscar professores:", error);
-        }
+  useEffect(() => {
+    async function fetchProfessores() {
+      try {
+        const reponseProfessor = await api.get("/professores");
+        setProfessores(reponseProfessor.data.dados || reponseProfessor.data);
+      } catch (error) {
+        console.error("Erro ao buscar professores:", error);
       }
-      async function fetchSalas() {
-        try {
-          const reponseSalas = await api.get("/salas");
-          setSalas(reponseSalas.data.dados || reponseSalas.data);
-        } catch (error) {
-          console.error("Erro ao buscar salas:", error);
-        }
+    }
+    async function fetchSalas() {
+      try {
+        const reponseSalas = await api.get("/salas");
+        setSalas(reponseSalas.data.dados || reponseSalas.data);
+      } catch (error) {
+        console.error("Erro ao buscar salas:", error);
       }
-      fetchProfessores();
-      fetchSalas();
+    }
+    fetchProfessores();
+    fetchSalas();
     }, []);
   
     const handleSubmit = async () => {
@@ -38,16 +43,17 @@ function NovaDisciplinaModal({ handlleCloseModal, onDisciplinasCriadas }) {
 
       try {
         await api.post("/disciplinas", novaDisciplina);
-        alert("Disciplina cadastrada com sucesso!");
+        showSuccess("Disciplina cadastrada com sucesso!");
 
+        setTimeout(() => {
         if (onDisciplinasCriadas) {
-          onDisciplinasCriadas();
+          onEstudanteCriado();
         }
-
         handlleCloseModal();
+      }, 1500);
       } catch (error) {
         console.error("Erro ao cadastrar disciplina:", error);
-        alert(error.response?.data?.mensagem || "Erro ao cadastrar disciplina.");
+        showError(error.response?.data?.mensagem || "Erro ao cadastrar disciplina.");
       }
     };
 
@@ -107,6 +113,20 @@ function NovaDisciplinaModal({ handlleCloseModal, onDisciplinasCriadas }) {
           </div>
         </div>
       </div>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={hideSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={hideSnackbar} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

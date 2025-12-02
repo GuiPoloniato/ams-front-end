@@ -1,5 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { api } from '../../../services/service';
+import { useSnackbar } from '../../../hooks/useSnackbar';
 import SetaLeft from "../../../assets/iconsSvg/setaLeft.svg";
 import SetaRigth from "../../../assets/iconsSvg/setaRigth.svg";
 import ModalArquivar from '../../modal/arquivar/arquivar';
@@ -7,24 +10,41 @@ import ModalEditarUsuario from '../../modal/editar/permissoes/editarUsuario';
 import ModalVisualizarPermissoes from '../../modal/visualizar/permissoes/visualizarPermissoes';
 import "../style.css";
 
-function TablePermissoes({ filtros, dadosOriginais }) {
+function TablePermissoes({ filtros, dadosOriginais, onDadosAtualizados }) {
   const [dados, setDados] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [dadosSelecionados, setDadosSelecionados] = useState(null);
   const [acaoPendente, setAcaoPendente] = useState(null);
 
+  const recarregarDados = async () => {
+    try {
+      const res = await api.get("/usuarios");
+      setDados(res.data.dados || res.data);
+
+      if (onDadosAtualizados) {
+        onDadosAtualizados(res.data.dados || res.data);
+      }
+    } catch (erro) {
+      console.error("Erro ao buscar usuarios:", erro);
+      showError("Erro ao carregar usuarios");
+    }
+  };
+
   useEffect(() => {
     const fetchUsuarios = async () => {
       try {
         const res = await api.get("/usuarios");
-        setDados(res.data.dados || []);
+        setDados(res.data.dados || res.data);
       } catch (err) {
         console.error("Erro ao buscar usuários:", err);
+        showError("Erro ao carregar dados");
       }
     };
     fetchUsuarios();
   }, []);
+
+  const { snackbar, showSuccess, showError, hideSnackbar } = useSnackbar();
 
   const dadosFiltrados = useMemo(() => {
     let resultado = [...((dadosOriginais || []))];
@@ -80,33 +100,28 @@ function TablePermissoes({ filtros, dadosOriginais }) {
     if (!dadosSelecionados || !acaoPendente) return;
 
     try {
-      if (acaoPendente === 'inativo') {
-        await api.patch(`/usuarios/${dadosSelecionados.id}/inativar`);
-      } else {
-        await api.put(`/usuarios/${dadosSelecionados.id}`, { ativo: true });
-      }
+      await api.patch(`/usuarios/${dadosSelecionados.id}/status`, { 
+        status: acaoPendente 
+      });
 
-      setDados(prev =>
-        prev.map(user =>
-          user.id === dadosSelecionados.id
-            ? { ...user, ativo: acaoPendente === 'ativo' }
-            : user
-        )
-      );
+      await recarregarDados();
 
       setModalOpen(false);
       setDadosSelecionados(null);
       setAcaoPendente(null);
 
-      const acaoTexto = acaoPendente === 'ativo' ? 'reativado' : 'arquivado';
-      alert(`Usuário ${acaoTexto} com sucesso!`);
+      const acaoTexto = acaoPendente === 'ativo' ? 'reativada' : 'arquivada';
+      showSuccess(`Usuarios ${acaoTexto} com sucesso!`);
     } catch (error) {
       console.error('Erro ao atualizar status:', error);
-      alert('Erro ao atualizar status. Tente novamente.');
+      showError('Erro ao atualizar status. Tente novamente.');
     }
   };
 
-  
+  const handleEdicaoConcluida = async () => {
+    await recarregarDados();
+    handleCloseModal();
+  };
 
   return (
     <div className="body-table">
@@ -222,7 +237,7 @@ function TablePermissoes({ filtros, dadosOriginais }) {
       )}
       {modalOpen === 'editar' && (
         <ModalEditarUsuario
-          handleCloseModal={handleCloseModal}
+          handleCloseModal={handleEdicaoConcluida} 
           editarSelecionado={dadosSelecionados}
         />
       )}
@@ -232,6 +247,20 @@ function TablePermissoes({ filtros, dadosOriginais }) {
           visualizarSelecionado={dadosSelecionados}
         />
       )}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={hideSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={hideSnackbar} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

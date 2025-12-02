@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { api } from '../../../../services/service';
+import { validateForm, formatters, estadosBrasil } from '../../../../utils/validatorUtil';
+import { estudanteValidationSchema } from '../../../../utils/validatorUtil';
+import { useSnackbar } from '../../../../hooks/useSnackbar';
 import './style.css';
 
 function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
@@ -14,14 +19,14 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
     logradouro: '',
     numero: '',
     pais: '',
-    estado: '',
+    uf: '',
     cidade: '',
     turno: '',
     nomeResponsavel: '',
-    responsavelCpf: '',
-    responsavelRg: '',
+    cpfResponsavel: '',
+    rgResponsavel: '',
     orgaoExpedidor: '',
-    uf: '',
+    ufResponsavel: '',
     telefoneResidencial: '',
     telefoneComercial: '',
     celular: '',
@@ -29,6 +34,9 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
     profissao: '',
     parentesco: ''
   });
+
+  const [loading, setLoading] = useState(false);
+  const { snackbar, showSuccess, showError, hideSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (editarSelecionado) {
@@ -42,22 +50,22 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
         nascimento: aluno.nascimento || '',
         naturalidade: aluno.naturalidade || '',
         raca: aluno.raca || '',
-        cep: endereco.cep || '',
+        cep: endereco.cep ? formatters.cep(endereco.cep) : '',
         bairro: endereco.bairro || '',
         logradouro: endereco.logradouro || '',
         numero: endereco.numero || '',
         pais: endereco.pais || '',
-        estado: endereco.uf || '',
+        uf: endereco.uf || '',
         cidade: endereco.cidade || '',
         turno: aluno.turno || '',
         nomeResponsavel: responsavel.nome || '',
-        responsavelCpf: responsavel.cpf || '',
-        responsavelRg: responsavel.rg || '',
+        cpfResponsavel: responsavel.cpf ? formatters.cpf(responsavel.cpf) : '',
+        rgResponsavel: responsavel.rg || '',
         orgaoExpedidor: responsavel.orgaoExpedidor || '',
-        uf: responsavel.uf || '',
-        telefoneResidencial: responsavel.telefoneResidencial || '',
-        telefoneComercial: responsavel.telefoneComercial || '',
-        celular: responsavel.celular || '',
+        ufResponsavel: responsavel.uf || '',
+        telefoneResidencial: responsavel.telefoneResidencial ? formatters.phone(responsavel.telefoneResidencial) : '',
+        telefoneComercial: responsavel.telefoneComercial ? formatters.phone(responsavel.telefoneComercial) : '',
+        celular: responsavel.celular ? formatters.phone(responsavel.celular) : '',
         email: responsavel.email || '',
         profissao: responsavel.profissao || '',
         parentesco: responsavel.parentesco || ''
@@ -65,45 +73,84 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
     }
   }, [editarSelecionado]);
 
-  const handleSubmit = async () => {
-    try {
-      const alunoAtualizado = {
-        nome: formData.nome,
-        matricula: formData.matricula,
-        nascimento: formData.nascimento,
-        naturalidade: formData.naturalidade,
-        raca: formData.raca,
-        turno: formData.turno,
-        endereco: {
-          cep: formData.cep,
-          bairro: formData.bairro,
-          logradouro: formData.logradouro,
-          numero: formData.numero,
-          pais: formData.pais,
-          estado: formData.uf,
-          cidade: formData.cidade
-        },
-        responsavel: {
-          nomeCompleto: formData.nomeResponsavel,
-          cpf: formData.responsavelCpf,
-          rg: formData.responsavelRg,
-          orgaoExpedidor: formData.orgaoExpedidor,
-          uf: formData.uf,
-          telefoneResidencial: formData.telefoneResidencial,
-          telefoneComercial: formData.telefoneComercial,
-          celular: formData.celular,
-          email: formData.email,
-          profissao: formData.profissao,
-          parentesco: formData.parentesco
-        }
-      };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    let formattedValue = value;
 
+    if (name === 'cep') {
+      formattedValue = formatters.cep(value);
+    } else if (name === 'celular' || name === 'telefoneResidencial' || name === 'telefoneComercial') {
+      formattedValue = formatters.phone(value);
+    } else if (name === 'cpfResponsavel') {
+      formattedValue = formatters.cpf(value);
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: formattedValue
+    }));
+  };
+
+  const handleSubmit = async () => {
+    const validationErrors = validateForm(formData, estudanteValidationSchema);
+    
+    if (Object.keys(validationErrors).length > 0) {
+      const firstError = Object.values(validationErrors)[0];
+      showError(firstError);
+      return;
+    }
+
+    const alunoAtualizado = {
+      nome: formData.nome,
+      matricula: formData.matricula,
+      nascimento: formData.nascimento,
+      naturalidade: formData.naturalidade,
+      raca: formData.raca,
+      turno: formData.turno,
+      endereco: {
+        cep: formData.cep.replace(/\D/g, ''),
+        bairro: formData.bairro,
+        logradouro: formData.logradouro,
+        numero: formData.numero,
+        pais: formData.pais,
+        uf: formData.uf,
+        cidade: formData.cidade
+      },
+      responsavel: {
+        nome: formData.nomeResponsavel,
+        cpf: formData.cpfResponsavel.replace(/\D/g, ''),
+        rg: formData.rgResponsavel,
+        orgaoExpedidor: formData.orgaoExpedidor,
+        uf: formData.ufResponsavel,
+        telefoneResidencial: formData.telefoneResidencial.replace(/\D/g, ''),
+        telefoneComercial: formData.telefoneComercial.replace(/\D/g, ''),
+        celular: formData.celular.replace(/\D/g, ''),
+        email: formData.email,
+        profissao: formData.profissao,
+        parentesco: formData.parentesco
+      }
+    };
+
+    try {
+      setLoading(true);
       await api.put(`/alunos/${editarSelecionado.id}`, alunoAtualizado);
-      alert('Estudante atualizado com sucesso!');
-      handleCloseModal();
+      showSuccess('Estudante atualizado com sucesso!');
+      
+      setTimeout(() => {
+        handleCloseModal();
+      }, 1500);
     } catch (error) {
       console.error('Erro ao atualizar estudante:', error);
-      alert(error.response?.data?.mensagem || 'Erro ao atualizar estudante.');
+      
+      const errorMessage = error.response?.data?.mensagem 
+        || error.request 
+          ? "Não foi possível conectar ao servidor. Verifique sua conexão."
+          : "Erro inesperado. Tente novamente.";
+      
+      showError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -117,154 +164,194 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="inputMatricula">Matrícula</label>
+              <label htmlFor="matricula">Matrícula</label>
               <input
-                type="text"
+                type="number"
                 className="inputMatricula"
-                id="inputMatricula"
+                id="matricula"
+                name="matricula"
                 value={formData.matricula}
-                onChange={(e) => setFormData({ ...formData, matricula: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputName">Nome completo</label>
+              <label htmlFor="nome">Nome completo</label>
               <input
                 type="text"
                 className="inputName"
-                id="inputName"
+                id="nome"
+                name="nome"
                 value={formData.nome}
-                onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="dataInput">Data de nascimento</label>
+              <label htmlFor="nascimento">Data de nascimento</label>
               <input
                 type="date"
                 className="dataInput"
-                id="dataInput"
+                id="nascimento"
+                name="nascimento"
                 value={formData.nascimento}
-                onChange={(e) => setFormData({ ...formData, nascimento: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputNaturalidade">Naturalidade</label>
+              <label htmlFor="naturalidade">Naturalidade</label>
               <input
                 type="text"
                 className="inputNaturalidade"
-                id="inputNaturalidade"
+                id="naturalidade"
+                name="naturalidade"
                 value={formData.naturalidade}
-                onChange={(e) => setFormData({ ...formData, naturalidade: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="selectRaca">Raça</label>
+              <label htmlFor="raca">Raça</label>
               <select
                 className="selectRaca"
-                id="selectRaca"
+                id="raca"
+                name="raca"
                 value={formData.raca}
-                onChange={(e) => setFormData({ ...formData, raca: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
               >
-                <option value=""></option>
-                <option value="Branca">Branca</option>
-                <option value="Negra">Negra</option>
-                <option value="Parda">Parda</option>
-                <option value="Amarela">Amarela</option>
-                <option value="Indígena">Indígena</option>
+                <option value="">Selecione</option>
+                <option value="branca">Branca</option>
+                <option value="preta">Preta</option>
+                <option value="parda">Parda</option>
+                <option value="amarela">Amarela</option>
+                <option value="indigena">Indígena</option>
               </select>
             </div>
           </div>
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="inputCep">CEP</label>
+              <label htmlFor="cep">CEP</label>
               <input
                 type="text"
                 className="inputCep"
-                id="inputCep"
+                id="cep"
+                name="cep"
                 value={formData.cep}
-                onChange={(e) => setFormData({ ...formData, cep: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="00000-000"
+                maxLength="9"
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputBairro">Bairro</label>
+              <label htmlFor="bairro">Bairro</label>
               <input
                 type="text"
                 className="inputBairro"
-                id="inputBairro"
+                id="bairro"
+                name="bairro"
                 value={formData.bairro}
-                onChange={(e) => setFormData({ ...formData, bairro: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputLogradouro">Logradouro</label>
+              <label htmlFor="logradouro">Logradouro</label>
               <input
                 type="text"
                 className="inputLogradouro"
-                id="inputLogradouro"
+                id="logradouro"
+                name="logradouro"
                 value={formData.logradouro}
-                onChange={(e) => setFormData({ ...formData, logradouro: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputNumber">Número</label>
+              <label htmlFor="numero">Número</label>
               <input
-                type="text"
+                type="number"
                 className="inputNumber"
-                id="inputNumber"
+                id="numero"
+                name="numero"
                 value={formData.numero}
-                onChange={(e) => setFormData({ ...formData, numero: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
           </div>
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="selectPais">País</label>
-              <select
-                className="selectPais"
-                id="selectPais"
+              <label htmlFor="pais">País</label>
+              <input
+                type="text"
+                className="inputPais"
+                id="pais"
+                name="pais"
                 value={formData.pais}
-                onChange={(e) => setFormData({ ...formData, pais: e.target.value })}
-              >
-                <option value=""></option>
-                <option value="Brasil">Brasil</option>
-              </select>
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="Brasil"
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="selectEstado">Estado</label>
+              <label htmlFor="uf">Estado</label>
               <select
                 className="selectEstado"
-                id="selectEstado"
+                id="uf"
+                name="uf"
                 value={formData.uf}
-                onChange={(e) => setFormData({ ...formData, estado: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
               >
-                <option value=""></option>
-                <option value="Go">Goiás</option>
+                <option value="">Selecione</option>
+                {estadosBrasil.map(estado => (
+                  <option key={estado.value} value={estado.value}>
+                    {estado.label}
+                  </option>
+                ))}
               </select>
             </div>
+            
             <div className="campo">
-              <label htmlFor="selectCidade">Cidade</label>
-              <select
-                className="selectCidade"
-                id="selectCidade"
+              <label htmlFor="cidade">Cidade</label>
+              <input
+                type="text"
+                className="inputCidade"
+                id="cidade"
+                name="cidade"
                 value={formData.cidade}
-                onChange={(e) => setFormData({ ...formData, cidade: e.target.value })}
-              >
-                <option value=""></option>
-                <option value="Anapolis">Anápolis</option>
-              </select>
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
+            
             <div className="campo">
-              <label htmlFor="selectTurno">Turno</label>
+              <label htmlFor="turno">Turno</label>
               <select
                 className="selectTurno"
-                id="selectTurno"
+                id="turno"
+                name="turno"
                 value={formData.turno}
-                onChange={(e) => setFormData({ ...formData, turno: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
               >
-                <option value=""></option>
-                <option value="Matutino">Matutino</option>
-                <option value="Vespertino">Vespertino</option>
+                <option value="">Selecione</option>
+                <option value="vespertino">Vespertino</option>
+                <option value="matutino">Matutino</option>
+                <option value="noturno">Noturno</option>
               </select>
             </div>
           </div>
@@ -273,125 +360,203 @@ function ModalEditarEstudante({ handleCloseModal, editarSelecionado }) {
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="inputNomeResponsavel">Nome completo</label>
+              <label htmlFor="nomeResponsavel">Nome completo</label>
               <input
                 type="text"
                 className="inputNomeResponsavel"
-                id="inputNomeResponsavel"
+                id="nomeResponsavel"
+                name="nomeResponsavel"
                 value={formData.nomeResponsavel}
-                onChange={(e) => setFormData({ ...formData, nomeResponsavel: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputCpfResponsavel">CPF</label>
+              <label htmlFor="cpfResponsavel">CPF</label>
               <input
                 type="text"
                 className="inputCpfResponsavel"
-                id="inputCpfResponsavel"
-                value={formData.responsavelCpf}
-                onChange={(e) => setFormData({ ...formData, responsavelCpf: e.target.value })}
+                id="cpfResponsavel"
+                name="cpfResponsavel"
+                value={formData.cpfResponsavel}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="000.000.000-00"
+                maxLength="14"
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputRgResponsavel">RG</label>
+              <label htmlFor="rgResponsavel">RG</label>
               <input
                 type="text"
                 className="inputRgResponsavel"
-                id="inputRgResponsavel"
-                value={formData.responsavelRg}
-                onChange={(e) => setFormData({ ...formData, responsavelRg: e.target.value })}
+                id="rgResponsavel"
+                name="rgResponsavel"
+                value={formData.rgResponsavel}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputOrgao">Órgão expedidor</label>
+              <label htmlFor="orgaoExpedidor">Órgão expedidor</label>
               <input
                 type="text"
                 className="inputOrgao"
-                id="inputOrgao"
+                id="orgaoExpedidor"
+                name="orgaoExpedidor"
                 value={formData.orgaoExpedidor}
-                onChange={(e) => setFormData({ ...formData, orgaoExpedidor: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="selectUf">UF</label>
+              <label htmlFor="ufResponsavel">UF</label>
               <select
                 className="selectUf"
-                id="selectUf"
-                value={formData.uf}
-                onChange={(e) => setFormData({ ...formData, uf: e.target.value })}
+                id="ufResponsavel"
+                name="ufResponsavel"
+                value={formData.ufResponsavel}
+                onChange={handleChange}
+                disabled={loading}
               >
-                <option value=""></option>
-                <option value="Go">GO</option>
+                <option value="">Selecione</option>
+                {estadosBrasil.map(estado => (
+                  <option key={estado.value} value={estado.value}>
+                    {estado.value}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
 
           <div className="linha-flex">
             <div className="campo">
-              <label htmlFor="inputTelefone">Telefone residencial</label>
+              <label htmlFor="telefoneResidencial">Telefone residencial</label>
               <input
                 type="text"
                 className="inputTelefone"
-                id="inputTelefone"
+                id="telefoneResidencial"
+                name="telefoneResidencial"
                 value={formData.telefoneResidencial}
-                onChange={(e) => setFormData({ ...formData, telefoneResidencial: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="(00) 0000-0000"
+                maxLength="15"
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputComercial">Telefone comercial</label>
+              <label htmlFor="telefoneComercial">Telefone comercial</label>
               <input
                 type="text"
                 className="inputComercial"
-                id="inputComercial"
+                id="telefoneComercial"
+                name="telefoneComercial"
                 value={formData.telefoneComercial}
-                onChange={(e) => setFormData({ ...formData, telefoneComercial: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="(00) 0000-0000"
+                maxLength="15"
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputCelular">Celular</label>
+              <label htmlFor="celular">Celular</label>
               <input
                 type="text"
                 className="inputCelular"
-                id="inputCelular"
+                id="celular"
+                name="celular"
                 value={formData.celular}
-                onChange={(e) => setFormData({ ...formData, celular: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="(00) 00000-0000"
+                maxLength="15"
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputEmail">Email</label>
+              <label htmlFor="email">Email</label>
               <input
                 type="email"
                 className="inputEmail"
-                id="inputEmail"
+                id="email"
+                name="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputProfissao">Profissão</label>
+              <label htmlFor="profissao">Profissão</label>
               <input
                 type="text"
                 className="inputProfissao"
-                id="inputProfissao"
+                id="profissao"
+                name="profissao"
                 value={formData.profissao}
-                onChange={(e) => setFormData({ ...formData, profissao: e.target.value })}
+                onChange={handleChange}
+                disabled={loading}
               />
             </div>
+            
             <div className="campo">
-              <label htmlFor="inputParentesco">Parentesco</label>
-              <input type="text" className='inputParentesco' id="inputParentesco" value={formData.parentesco}
-                onChange={(e) => setFormData({ ...formData, parentesco: e.target.value })}/>
+              <label htmlFor="parentesco">Parentesco</label>
+              <input
+                type="text"
+                className="inputParentesco"
+                id="parentesco"
+                name="parentesco"
+                value={formData.parentesco}
+                onChange={handleChange}
+                disabled={loading}
+              />
             </div>
           </div>
 
-          <button className="button-responsavel">Adicionar responsável</button>
+          <button className="button-responsavel" disabled={loading}>
+            Adicionar responsável
+          </button>
 
           <div className="buttons-submit">
-            <button className="btn-cancelar" onClick={handleCloseModal}>Cancelar</button>
-            <button className="btn-salvar" onClick={handleSubmit}>Salvar</button>
+            <button 
+              className="btn-cancelar" 
+              onClick={handleCloseModal}
+              disabled={loading}
+            >
+              Cancelar
+            </button>
+            <button 
+              className="btn-salvar" 
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? 'Salvando...' : 'Salvar'}
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Snackbar do Material-UI */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={hideSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={hideSnackbar} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
